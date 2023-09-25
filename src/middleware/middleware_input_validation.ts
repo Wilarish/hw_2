@@ -55,9 +55,6 @@ export const authBasic= (req:Request, res:Response, next:NextFunction)=>{
             next()
         }
     }
-
-
-
-    return HTTP_statuses.UNAUTHORIZED_401
+    res.sendStatus(HTTP_statuses.UNAUTHORIZED_401)
 
 }

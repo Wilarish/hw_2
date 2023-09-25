@@ -3,7 +3,7 @@ import {BlogsRouter} from "./routes/blogs-router";
 import {DB} from "./data/DB";
 import {HTTP_statuses} from "./data/HTTP_statuses";
 import {PostsRouter} from "./routes/posts-router";
-import {authBasic, errorsChecking} from "./middleware/middleware_input_validation";
+
 
 export const app = express()
 
