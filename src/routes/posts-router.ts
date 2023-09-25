@@ -8,7 +8,7 @@ import {PostsMainType} from "../types/posts/posts-main-type";
 export const PostsRouter = Router()
 
 PostsRouter.get('/', (req:Request, res:Response)=>{
-    res.send(DB.blogs)
+    res.send(DB.posts)
 })
 PostsRouter.get('/:id', errorsChecking ,(req:Request<{id:string}>, res:Response)=>{
     const post = DB.posts.find(b => b.id === req.params.id)
