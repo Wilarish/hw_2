@@ -28,7 +28,7 @@ PostsRouter.post('/',  authBasic,  paramsCheckingPosts.title,  paramsCheckingPos
         shortDescription: req.body.shortDescription,
         content: req.body.content,
         blogId: req.body.blogId,
-        blogName: find_blog ? find_blog.id : 'nope'
+        blogName: find_blog ? find_blog.name : 'nope'
     }
     DB.posts.push(new_post)
     res.status(HTTP_statuses.CREATED_201).send(new_post)

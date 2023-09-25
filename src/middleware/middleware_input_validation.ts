@@ -40,25 +40,31 @@ export const errorsChecking = (req:Request, res:Response, next: NextFunction) =>
     const errors = validationResult(req).formatWith(errorFormatter);
     console.log("checking...")
     if (!errors.isEmpty()) {
-        res.status(HTTP_statuses.BAD_REQUEST_400).send({ errors: errors.array() });
+        res.status(HTTP_statuses.BAD_REQUEST_400).send({ errorsMessages: errors.array({onlyFirstError: true}) });
     }else next();
 }
 
 
-export const authBasic= (req:Request, res:Response, next:NextFunction)=>{
+export const authBasic = (req:Request, res:Response, next:NextFunction)=>{
     const token = req.headers.authorization //'Basic gfdhgdhfmjhghj' -> 'admin:qwerty' next()||401 (Unauthorized)
 
-    if (token){
-        const Slice = token?.slice(0,6)
-        const Decode:any = atob(token?.slice(6))
+    let Decode;
 
+    if (!token) return res.sendStatus(HTTP_statuses.UNAUTHORIZED_401)
+
+    else{
+        const Slice = token?.slice(0,6)
+        try {
+            Decode= atob(token?.slice(6))
+        }
+        catch (err){
+            res.sendStatus(HTTP_statuses.UNAUTHORIZED_401)
+        }
         if(Slice === 'Basic ' && Decode === 'admin:qwerty'){
-            next();
+            return next();
         }
     }
-    else {
-        res.sendStatus(HTTP_statuses.UNAUTHORIZED_401)
-    }
+
 
 
 

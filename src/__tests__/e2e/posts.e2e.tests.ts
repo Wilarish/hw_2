@@ -6,14 +6,17 @@ import {PostsCreateUpdate} from "../../types/posts/posts-create-update";
 import {BlogsMainType} from "../../types/blogs/blogs-main-type";
 import {DB} from "../../data/DB";
 import {create_update_Blogs} from "../../types/blogs/blogs-create-update-type";
+import {createBlogUtils} from "./utils/createBlog.utils";
 
 
 describe('/videos', ()=>{
-
+    let createdPost: PostsMainType;
+    let createdPost_2: PostsMainType;
+    let createdBlog:BlogsMainType;
     beforeAll(async ()=>{
         await request(app).delete('/testing/all-data');
 
-        let createdBlog:BlogsMainType;
+
 
     })
 
@@ -24,31 +27,31 @@ describe('/videos', ()=>{
             .expect(HTTP_statuses.OK_200, [])
     })
 
-    let createdPost: PostsMainType;
-    let createdPost_2: PostsMainType;
-
-    DB.blogs = [{
-        id: "any_id",
-        name: "any_name",
-        description: "any_description",
-        websiteUrl: "any_websiteUrl"
-    }]
 
     it('should create post with correct data', async () => {
+
+
+        createdBlog = await createBlogUtils(1);
 
         const data: PostsCreateUpdate = {
             title: 'string',
             shortDescription: 'string',
             content: 'string',
-            blogId: 'any_id',
+            blogId: createdBlog.id,
         }
-        // Don`t understand this one
-        //const {created_Video_Manager} = await video_test_manager.createUser(data)
+
 
         const response = await request(app)
             .post(RouterPath.posts)
+            .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send(data)
             .expect(HTTP_statuses.CREATED_201)
+
+        expect(response.body).toEqual({
+            id: expect.any(String),
+            ...data,
+            blogName: createdBlog.name
+        })
 
         createdPost = response.body;
 
