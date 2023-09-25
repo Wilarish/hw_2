@@ -53,8 +53,7 @@ export const authBasic= (req:Request, res:Response, next:NextFunction)=>{
         const Decode:any = atob(token?.slice(6))
 
         if(Slice === 'Basic ' && Decode === 'admin:qwerty'){
-            res.sendStatus(HTTP_statuses.OK_200)
-            next()
+            next();
         }
     }
     res.sendStatus(HTTP_statuses.UNAUTHORIZED_401)
