@@ -33,7 +33,7 @@ PostsRouter.post('/',  authBasic,  paramsCheckingPosts.title,  paramsCheckingPos
     DB.posts.push(new_post)
     res.status(HTTP_statuses.CREATED_201).send(new_post)
 })
-PostsRouter.put('/:id',  authBasic,  paramsCheckingPosts.id,  paramsCheckingPosts.title,  paramsCheckingPosts.shortDescription,  paramsCheckingPosts.content,  paramsCheckingPosts.blogId,  errorsChecking,  (req:Request<{id:string},{},{id: string, title: string, shortDescription: string, content: string, blogId: string, blogName: string }>, res:Response)=>{
+PostsRouter.put('/:id',  authBasic,  paramsCheckingPosts.title,  paramsCheckingPosts.shortDescription,  paramsCheckingPosts.content,  paramsCheckingPosts.blogId,  errorsChecking,  (req:Request<{id:string},{},{id: string, title: string, shortDescription: string, content: string, blogId: string, blogName: string }>, res:Response)=>{
 
     const new_post = DB.posts.find(b => b.id === req.params.id)
 
