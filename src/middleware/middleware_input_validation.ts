@@ -63,6 +63,9 @@ export const authBasic = (req:Request, res:Response, next:NextFunction)=>{
         if(Slice === 'Basic ' && Decode === 'admin:qwerty'){
             return next();
         }
+        else {
+            return res.sendStatus(HTTP_statuses.UNAUTHORIZED_401)
+        }
     }
 
 
