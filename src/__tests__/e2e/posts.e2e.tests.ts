@@ -167,7 +167,7 @@ describe('/videos', ()=>{
             .get(`${RouterPath.posts}/${createdPost.id}`)
             .expect(HTTP_statuses.OK_200, createdPost)
     });
-    it('should update unexpected post ', async () => {
+    it('shouldn`t update unexpected post ', async () => {
 
         const data: PostsCreateUpdate = {
             title: 'qqqqqqq',

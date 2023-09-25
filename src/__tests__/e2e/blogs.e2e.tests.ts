@@ -136,7 +136,7 @@ describe('/videos', ()=>{
             .get(`${RouterPath.blogs}/${createdBlog.id}`)
             .expect(HTTP_statuses.OK_200, createdBlog)
     });
-    it('should update unexpected blog ', async () => {
+    it('shouldn`t update unexpected blog ', async () => {
 
         const data:create_update_Blogs = {
             name: 'string_put_@',
@@ -164,7 +164,6 @@ describe('/videos', ()=>{
             .send(data)
             .expect(HTTP_statuses.NO_CONTENT_204)
 
-        console.log('RESULT:',res.body)
 
         const result =  await request(app)
             .get(`${RouterPath.blogs}/${createdBlog.id}`)

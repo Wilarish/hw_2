@@ -52,13 +52,13 @@ PostsRouter.put('/:id',  authBasic,  paramsCheckingPosts.title,  paramsCheckingP
 
 
 })
-PostsRouter.delete('/:id',  authBasic,  errorsChecking,  (req:Request<{id:string}>, res:Response)=>{
-    const post: any = DB.posts.find(p => p.id === req.params.id)
+PostsRouter.delete('/:id',  authBasic,  (req:Request<{id:string}>, res:Response)=>{
+    const post = DB.posts.find(p => p.id === req.params.id)
     if(!post){
         res.sendStatus(HTTP_statuses.NOT_FOUND_404)
     }
     else{
-        DB.blogs.splice(DB.blogs.indexOf(post), 1)
+        DB.posts.splice(DB.posts.indexOf(<PostsMainType>post), 1)
         res.sendStatus(HTTP_statuses.NO_CONTENT_204)
     }
 
