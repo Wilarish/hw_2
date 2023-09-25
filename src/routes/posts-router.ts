@@ -44,7 +44,7 @@ PostsRouter.put('/:id',  authBasic,  paramsCheckingPosts.title,  paramsCheckingP
         new_post.shortDescription =req.body.shortDescription
         new_post.content= req.body.content
         new_post.blogId = req.body.blogId
-        new_post.blogName = find_blog ? find_blog.id : 'nope'
+        new_post.blogName = find_blog ? find_blog.name : 'nope'
         res.status(HTTP_statuses.NO_CONTENT_204).send(new_post)
     }
     else
