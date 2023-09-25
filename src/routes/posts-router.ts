@@ -53,7 +53,7 @@ PostsRouter.put('/:id',  authBasic,  paramsCheckingPosts.title,  paramsCheckingP
 
 })
 PostsRouter.delete('/:id',  authBasic,  errorsChecking,  (req:Request<{id:string}>, res:Response)=>{
-    const post: any = DB.posts.find(b => b.id === req.params.id)
+    const post: any = DB.posts.find(p => p.id === req.params.id)
     if(!post){
         res.sendStatus(HTTP_statuses.NOT_FOUND_404)
     }

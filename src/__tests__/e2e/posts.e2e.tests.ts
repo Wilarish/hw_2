@@ -89,14 +89,13 @@ describe('/videos', ()=>{
 
         createdPost_2 = response.body;
 
-        console.log([createdPost, createdPost_2])
 
         await request(app)
             .get(RouterPath.posts)
             .expect(HTTP_statuses.OK_200, [createdPost, createdPost_2])
 
     });
-    it('shouldn`t сreate video with incorrect data', async () => {
+    it('shouldn`t сreate post with incorrect data', async () => {
 
         const data: PostsCreateUpdate = {
             title: 'string_put',
@@ -111,119 +110,128 @@ describe('/videos', ()=>{
             .send({...data, title:123})
             .expect(HTTP_statuses.BAD_REQUEST_400)
     });
-    // it('shouldn`t update video ', async () => {
-    //
-    //     const data:create_update_Blogs = {
-    //         name: 'string_put',
-    //         description: 'string_put',
-    //         websiteUrl: 'https://www.amazon.com'
-    //     }
-    //
-    //     const notStringTitle = await request(app)
-    //         .put(`${RouterPath.blogs}/${createdBlog.id}`)
-    //         .send({...data, name: 123})
-    //         .expect(HTTP_statuses.BAD_REQUEST_400 )
-    //
-    //     expect(notStringTitle.body).toEqual({
-    //         errorsMessages: [
-    //             {
-    //                 message: expect.any(String),
-    //                 field: 'name'
-    //             }
-    //         ]
-    //     })
-    //
-    //     const notULR = await request(app)
-    //         .put(`${RouterPath.blogs}/${createdBlog.id}`)
-    //         .send({...data, description: 'qwerioqweqweqweqweqweqweqweqweqweqweqweqwerqwerqwreqrwerqwerqwerqwerqwre'})
-    //         .expect(HTTP_statuses.BAD_REQUEST_400 )
-    //
-    //     expect(notULR.body).toEqual({
-    //         errorsMessages: [
-    //             {
-    //                 message: expect.any(String),
-    //                 field: 'description'
-    //             }
-    //         ]
-    //     })
-    //     const longDescription = await request(app)
-    //         .put(`${RouterPath.blogs}/${createdBlog.id}`)
-    //         .send({...data, websiteUrl: '-----/////'})
-    //         .expect(HTTP_statuses.BAD_REQUEST_400 )
-    //
-    //     expect(longDescription.body).toEqual({
-    //         errorsMessages: [
-    //             {
-    //                 message: expect.any(String),
-    //                 field: 'websiteUrl'
-    //             }
-    //         ]
-    //     })
-    //
-    //     await request(app)
-    //         .get(`${RouterPath.blogs}/${createdBlog.id}`)
-    //         .expect(HTTP_statuses.OK_200, createdBlog)
-    // });
-    // it('should update unexpected video ', async () => {
-    //
-    //     const data:create_update_Blogs = {
-    //         name: 'string_put_@',
-    //         description: 'string_put_@',
-    //         websiteUrl: 'https://www.amazon.com/users/types'
-    //     }
-    //
-    //     await request(app)
-    //         .put(`${RouterPath.blogs}/${-100}`)
-    //         .send(data)
-    //         .expect(HTTP_statuses.NOT_FOUND_404)
-    //
-    // });
-    // it('should update video correct ', async () => {
-    //
-    //     const data:create_update_Blogs = {
-    //         name: 'string_put_@',
-    //         description: 'string_put_@',
-    //         websiteUrl: 'https://www.amazon.com/users/types'
-    //     }
-    //     const res = await request(app)
-    //         .put(`${RouterPath.blogs}/${createdBlog.id}`)
-    //         .send(data)
-    //         .expect(HTTP_statuses.NO_CONTENT_204)
-    //
-    //     console.log('RESULT:',res.body)
-    //
-    //     const result =  await request(app)
-    //         .get(`${RouterPath.blogs}/${createdBlog.id}`)
-    //         .expect(HTTP_statuses.OK_200 )
-    //
-    //     expect(result.body).toEqual({
-    //         ...createdBlog,
-    //         ...data
-    //     })
-    // });
-    // it('should delete video', async () => {
-    //
-    //     await request(app)
-    //         .delete(`${RouterPath.blogs}/${createdBlog.id}`)
-    //         .expect(HTTP_statuses.NO_CONTENT_204)
-    //
-    //     await request(app)
-    //         .get(`${RouterPath.blogs}/${createdBlog.id}`)
-    //         .expect(HTTP_statuses.NOT_FOUND_404)
-    //
-    // });
-    // it('shouldn`t delete unexpected video', async () => {
-    //
-    //
-    //     await request(app)
-    //         .delete(`${RouterPath.blogs}/${-100}`)
-    //         .expect(HTTP_statuses.NOT_FOUND_404)
-    //
-    //     await request(app)
-    //         .get(`${RouterPath.blogs}/${-100}`)
-    //         .expect(HTTP_statuses.NOT_FOUND_404)
-    //
-    // });
-    //
+    it('shouldn`t update post ', async () => {
+
+        const data: PostsCreateUpdate = {
+            title: 'string_put',
+            shortDescription: 'string_put',
+            content: 'string_put',
+            blogId: createdBlog.id,
+        }
+
+        const notStringTitle = await request(app)
+            .put(`${RouterPath.posts}/${createdPost.id}`)
+            .set("Authorization", "Basic YWRtaW46cXdlcnR5")
+            .send({...data, title: 123})
+            .expect(HTTP_statuses.BAD_REQUEST_400 )
+
+        expect(notStringTitle.body).toEqual({
+            errorsMessages: [
+                {
+                    message: expect.any(String),
+                    field: 'title'
+                }
+            ]
+        })
+
+        const northingInDescription = await request(app)
+            .put(`${RouterPath.posts}/${createdPost.id}`)
+            .set("Authorization", "Basic YWRtaW46cXdlcnR5")
+            .send({...data, shortDescription: ''})
+            .expect(HTTP_statuses.BAD_REQUEST_400 )
+
+        expect(northingInDescription.body).toEqual({
+            errorsMessages: [
+                {
+                    message: expect.any(String),
+                    field: 'shortDescription'
+                }
+            ]
+        })
+        const notStringContent = await request(app)
+            .put(`${RouterPath.posts}/${createdPost.id}`)
+            .set("Authorization", "Basic YWRtaW46cXdlcnR5")
+            .send({...data, content: 123})
+            .expect(HTTP_statuses.BAD_REQUEST_400 )
+
+        expect(notStringContent.body).toEqual({
+            errorsMessages: [
+                {
+                    message: expect.any(String),
+                    field: 'content'
+                }
+            ]
+        })
+
+        await request(app)
+            .get(`${RouterPath.posts}/${createdPost.id}`)
+            .expect(HTTP_statuses.OK_200, createdPost)
+    });
+    it('should update unexpected post ', async () => {
+
+        const data: PostsCreateUpdate = {
+            title: 'qqqqqqq',
+            shortDescription: 'qqqqqq',
+            content: 'sqqqqqqq',
+            blogId: createdBlog.id,
+        }
+
+        await request(app)
+            .put(`${RouterPath.posts}/${-100}`)
+            .set("Authorization", "Basic YWRtaW46cXdlcnR5")
+            .send(data)
+            .expect(HTTP_statuses.NOT_FOUND_404)
+
+    });
+    it('should update post correct ', async () => {
+
+        const data: PostsCreateUpdate = {
+            title: 'correct',
+            shortDescription: 'correct',
+            content: 'correct',
+            blogId: createdBlog.id,
+        }
+        const res = await request(app)
+            .put(`${RouterPath.posts}/${createdPost.id}`)
+            .set("Authorization", "Basic YWRtaW46cXdlcnR5")
+            .send(data)
+            .expect(HTTP_statuses.NO_CONTENT_204)
+
+
+        const result =  await request(app)
+            .get(`${RouterPath.posts}/${createdPost.id}`)
+            .expect(HTTP_statuses.OK_200 )
+
+        expect(result.body).toEqual({
+            ...createdPost,
+            ...data
+        })
+    });
+    it('should delete post', async () => {
+
+        await request(app)
+            .delete(`${RouterPath.posts}/${createdPost.id}`)
+            .set("Authorization", "Basic YWRtaW46cXdlcnR5")
+            .expect(HTTP_statuses.NO_CONTENT_204)
+
+        await request(app)
+            .get(`${RouterPath.posts}/${createdPost.id}`)
+            .expect(HTTP_statuses.NOT_FOUND_404)
+
+    });
+    it('shouldn`t delete unexpected post', async () => {
+
+
+        await request(app)
+            .delete(`${RouterPath.posts}/${-100}`)
+            .set("Authorization", "Basic YWRtaW46cXdlcnR5")
+            .expect(HTTP_statuses.NOT_FOUND_404)
+
+        await request(app)
+            .get(`${RouterPath.posts}/${-100}`)
+            .expect(HTTP_statuses.NOT_FOUND_404)
+
+    });
+
 
 })

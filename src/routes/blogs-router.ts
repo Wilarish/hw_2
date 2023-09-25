@@ -30,6 +30,7 @@ BlogsRouter.post('/',  authBasic,  paramsCheckingBlogs.websiteUrl,  paramsChecki
 BlogsRouter.put('/:id',  authBasic,   paramsCheckingBlogs.websiteUrl,  paramsCheckingBlogs.name,  paramsCheckingBlogs.description,  errorsChecking,  (req:Request<{id:string},{},{id: string, name: string, description: string, websiteUrl: string}>, res:Response)=>{
 
     const new_blog = DB.blogs.find(b => b.id === req.params.id)
+
     if (new_blog){
         new_blog.name = req.body.name
         new_blog.description =req.body.description
