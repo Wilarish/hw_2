@@ -106,7 +106,7 @@ describe('/videos', ()=>{
         const notULR = await request(app)
             .put(`${RouterPath.blogs}/${createdBlog.id}`)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
-            .send({...data, description: 'qwerioqweqweqweqweqweqweqweqweqweqweqweqwerqwerqwreqrwerqwerqwerqwerqwre'})
+            .send({...data, description: 1111})
             .expect(HTTP_statuses.BAD_REQUEST_400 )
 
         expect(notULR.body).toEqual({

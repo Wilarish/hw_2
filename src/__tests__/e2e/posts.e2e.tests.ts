@@ -70,7 +70,7 @@ describe('/videos', ()=>{
         const data: PostsCreateUpdate = {
             title: 'string_2',
             shortDescription: 'string_2',
-            content: 'string+@',
+            content: 'string',
             blogId: createdBlog.id,
         }
 
@@ -89,6 +89,8 @@ describe('/videos', ()=>{
 
         createdPost_2 = response.body;
 
+        console.log([createdPost, createdPost_2])
+
         await request(app)
             .get(RouterPath.posts)
             .expect(HTTP_statuses.OK_200, [createdPost, createdPost_2])
@@ -96,15 +98,17 @@ describe('/videos', ()=>{
     });
     it('shouldn`t сreate video with incorrect data', async () => {
 
-        const data: create_update_Blogs = {
-            name: 'string_2',
-            description: 'string_2',
-            websiteUrl: 'https://www.amazon.com'
+        const data: PostsCreateUpdate = {
+            title: 'string_put',
+            shortDescription: 'string_put',
+            content: 'string_put',
+            blogId: createdBlog.id,
         }
 
         await request(app)
-            .post(RouterPath.blogs)
-            .send({...data, name:123})
+            .post(RouterPath.posts)
+            .set("Authorization", "Basic YWRtaW46cXdlcnR5")
+            .send({...data, title:123})
             .expect(HTTP_statuses.BAD_REQUEST_400)
     });
     // it('shouldn`t update video ', async () => {
