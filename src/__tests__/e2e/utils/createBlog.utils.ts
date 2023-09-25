@@ -4,7 +4,7 @@ import {app, RouterPath} from "../../../settings";
 import {HTTP_statuses} from "../../../data/HTTP_statuses";
 import {blogs} from "../constants/blogsConstants";
 
-export const createBlogUtils = async(num: number) => {
+export const createBlogUtils = async() => {
 
     //const createdBlogs = []
 

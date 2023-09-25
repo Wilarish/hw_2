@@ -18,7 +18,7 @@ describe('/videos', ()=>{
     let createdBlog: BlogsMainType;
     let createdBlog_2: BlogsMainType;
 
-    it('should create video with correct data', async () => {
+    it('should create blog with correct data', async () => {
 
         const data: create_update_Blogs = {
             name: 'string',
@@ -30,6 +30,7 @@ describe('/videos', ()=>{
 
          const response = await request(app)
              .post(RouterPath.blogs)
+             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
              .send(data)
              .expect(HTTP_statuses.CREATED_201)
 
@@ -42,7 +43,7 @@ describe('/videos', ()=>{
             .expect(HTTP_statuses.OK_200, createdBlog)
 
     });
-    it('should create video_2 with correct data', async () => {
+    it('should create blog_2 with correct data', async () => {
 
         const data: create_update_Blogs = {
             name: 'string_2',
@@ -54,6 +55,7 @@ describe('/videos', ()=>{
 
         const response = await  request(app)
             .post(RouterPath.blogs)
+            .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send(data)
             .expect(HTTP_statuses.CREATED_201)
 
@@ -64,7 +66,7 @@ describe('/videos', ()=>{
             .get(RouterPath.blogs)
             .expect(HTTP_statuses.OK_200, [createdBlog, createdBlog_2])
     });
-    it('shouldn`t сreate video with incorrect data', async () => {
+    it('shouldn`t сreate blog with incorrect data', async () => {
 
         const data: create_update_Blogs = {
             name: 'string_2',
@@ -74,10 +76,11 @@ describe('/videos', ()=>{
 
         await request(app)
             .post(RouterPath.blogs)
+            .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send({...data, name:123})
             .expect(HTTP_statuses.BAD_REQUEST_400)
     });
-    it('shouldn`t update video ', async () => {
+    it('shouldn`t update blog ', async () => {
 
         const data:create_update_Blogs = {
             name: 'string_put',
@@ -87,6 +90,7 @@ describe('/videos', ()=>{
 
         const notStringTitle = await request(app)
             .put(`${RouterPath.blogs}/${createdBlog.id}`)
+            .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send({...data, name: 123})
             .expect(HTTP_statuses.BAD_REQUEST_400 )
 
@@ -101,6 +105,7 @@ describe('/videos', ()=>{
 
         const notULR = await request(app)
             .put(`${RouterPath.blogs}/${createdBlog.id}`)
+            .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send({...data, description: 'qwerioqweqweqweqweqweqweqweqweqweqweqweqwerqwerqwreqrwerqwerqwerqwerqwre'})
             .expect(HTTP_statuses.BAD_REQUEST_400 )
 
@@ -114,6 +119,7 @@ describe('/videos', ()=>{
         })
         const longDescription = await request(app)
             .put(`${RouterPath.blogs}/${createdBlog.id}`)
+            .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send({...data, websiteUrl: '-----/////'})
             .expect(HTTP_statuses.BAD_REQUEST_400 )
 
@@ -130,7 +136,7 @@ describe('/videos', ()=>{
             .get(`${RouterPath.blogs}/${createdBlog.id}`)
             .expect(HTTP_statuses.OK_200, createdBlog)
     });
-    it('should update unexpected video ', async () => {
+    it('should update unexpected blog ', async () => {
 
         const data:create_update_Blogs = {
             name: 'string_put_@',
@@ -140,11 +146,12 @@ describe('/videos', ()=>{
 
         await request(app)
             .put(`${RouterPath.blogs}/${-100}`)
+            .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send(data)
             .expect(HTTP_statuses.NOT_FOUND_404)
 
     });
-    it('should update video correct ', async () => {
+    it('should update blog correct ', async () => {
 
         const data:create_update_Blogs = {
             name: 'string_put_@',
@@ -153,6 +160,7 @@ describe('/videos', ()=>{
         }
         const res = await request(app)
             .put(`${RouterPath.blogs}/${createdBlog.id}`)
+            .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send(data)
             .expect(HTTP_statuses.NO_CONTENT_204)
 
@@ -167,10 +175,11 @@ describe('/videos', ()=>{
             ...data
         })
     });
-    it('should delete video', async () => {
+    it('should delete blog', async () => {
 
         await request(app)
             .delete(`${RouterPath.blogs}/${createdBlog.id}`)
+            .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .expect(HTTP_statuses.NO_CONTENT_204)
 
         await request(app)
@@ -178,11 +187,12 @@ describe('/videos', ()=>{
             .expect(HTTP_statuses.NOT_FOUND_404)
 
     });
-    it('shouldn`t delete unexpected video', async () => {
+    it('shouldn`t delete unexpected blog', async () => {
 
 
         await request(app)
             .delete(`${RouterPath.blogs}/${-100}`)
+            .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .expect(HTTP_statuses.NOT_FOUND_404)
 
         await request(app)
