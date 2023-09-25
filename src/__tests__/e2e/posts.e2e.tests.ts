@@ -27,15 +27,14 @@ describe('/videos', ()=>{
     let createdPost: PostsMainType;
     let createdPost_2: PostsMainType;
 
-    it('should create post with correct data', async () => {
+    DB.blogs = [{
+        id: "any_id",
+        name: "any_name",
+        description: "any_description",
+        websiteUrl: "any_websiteUrl"
+    }]
 
-        await request(app)
-            .post(RouterPath.blogs)
-            .send({
-                name: 'string',
-                description: 'string',
-                websiteUrl: 'https://www.google.com'
-            })
+    it('should create post with correct data', async () => {
 
         const data: PostsCreateUpdate = {
             title: 'string',

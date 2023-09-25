@@ -19,8 +19,10 @@ export const paramsCheckingPosts = {
     blogId:body('blogId').custom(value => {
 
         const blog = DB.blogs.find(b => b.id === value)
+
         if(!blog)
             throw new Error("error blogID")
+
         return true
 
     })
@@ -42,6 +44,19 @@ export const errorsChecking = (req:Request, res:Response, next: NextFunction) =>
 }
 
 
-// const authBasic= (req, res, next)=>{
-//     const token = req.headers.authorization //'Basic gfdhgdhfmjhghj' -> 'admin:qwerty' next()||401 (Unauthorized)
-// }
+export const authBasic= (req:Request, res:Response, next:NextFunction)=>{
+    const token:any = req.headers.authorization //'Basic gfdhgdhfmjhghj' -> 'admin:qwerty' next()||401 (Unauthorized)
+
+    const Splice = token?.splice(' ', 2)
+    const Decode:any = atob(Splice[1])
+
+    const Input = Decode[1]?.splice(':', 2)
+
+    if(Splice[0] === 'Basic' && Decode === 'admin:qwerty'){
+        if(Input[0] === 'admin' && Input[1] === 'qwerty'){
+            next()
+        }
+    }
+    return HTTP_statuses.UNAUTHORIZED_401
+
+}

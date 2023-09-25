@@ -1,6 +1,6 @@
 import {Request, Response, Router} from "express";
 import {DB} from "../data/DB";
-import {errorsChecking, paramsCheckingPosts} from "../middleware/middleware_input_validation";
+import {authBasic, errorsChecking, paramsCheckingPosts} from "../middleware/middleware_input_validation";
 import {HTTP_statuses} from "../data/HTTP_statuses";
 import {PostsMainType} from "../types/posts/posts-main-type";
 
@@ -18,7 +18,7 @@ PostsRouter.get('/:id', errorsChecking ,(req:Request<{id:string}>, res:Response)
         res.send(post)
 
 })
-PostsRouter.post('/',  paramsCheckingPosts.title,  paramsCheckingPosts.shortDescription,  paramsCheckingPosts.content,  paramsCheckingPosts.blogId,  errorsChecking,  (req:Request<{},{},{id: string, title: string, shortDescription: string, content: string, blogId: string, blogName: string }>, res:Response)=>{
+PostsRouter.post('/',  authBasic,  paramsCheckingPosts.title,  paramsCheckingPosts.shortDescription,  paramsCheckingPosts.content,  paramsCheckingPosts.blogId,  errorsChecking,  (req:Request<{},{},{id: string, title: string, shortDescription: string, content: string, blogId: string, blogName: string }>, res:Response)=>{
 
     const find_blog = DB.blogs.find(b => b.id === req.body.blogId)
 
@@ -33,7 +33,7 @@ PostsRouter.post('/',  paramsCheckingPosts.title,  paramsCheckingPosts.shortDesc
     DB.posts.push(new_post)
     res.status(HTTP_statuses.CREATED_201).send(new_post)
 })
-PostsRouter.put('/:id',  paramsCheckingPosts.id,  paramsCheckingPosts.title,  paramsCheckingPosts.shortDescription,  paramsCheckingPosts.content,  paramsCheckingPosts.blogId,  errorsChecking,  (req:Request<{id:string},{},{id: string, title: string, shortDescription: string, content: string, blogId: string, blogName: string }>, res:Response)=>{
+PostsRouter.put('/:id',  authBasic,  paramsCheckingPosts.id,  paramsCheckingPosts.title,  paramsCheckingPosts.shortDescription,  paramsCheckingPosts.content,  paramsCheckingPosts.blogId,  errorsChecking,  (req:Request<{id:string},{},{id: string, title: string, shortDescription: string, content: string, blogId: string, blogName: string }>, res:Response)=>{
 
     const new_post = DB.posts.find(b => b.id === req.params.id)
 
@@ -52,7 +52,7 @@ PostsRouter.put('/:id',  paramsCheckingPosts.id,  paramsCheckingPosts.title,  pa
 
 
 })
-PostsRouter.delete('/:id',  errorsChecking,  (req:Request<{id:string}>, res:Response)=>{
+PostsRouter.delete('/:id',  authBasic,  errorsChecking,  (req:Request<{id:string}>, res:Response)=>{
     const post: any = DB.posts.find(b => b.id === req.params.id)
     if(!post){
         res.sendStatus(HTTP_statuses.NOT_FOUND_404)

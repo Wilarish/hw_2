@@ -2,7 +2,7 @@ import {Response, Request, Router} from "express";
 import {DB} from "../data/DB";
 import {BlogsMainType} from "../types/blogs/blogs-main-type";
 import {HTTP_statuses} from "../data/HTTP_statuses";
-import {errorsChecking, paramsCheckingBlogs} from "../middleware/middleware_input_validation";
+import {authBasic, errorsChecking, paramsCheckingBlogs} from "../middleware/middleware_input_validation";
 
 export const BlogsRouter = Router()
 
@@ -17,7 +17,7 @@ BlogsRouter.get('/:id', errorsChecking ,(req:Request<{id:string}>, res:Response)
         res.send(blog)
 
 })
-BlogsRouter.post('/',  paramsCheckingBlogs.websiteUrl,  paramsCheckingBlogs.name,  paramsCheckingBlogs.description,  errorsChecking,  (req:Request<{},{},{id: string, name: string, description: string, websiteUrl: string}>, res:Response)=>{
+BlogsRouter.post('/',  authBasic,  paramsCheckingBlogs.websiteUrl,  paramsCheckingBlogs.name,  paramsCheckingBlogs.description,  errorsChecking,  (req:Request<{},{},{id: string, name: string, description: string, websiteUrl: string}>, res:Response)=>{
     const new_blog:BlogsMainType ={
         id: new Date().toISOString(),
         name: req.body.name,
@@ -27,7 +27,7 @@ BlogsRouter.post('/',  paramsCheckingBlogs.websiteUrl,  paramsCheckingBlogs.name
     DB.blogs.push(new_blog)
     res.status(HTTP_statuses.CREATED_201).send(new_blog)
 })
-BlogsRouter.put('/:id',  paramsCheckingBlogs.websiteUrl,  paramsCheckingBlogs.name,  paramsCheckingBlogs.description,  errorsChecking,  (req:Request<{id:string},{},{id: string, name: string, description: string, websiteUrl: string}>, res:Response)=>{
+BlogsRouter.put('/:id',  authBasic,   paramsCheckingBlogs.websiteUrl,  paramsCheckingBlogs.name,  paramsCheckingBlogs.description,  errorsChecking,  (req:Request<{id:string},{},{id: string, name: string, description: string, websiteUrl: string}>, res:Response)=>{
 
     const new_blog = DB.blogs.find(b => b.id === req.params.id)
     if (new_blog){
@@ -41,7 +41,7 @@ BlogsRouter.put('/:id',  paramsCheckingBlogs.websiteUrl,  paramsCheckingBlogs.na
 
 
 })
-BlogsRouter.delete('/:id', (req:Request<{id:string}>, res:Response)=>{
+BlogsRouter.delete('/:id',  authBasic, (req:Request<{id:string}>, res:Response)=>{
     const blog = DB.blogs.find(b => b.id === req.params.id)
     if(!blog){
         res.sendStatus(HTTP_statuses.NOT_FOUND_404)
