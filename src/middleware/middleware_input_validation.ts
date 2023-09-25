@@ -45,18 +45,19 @@ export const errorsChecking = (req:Request, res:Response, next: NextFunction) =>
 
 
 export const authBasic= (req:Request, res:Response, next:NextFunction)=>{
-    const token:any = req.headers.authorization //'Basic gfdhgdhfmjhghj' -> 'admin:qwerty' next()||401 (Unauthorized)
+    const token = req.headers.authorization //'Basic gfdhgdhfmjhghj' -> 'admin:qwerty' next()||401 (Unauthorized)
 
-    const Splice = token?.splice(' ', 2)
-    const Decode:any = atob(Splice[1])
+    if (token){
+        const Slice = token?.slice(0,6)
+        const Decode:any = atob(token?.slice(6))
 
-    const Input = Decode[1]?.splice(':', 2)
-
-    if(Splice[0] === 'Basic' && Decode === 'admin:qwerty'){
-        if(Input[0] === 'admin' && Input[1] === 'qwerty'){
+        if(Slice === 'Basic ' && Decode === 'admin:qwerty'){
             next()
         }
     }
+
+
+
     return HTTP_statuses.UNAUTHORIZED_401
 
 }
