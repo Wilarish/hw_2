@@ -21,7 +21,7 @@ app.use(RouterPath.posts, PostsRouter)
 app.get('/', (req:Request, res:Response) => {
     res.send('Hello World!)***(')
 })
-app.delete('/testing/all-data', authBasic, errorsChecking,(req:Request, res:Response)=>{
+app.delete('/testing/all-data',  (req:Request, res:Response)=>{
     DB.blogs = []
     DB.posts = []
     res.sendStatus(HTTP_statuses.NO_CONTENT_204)
