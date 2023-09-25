@@ -3,6 +3,7 @@ import {DB} from "../data/DB";
 import {authBasic, errorsChecking, paramsCheckingPosts} from "../middleware/middleware_input_validation";
 import {HTTP_statuses} from "../data/HTTP_statuses";
 import {PostsMainType} from "../types/posts/posts-main-type";
+import {postsRepository} from "../repositories/posts-rep";
 
 
 export const PostsRouter = Router()
@@ -11,41 +12,41 @@ PostsRouter.get('/', (req:Request, res:Response)=>{
     res.send(DB.posts)
 })
 PostsRouter.get('/:id', errorsChecking ,(req:Request<{id:string}>, res:Response)=>{
-    const post = DB.posts.find(b => b.id === req.params.id)
+
+    const post = postsRepository.findPost(req.params.id)
+
     if(!post)
         res.sendStatus(HTTP_statuses.NOT_FOUND_404)
+
     else
         res.send(post)
 
 })
 PostsRouter.post('/',  authBasic,  paramsCheckingPosts.title,  paramsCheckingPosts.shortDescription,  paramsCheckingPosts.content,  paramsCheckingPosts.blogId,  errorsChecking,  (req:Request<{},{},{id: string, title: string, shortDescription: string, content: string, blogId: string, blogName: string }>, res:Response)=>{
 
-    const find_blog = DB.blogs.find(b => b.id === req.body.blogId)
+    const  new_post = postsRepository.createPost({
 
-    const new_post:PostsMainType ={
-        id: new Date().toISOString(),
-        title: req.body.title,
-        shortDescription: req.body.shortDescription,
-        content: req.body.content,
-        blogId: req.body.blogId,
-        blogName: find_blog ? find_blog.name : 'nope'
-    }
+            title: req.body.title,
+            shortDescription: req.body.shortDescription,
+            content: req.body.content,
+            blogId: req.body.blogId
+    })
+
     DB.posts.push(new_post)
     res.status(HTTP_statuses.CREATED_201).send(new_post)
 })
 PostsRouter.put('/:id',  authBasic,  paramsCheckingPosts.title,  paramsCheckingPosts.shortDescription,  paramsCheckingPosts.content,  paramsCheckingPosts.blogId,  errorsChecking,  (req:Request<{id:string},{},{id: string, title: string, shortDescription: string, content: string, blogId: string, blogName: string }>, res:Response)=>{
 
-    const new_post = DB.posts.find(b => b.id === req.params.id)
+    const new_post = postsRepository.findPost(req.params.id)
 
-    const find_blog = DB.blogs.find(b => b.id === req.body.blogId)
-
-    if (new_post){
-        new_post.title =req.body.title
-        new_post.shortDescription =req.body.shortDescription
-        new_post.content= req.body.content
-        new_post.blogId = req.body.blogId
-        new_post.blogName = find_blog ? find_blog.name : 'nope'
-        res.status(HTTP_statuses.NO_CONTENT_204).send(new_post)
+    if (new_post) {
+        const result = postsRepository.updatePost(new_post, {
+            title: req.body.title,
+            shortDescription: req.body.shortDescription,
+            content: req.body.content,
+            blogId: req.body.blogId
+        })
+        res.status(HTTP_statuses.NO_CONTENT_204).send(result)
     }
     else
         res.sendStatus(HTTP_statuses.NOT_FOUND_404)
@@ -53,12 +54,11 @@ PostsRouter.put('/:id',  authBasic,  paramsCheckingPosts.title,  paramsCheckingP
 
 })
 PostsRouter.delete('/:id',  authBasic,  (req:Request<{id:string}>, res:Response)=>{
-    const post = DB.posts.find(p => p.id === req.params.id)
-    if(!post){
+    const del = postsRepository.deletePost(req.params.id)
+    if(!del){
         res.sendStatus(HTTP_statuses.NOT_FOUND_404)
     }
     else{
-        DB.posts.splice(DB.posts.indexOf(<PostsMainType>post), 1)
         res.sendStatus(HTTP_statuses.NO_CONTENT_204)
     }
 
