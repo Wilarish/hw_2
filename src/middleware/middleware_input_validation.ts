@@ -40,7 +40,7 @@ export const errorsChecking = (req:Request, res:Response, next: NextFunction) =>
     const errors = validationResult(req).formatWith(errorFormatter);
     console.log("checking...")
     if (!errors.isEmpty()) {
-        res.status(HTTP_statuses.BAD_REQUEST_400).send({ errorsMessages: errors.array() });
+        res.status(HTTP_statuses.BAD_REQUEST_400).send({ errors: errors.array() });
     }else next();
 }
 
