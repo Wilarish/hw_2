@@ -17,7 +17,8 @@ BlogsRouter.get('/:id', errorsChecking ,(req:Request<{id:string}>, res:Response)
         res.send(blog)
 
 })
-BlogsRouter.post('/',  authBasic,  paramsCheckingBlogs.websiteUrl,  paramsCheckingBlogs.name,  paramsCheckingBlogs.description,  errorsChecking,  (req:Request<{},{},{id: string, name: string, description: string, websiteUrl: string}>, res:Response)=>{
+const postParams =[paramsCheckingBlogs.websiteUrl,  paramsCheckingBlogs.name,  paramsCheckingBlogs.description,]
+BlogsRouter.post('/',  authBasic, postParams,    errorsChecking,  (req:Request<{},{},{id: string, name: string, description: string, websiteUrl: string}>, res:Response)=>{
     const new_blog:BlogsMainType ={
         id: new Date().toISOString(),
         name: req.body.name,

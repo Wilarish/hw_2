@@ -7,7 +7,7 @@ export const  blogsRepository = {
             return blog
         }
         else {
-            return false
+            return null
         }
     }
 }

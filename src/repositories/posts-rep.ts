@@ -23,7 +23,7 @@ export const  postsRepository = {
             shortDescription: data.shortDescription,
             content: data.content,
             blogId: data.blogId,
-            blogName: find_blog ? find_blog.name : 'nope'
+            blogName: find_blog!.name
         }
         return new_post
     },
@@ -35,14 +35,14 @@ export const  postsRepository = {
         post.shortDescription =data.shortDescription
         post.content= data.content
         post.blogId = data.blogId
-        post.blogName = find_blog ? find_blog.name : 'nope'
+        post.blogName = find_blog!.name
 
         return post
     },
     deletePost(id: string){
 
         const post: any = DB.posts.find(p => p.id === id)
-        if(typeof post === 'undefined')
+        if(!post)
             return false
         else {
             DB.posts.splice(DB.posts.indexOf(post), 1)
