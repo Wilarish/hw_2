@@ -21,8 +21,8 @@ app.use(RouterPath.posts, PostsRouter)
 app.get('/', (req:Request, res:Response) => {
     res.send('Hello World!)***(')
 })
-app.delete('/testing/all-data',  (req:Request, res:Response)=>{
-    posts_db.deleteMany({})
-    blogs_db.deleteMany({})
+app.delete('/testing/all-data',  async (req:Request, res:Response)=>{
+    await posts_db.deleteMany({})
+    await blogs_db.deleteMany({})
     res.sendStatus(HTTP_statuses.NO_CONTENT_204)
 })
