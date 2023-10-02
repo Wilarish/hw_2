@@ -5,30 +5,25 @@ import {blogs_db} from "../data/DB";
 
 
 export const paramsCheckingBlogs = {
-    id: body('id').isString().trim().isLength({min: 1}),
     name: body('name').isString().trim().isLength({min: 1, max: 15}),
     description: body('description').isString().trim().isLength({min: 1, max: 500}),
     websiteUrl: body('websiteUrl').isString().trim().isURL().isLength({min: 1, max: 100}),
-    createdAt: body("createdAt").isString().trim().isDate().isLength({min: 1, max: 100}),
-    isMembership: body("isMembership").isBoolean()
 }
 
 export const paramsCheckingPosts = {
-    id: body('id').isString().trim().isLength({min: 1}),
     title: body('title').isString().trim().isLength({min: 1, max: 30}),
     shortDescription: body('shortDescription').isString().trim().isLength({min: 1, max: 100}),
     content: body('content').isString().trim().isLength({min: 1, max: 1000}),
-    blogId: body('blogId').custom(value => {
+    blogId: body('blogId').custom(async (value) => {
 
-        const blog = blogs_db.find({id:value})
+        const blog = await blogs_db.findOne({id:value})
 
         if (!blog)
             throw new Error("error blogID")
 
         return true
 
-    }),
-    createdAt:body("createdAt").isString().trim().isDate().isLength({min: 1, max: 100})
+    })
 }
 const errorFormatter = (error: ValidationError) => {
     switch (error.type) {
