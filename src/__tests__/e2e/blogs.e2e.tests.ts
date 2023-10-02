@@ -3,7 +3,7 @@ import {app, RouterPath} from "../../settings";
 import {HTTP_statuses} from "../../data/HTTP_statuses";
 import {BlogsMainType} from "../../types/blogs/blogs-main-type";
 import {create_update_Blogs} from "../../types/blogs/blogs-create-update-type";
-describe('/videos', ()=>{
+describe('/blogs', ()=>{
     beforeAll(async ()=>{
         await request(app).delete('/testing/all-data')
     })
@@ -62,9 +62,13 @@ describe('/videos', ()=>{
         createdBlog_2 = response.body;
 
 
-        await request(app)
+       const res = await request(app)
             .get(RouterPath.blogs)
-            .expect(HTTP_statuses.OK_200, [createdBlog, createdBlog_2])
+            .expect(HTTP_statuses.OK_200, )
+
+        console.log(res.body)
+
+        expect(res.body).toEqual([createdBlog, createdBlog_2])
     });
     it('shouldn`t сreate blog with incorrect data', async () => {
 

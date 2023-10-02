@@ -4,12 +4,10 @@ import {HTTP_statuses} from "../../data/HTTP_statuses";
 import {PostsMainType} from "../../types/posts/posts-main-type";
 import {PostsCreateUpdate} from "../../types/posts/posts-create-update";
 import {BlogsMainType} from "../../types/blogs/blogs-main-type";
-import {DB} from "../../data/DB";
-import {create_update_Blogs} from "../../types/blogs/blogs-create-update-type";
 import {createBlogUtils} from "./utils/createBlog.utils";
 
 
-describe('/videos', ()=>{
+describe('/posts', ()=>{
 
 
     let createdPost: PostsMainType;
@@ -54,7 +52,8 @@ describe('/videos', ()=>{
         expect(response.body).toEqual({
             id: expect.any(String),
             ...data,
-            blogName: createdBlog.name
+            blogName: createdBlog.name,
+            createdAt: expect.any(String)
         })
 
         createdPost = response.body;
@@ -84,7 +83,8 @@ describe('/videos', ()=>{
         expect(response.body).toEqual({
             id: expect.any(String),
             ...data,
-            blogName: createdBlog.name
+            blogName: createdBlog.name,
+            createdAt: expect.any(String)
         })
 
         createdPost_2 = response.body;

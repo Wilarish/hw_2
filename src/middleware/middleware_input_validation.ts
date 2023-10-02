@@ -1,14 +1,16 @@
 import e, {Response, Request, NextFunction} from "express";
 import {body, ValidationError, validationResult} from "express-validator";
 import {HTTP_statuses} from "../data/HTTP_statuses";
-import {DB} from "../data/DB";
+import {blogs_db} from "../data/DB";
 
 
 export const paramsCheckingBlogs = {
     id: body('id').isString().trim().isLength({min: 1}),
     name: body('name').isString().trim().isLength({min: 1, max: 15}),
     description: body('description').isString().trim().isLength({min: 1, max: 500}),
-    websiteUrl: body('websiteUrl').isString().trim().isURL().isLength({min: 1, max: 100})
+    websiteUrl: body('websiteUrl').isString().trim().isURL().isLength({min: 1, max: 100}),
+    createdAt: body("createdAt").isString().trim().isDate().isLength({min: 1, max: 100}),
+    isMembership: body("isMembership").isBoolean()
 }
 
 export const paramsCheckingPosts = {
@@ -18,14 +20,15 @@ export const paramsCheckingPosts = {
     content: body('content').isString().trim().isLength({min: 1, max: 1000}),
     blogId: body('blogId').custom(value => {
 
-        const blog = DB.blogs.find(b => b.id === value)
+        const blog = blogs_db.find({id:value})
 
         if (!blog)
             throw new Error("error blogID")
 
         return true
 
-    })
+    }),
+    createdAt:body("createdAt").isString().trim().isDate().isLength({min: 1, max: 100})
 }
 const errorFormatter = (error: ValidationError) => {
     switch (error.type) {
