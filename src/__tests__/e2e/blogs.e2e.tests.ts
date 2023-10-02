@@ -25,8 +25,6 @@ describe('/blogs', ()=>{
             description: 'string',
             websiteUrl: 'https://www.google.com'
         }
-        // Don`t understand this one
-        //const {created_Video_Manager} = await video_test_manager.createUser(data)
 
          const response = await request(app)
              .post(RouterPath.blogs)
@@ -92,13 +90,13 @@ describe('/blogs', ()=>{
             websiteUrl: 'https://www.amazon.com'
         }
 
-        const notStringTitle = await request(app)
+        const notStringName = await request(app)
             .put(`${RouterPath.blogs}/${createdBlog.id}`)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send({...data, name: 123})
             .expect(HTTP_statuses.BAD_REQUEST_400 )
 
-        expect(notStringTitle.body).toEqual({
+        expect(notStringName.body).toEqual({
             errorsMessages: [
                 {
                     message: expect.any(String),
@@ -107,13 +105,13 @@ describe('/blogs', ()=>{
             ]
         })
 
-        const notULR = await request(app)
+        const descriptionIsNotString = await request(app)
             .put(`${RouterPath.blogs}/${createdBlog.id}`)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send({...data, description: 1111})
             .expect(HTTP_statuses.BAD_REQUEST_400 )
 
-        expect(notULR.body).toEqual({
+        expect(descriptionIsNotString.body).toEqual({
             errorsMessages: [
                 {
                     message: expect.any(String),
@@ -121,13 +119,13 @@ describe('/blogs', ()=>{
                 }
             ]
         })
-        const longDescription = await request(app)
+        const notUrl = await request(app)
             .put(`${RouterPath.blogs}/${createdBlog.id}`)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send({...data, websiteUrl: '-----/////'})
             .expect(HTTP_statuses.BAD_REQUEST_400 )
 
-        expect(longDescription.body).toEqual({
+        expect(notUrl.body).toEqual({
             errorsMessages: [
                 {
                     message: expect.any(String),
@@ -135,6 +133,7 @@ describe('/blogs', ()=>{
                 }
             ]
         })
+
 
         await request(app)
             .get(`${RouterPath.blogs}/${createdBlog.id}`)

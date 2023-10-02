@@ -7,7 +7,12 @@ import e from "express";
 
 
 export const blogsRepository = {
-    async findBlog(id: string): Promise<BlogsMainType | null> {
+
+    async findBlogs(): Promise<BlogsMainType[] | null> {
+        return await blogs_db.find({}, {projection: {_id: 0}}).toArray();
+    },
+
+    async findBlogById(id: string): Promise<BlogsMainType | null> {
 
         const blog: BlogsMainType|null = await blogs_db.findOne({id:id},{ projection: {  _id: 0 } } )
         // const blog: BlogsMainType | undefined = DB.blogs.find(b => b.id === id)
@@ -42,7 +47,7 @@ export const blogsRepository = {
 
 
         if(result.matchedCount === 1)
-            return blogsRepository.findBlog(id)
+            return blogsRepository.findBlogById(id)
         else
             return null
 
@@ -54,12 +59,7 @@ export const blogsRepository = {
 
         return result.deletedCount === 1
 
-        //const blog: BlogsMainType | null | undefined = await DB.blogs.find(b => b.id === id)
-        // if (!result)
-        //     return false
-        // else {
-        //     //DB.blogs.splice(DB.blogs.indexOf(blog), 1)
-        //     return true
+
         }
 
     }

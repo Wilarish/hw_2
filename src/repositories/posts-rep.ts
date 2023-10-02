@@ -5,7 +5,12 @@ import {blogsRepository} from "./blogs-rep";
 import {BlogsMainType} from "../types/blogs/blogs-main-type";
 
 export const postsRepository = {
-    async findPost(id: string): Promise<PostsMainType | null> {
+
+    async findPosts(): Promise<PostsMainType[] | null> {
+        return  await posts_db.find({},{ projection: {  _id: 0 } }).toArray()
+    },
+
+    async findPostById(id: string): Promise<PostsMainType | null> {
         const post: PostsMainType|null = await posts_db.findOne({id:id},{ projection: {  _id: 0 } })
         if (!post) {
             return null
@@ -15,7 +20,7 @@ export const postsRepository = {
     },
     async createPost(data: PostsCreateUpdate): Promise<PostsMainType> {
 
-        const find_blog: BlogsMainType | null = await blogsRepository.findBlog(data.blogId)
+        const find_blog: BlogsMainType | null = await blogsRepository.findBlogById(data.blogId)
 
         const new_post: PostsMainType = {
 
@@ -34,7 +39,7 @@ export const postsRepository = {
     },
     async updatePost(id: string, data: PostsCreateUpdate): Promise<PostsMainType | null> {
 
-        const find_blog: BlogsMainType | null = await blogsRepository.findBlog(data.blogId)
+        const find_blog: BlogsMainType | null = await blogsRepository.findBlogById(data.blogId)
 
         const result = await posts_db.updateOne({id:id},{$set:{
 
@@ -47,7 +52,7 @@ export const postsRepository = {
 
 
         if (result.matchedCount === 1)
-            return postsRepository.findPost(id)
+            return postsRepository.findPostById(id)
         else
             return null
     },
