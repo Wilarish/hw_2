@@ -5,7 +5,7 @@ import {RunDb} from "./data/DB";
 const port = process.env.PORT || 3005
 
 
-const  startApp = async ()=>{
+export const  startApp = async ()=>{
     await RunDb()
     app.listen(port, () => {
         console.log(`Example app listening on port ${port}`)
