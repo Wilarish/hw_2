@@ -1,5 +1,5 @@
 import {PostsCreateUpdate} from "../types/posts/posts-create-update";
-import {posts_db} from "../data/DB";
+import {blogs_db, posts_db} from "../data/DB";
 import {PostsMainType} from "../types/posts/posts-main-type";
 import {blogsRepository} from "./blogs-rep";
 import {BlogsMainType} from "../types/blogs/blogs-main-type";
@@ -63,6 +63,10 @@ export const postsRepository = {
         return result.deletedCount === 1
 
 
+    },
+    async deleteAllPosts(): Promise<boolean> {
+        await posts_db.deleteMany({})
+        return true
     }
 
 }

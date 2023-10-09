@@ -1,20 +1,26 @@
-import {Response, Request, Router} from "express";
+import e, {Response, Request, Router} from "express";
 import {BlogsMainType} from "../types/blogs/blogs-main-type";
 import {HTTP_statuses} from "../data/HTTP_statuses";
 import {authBasic, errorsChecking} from "../middleware/middleware_input_validation";
+import {InputValidBlogs, InputValidPosts} from "../middleware/arrays_of_input_validation";
+import {blogsServise} from "../domain/blogs-servise";
 import {blogsRepository} from "../repositories/blogs-rep";
-import {InputValidBlogs} from "../middleware/arrays_of_input_validation";
+import {PostsRouter} from "./posts-router";
+import {postsRepository} from "../repositories/posts-rep";
+import {PostsMainType} from "../types/posts/posts-main-type";
+import {getBlogsPagination} from "../helpers/pagination.helper";
 
 export const BlogsRouter = Router()
 
 BlogsRouter.get('/', async(req: Request, res: Response) => {
-    const blogs =await blogsRepository.findBlogs()
+    const pagination = getBlogsPagination(req.query)
+    const blogs = await blogsRepository.findBlogs(pagination)
 
     return res.send(blogs)
 })
 BlogsRouter.get('/:id', errorsChecking, async (req: Request<{ id: string }>, res: Response) => {
 
-    const blog: BlogsMainType | null = await blogsRepository.findBlogById(req.params.id)
+    const blog: BlogsMainType | null = await blogsServise.findBlogById(req.params.id)
 
     if (!blog)
         res.sendStatus(HTTP_statuses.NOT_FOUND_404)
@@ -22,9 +28,15 @@ BlogsRouter.get('/:id', errorsChecking, async (req: Request<{ id: string }>, res
         res.send(blog)
 
 })
+BlogsRouter.get('/:id/posts', errorsChecking, async (req: Request<{id: string}>, res:Response)=>{
+
+    const result =  await blogsServise.findPostsForBlogsById(req.params.id)
+    res.status(HTTP_statuses.OK_200).send(result)
+
+})
 BlogsRouter.post('/', authBasic, InputValidBlogs.post, errorsChecking, async (req: Request<{}, {}, { id: string, name: string, description: string, websiteUrl: string }>, res: Response) => {
 
-    const new_blog: BlogsMainType = await blogsRepository.createBlog({
+    const new_blog: BlogsMainType = await blogsServise.createBlog({
         name: req.body.name,
         description: req.body.description,
         websiteUrl: req.body.websiteUrl
@@ -32,14 +44,29 @@ BlogsRouter.post('/', authBasic, InputValidBlogs.post, errorsChecking, async (re
 
     res.status(HTTP_statuses.CREATED_201).send(new_blog)
 })
+BlogsRouter.post('/:id/posts', authBasic, InputValidPosts.post_NoBlogId, errorsChecking, async (req: Request<{
+    id: string }, {}, { title: string, shortDescription: string, content: string, blogId: string, blogName: string }>, res: Response)=>{
+
+
+    const  new_post:PostsMainType =  await postsRepository.createPost({
+        title: req.body.title,
+        shortDescription: req.body.shortDescription,
+        content: req.body.content,
+        blogId: req.params.id
+    })
+
+    res.status(HTTP_statuses.CREATED_201).send(new_post)
+
+
+})
 BlogsRouter.put('/:id', authBasic, InputValidBlogs.put, errorsChecking, async (req: Request<{
     id: string
 }, {}, { id: string, name: string, description: string, websiteUrl: string }>, res: Response) => {
 
-    const new_blog: BlogsMainType | null = await blogsRepository.findBlogById(req.params.id)
+    const new_blog: BlogsMainType | null = await blogsServise.findBlogById(req.params.id)
 
     if (new_blog) {
-        const result: BlogsMainType | null = await blogsRepository.updateBlog(req.params.id, {
+        const result: BlogsMainType | null = await blogsServise.updateBlog(req.params.id, {
             name: req.body.name,
             description: req.body.description,
             websiteUrl: req.body.websiteUrl
@@ -52,7 +79,7 @@ BlogsRouter.put('/:id', authBasic, InputValidBlogs.put, errorsChecking, async (r
 })
 BlogsRouter.delete('/:id', authBasic, async (req: Request<{ id: string }>, res: Response) => {
 
-    const del:boolean = await blogsRepository.deleteBlog(req.params.id)
+    const del:boolean = await blogsServise.deleteBlog(req.params.id)
 
     if (!del) {
         res.sendStatus(HTTP_statuses.NOT_FOUND_404)

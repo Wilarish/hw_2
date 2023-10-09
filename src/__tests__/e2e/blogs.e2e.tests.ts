@@ -4,8 +4,12 @@ import {HTTP_statuses} from "../../data/HTTP_statuses";
 import {BlogsMainType} from "../../types/blogs/blogs-main-type";
 import {create_update_Blogs} from "../../types/blogs/blogs-create-update-type";
 describe('/blogs', ()=>{
+
     beforeAll(async ()=>{
-        await request(app).delete('/testing/all-data')
+        await request(app)
+            .delete('/testing/all-data')
+            .expect(HTTP_statuses.NO_CONTENT_204)
+
     })
 
 
@@ -48,8 +52,7 @@ describe('/blogs', ()=>{
             description: 'string_2',
             websiteUrl: 'https://www.amazon.com'
         }
-        // // Don`t understand this one
-        // const {created_Video_Manager} = await video_test_manager.createUser(data)
+
 
         const response = await  request(app)
             .post(RouterPath.blogs)
@@ -64,7 +67,6 @@ describe('/blogs', ()=>{
             .get(RouterPath.blogs)
             .expect(HTTP_statuses.OK_200, )
 
-        console.log(res.body)
 
         expect(res.body).toEqual([createdBlog, createdBlog_2])
     });
@@ -161,7 +163,7 @@ describe('/blogs', ()=>{
             description: 'string_put_@',
             websiteUrl: 'https://www.amazon.com/users/types'
         }
-        const res = await request(app)
+        await request(app)
             .put(`${RouterPath.blogs}/${createdBlog.id}`)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send(data)

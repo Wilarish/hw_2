@@ -5,6 +5,9 @@ import {PostsMainType} from "../../types/posts/posts-main-type";
 import {PostsCreateUpdate} from "../../types/posts/posts-create-update";
 import {BlogsMainType} from "../../types/blogs/blogs-main-type";
 import {createBlogUtils} from "./utils/createBlog.utils";
+import {create_update_Blogs} from "../../types/blogs/blogs-create-update-type";
+import {posts_db} from "../../data/DB";
+import {postsRepository} from "../../repositories/posts-rep";
 
 
 describe('/posts', ()=>{
@@ -16,9 +19,9 @@ describe('/posts', ()=>{
 
 
     beforeAll(async ()=>{
-        await request(app).delete('/testing/all-data');
-
-
+        await request(app)
+            .delete('/testing/all-data')
+            .expect(HTTP_statuses.NO_CONTENT_204)
 
     })
 
@@ -109,6 +112,40 @@ describe('/posts', ()=>{
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send({...data, title:123})
             .expect(HTTP_statuses.BAD_REQUEST_400)
+    });
+    it('should update "blogName" when field "name" in blog has been updated', async () => {
+
+        const data:create_update_Blogs = {
+            name: 'change',
+            description: 'change',
+            websiteUrl: 'https://www.change.com'
+        }
+        await request(app)
+            .put(`${RouterPath.blogs}/${createdBlog.id}`)
+            .set("Authorization", "Basic YWRtaW46cXdlcnR5")
+            .send(data)
+            .expect(HTTP_statuses.NO_CONTENT_204)
+
+
+        const result =  await request(app)
+            .get(`${RouterPath.blogs}/${createdBlog.id}`)
+            .expect(HTTP_statuses.OK_200 )
+
+
+        let updateDataPostFromDb  = await postsRepository.findPostById(createdPost.id)
+        if (updateDataPostFromDb) createdPost = updateDataPostFromDb
+
+
+        await request(app)
+            .get(`${RouterPath.posts}/${createdPost.id}`)
+            .expect(HTTP_statuses.OK_200, {...createdPost, blogName:"change"})
+
+
+
+        await request(app)
+            .get(`${RouterPath.posts}/${createdPost_2.id}`)
+            .expect(HTTP_statuses.OK_200, {...createdPost_2, blogName:"change"})
+
     });
     it('shouldn`t update post ', async () => {
 

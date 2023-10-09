@@ -1,10 +1,10 @@
 import {Request, Response, Router} from "express";
-import {posts_db} from "../data/DB";
 import {authBasic, errorsChecking} from "../middleware/middleware_input_validation";
 import {HTTP_statuses} from "../data/HTTP_statuses";
 import {PostsMainType} from "../types/posts/posts-main-type";
 import {postsRepository} from "../repositories/posts-rep";
 import {InputValidPosts} from "../middleware/arrays_of_input_validation";
+import {body} from "express-validator";
 
 
 export const PostsRouter = Router()
@@ -25,7 +25,7 @@ PostsRouter.get('/:id', errorsChecking ,async (req: Request<{ id: string }>, res
         res.send(post)
 
 })
-PostsRouter.post('/',  authBasic,  InputValidPosts.post,  errorsChecking, async  (req:Request<{},{},{id: string, title: string, shortDescription: string, content: string, blogId: string, blogName: string }>, res:Response)=>{
+PostsRouter.post('/',  authBasic,  InputValidPosts.post,  errorsChecking, async  (req:Request<{},{},{ title: string, shortDescription: string, content: string, blogId: string, blogName: string }>, res:Response)=>{
 
     const  new_post:PostsMainType =  await postsRepository.createPost({
 

@@ -4,28 +4,10 @@ import dotenv from 'dotenv'
 import {BlogsMainType} from "../types/blogs/blogs-main-type";
 import {PostsMainType} from "../types/posts/posts-main-type";
 
-// export const DB: DBType = {
-//     blogs: [{
-//         id: "any_id",
-//         name: "any_name",
-//         description: "any_description",
-//         websiteUrl: "any_websiteUrl"
-//     }],
-//     posts: [{
-//         id: 'string',
-//         title: 'string',
-//         shortDescription: 'string',
-//         content: 'string',
-//         blogId: 'any_id',
-//         blogName: 'any_name'
-//     }]
-// }
-
-
 dotenv.config()
 
 
-const mongoURI = process.env.MONGO_URL || 'mongodb://0.0.0.0:27017'
+const mongoURI =/* process.env.MONGO_URL ||*/'mongodb://0.0.0.0:27017/Posts_Blogs_HW2'
 
 if(!mongoURI)
     throw new Error("!err url")

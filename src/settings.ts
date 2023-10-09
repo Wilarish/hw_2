@@ -3,6 +3,8 @@ import {BlogsRouter} from "./routes/blogs-router";
 import {HTTP_statuses} from "./data/HTTP_statuses";
 import {PostsRouter} from "./routes/posts-router";
 import {blogs_db, posts_db} from "./data/DB";
+import {postsRepository} from "./repositories/posts-rep";
+import {blogsRepository} from "./repositories/blogs-rep";
 
 
 export const app = express()
@@ -22,7 +24,7 @@ app.get('/', (req:Request, res:Response) => {
     res.send('Hello World!)***(')
 })
 app.delete('/testing/all-data',  async (req:Request, res:Response)=>{
-    await posts_db.deleteMany({})
-    await blogs_db.deleteMany({})
+    await postsRepository.deleteAllPosts()
+    await blogsRepository.deleteAllBlogs()
     res.sendStatus(HTTP_statuses.NO_CONTENT_204)
 })

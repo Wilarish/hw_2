@@ -9,6 +9,7 @@ export const InputValidBlogs = {
 export const InputValidPosts = {
     get: [],
     post: [paramsCheckingPosts.title,  paramsCheckingPosts.shortDescription,  paramsCheckingPosts.content,  paramsCheckingPosts.blogId,],
+    post_NoBlogId:[paramsCheckingPosts.title,  paramsCheckingPosts.shortDescription,  paramsCheckingPosts.content],
     put: [paramsCheckingPosts.title,  paramsCheckingPosts.shortDescription,  paramsCheckingPosts.content,  paramsCheckingPosts.blogId],
     delete: [],
 }
