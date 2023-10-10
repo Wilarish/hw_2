@@ -3,11 +3,32 @@ import {blogs_db, posts_db} from "../data/DB";
 import {PostsMainType} from "../types/posts/posts-main-type";
 import {blogsRepository} from "./blogs-rep";
 import {BlogsMainType} from "../types/blogs/blogs-main-type";
+import {DefaultPaginationType, Paginated} from "../types/pagination.type";
 
 export const postsRepository = {
 
-    async findPosts(): Promise<PostsMainType[] | null> {
-        return  await posts_db.find({},{ projection: {  _id: 0 } }).toArray()
+    async findPosts(pagination: DefaultPaginationType): Promise<Paginated<PostsMainType>> {
+
+        const [items, totalCount] = await Promise.all([
+            posts_db
+                .find({}, {projection: {_id: 0}})
+                .sort({[pagination.sortBy]: pagination.sortDirection})
+                .skip(pagination.skip)
+                .limit(pagination.pageSize)
+                .toArray(),
+
+            posts_db.countDocuments()
+        ])
+
+        const pagesCount = Math.ceil(totalCount / pagination.pageSize)
+
+        return {
+            pagesCount,
+            page: pagination.pageNumber,
+            pageSize: pagination.pageSize,
+            totalCount,
+            items
+        }
     },
 
     async findPostById(id: string): Promise<PostsMainType | null> {

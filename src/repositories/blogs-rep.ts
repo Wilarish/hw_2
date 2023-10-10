@@ -18,6 +18,7 @@ export const blogsRepository = {
                 .skip(pagination.skip)
                 .limit(pagination.pageSize)
                 .toArray(),
+
             blogs_db.countDocuments(filter)
         ])
 

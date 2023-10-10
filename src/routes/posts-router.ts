@@ -5,12 +5,15 @@ import {PostsMainType} from "../types/posts/posts-main-type";
 import {postsRepository} from "../repositories/posts-rep";
 import {InputValidPosts} from "../middleware/arrays_of_input_validation";
 import {body} from "express-validator";
+import {getDefaultPagination} from "../helpers/pagination.helper";
+import {DefaultPaginationType, Paginated} from "../types/pagination.type";
 
 
 export const PostsRouter = Router()
 
 PostsRouter.get('/', async (req:Request, res:Response)=>{
-    const posts =await postsRepository.findPosts()
+    const pagination:DefaultPaginationType = getDefaultPagination(req.query)
+    const posts:Paginated<PostsMainType> = await postsRepository.findPosts(pagination)
 
     res.send(posts)
 })

@@ -7,7 +7,7 @@ import {PostsMainType} from "../types/posts/posts-main-type";
 dotenv.config()
 
 
-const mongoURI =/* process.env.MONGO_URL ||*/'mongodb://0.0.0.0:27017/Posts_Blogs_HW2'
+const mongoURI =process.env.MONGO_URL || 'mongodb://0.0.0.0:27017/Posts_Blogs_HW2'
 
 if(!mongoURI)
     throw new Error("!err url")

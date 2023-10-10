@@ -9,10 +9,6 @@ import {PostsMainType} from "../types/posts/posts-main-type";
 
 export const blogsServise = {
 
-    // async findBlogs(): Promise<BlogsMainType[] | null> {
-    //     return await blogsRepository.findBlogs()
-    // },
-
     async findBlogById(id: string): Promise<BlogsMainType | null> {
 
         return await blogsRepository.findBlogById(id)
