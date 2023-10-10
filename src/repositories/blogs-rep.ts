@@ -39,13 +39,6 @@ export const blogsRepository = {
 
         return blog
     },
-    // async findPostsForBlogsById(id: string): Promise<PostsMainType[]> {
-    //
-    //     const posts: PostsMainType[] = await posts_db.find({blogId: id}, {projection: {_id: 0}}).toArray()
-    //
-    //     return posts
-    //
-    // },
     async findPostsForBlogsById(id: string, pagination: DefaultPaginationType): Promise<Paginated<PostsMainType>> {
         const filter: Filter<PostsMainType> = {blogId: id}
 

@@ -29,6 +29,9 @@ BlogsRouter.get('/:id', errorsChecking, async (req: Request<{ id: string }>, res
 })
 BlogsRouter.get('/:id/posts', errorsChecking, async (req: Request<{id: string}>, res:Response)=>{
 
+    const blog = await blogsRepository.findBlogById(req.params.id)
+    if(!blog) res.sendStatus(HTTP_statuses.NOT_FOUND_404)
+
     const pagination = getDefaultPagination(req.query)
     const posts =  await blogsRepository.findPostsForBlogsById(req.params.id, pagination)
     res.status(HTTP_statuses.OK_200).send(posts)
