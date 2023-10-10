@@ -48,7 +48,7 @@ BlogsRouter.post('/:id/posts', authBasic, InputValidPosts.post_NoBlogId, errorsC
     id: string }, {}, { title: string, shortDescription: string, content: string, blogId: string, blogName: string }>, res: Response)=>{
 
     const blog = await blogsRepository.findBlogById(req.params.id)
-    if(!blog) return res.sendStatus(HTTP_statuses.BAD_REQUEST_400)
+    if(!blog) return res.sendStatus(HTTP_statuses.NOT_FOUND_404)
 
     const  new_post:PostsMainType =  await postsRepository.createPost({
         title: req.body.title,
