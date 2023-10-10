@@ -8,7 +8,7 @@ import {blogsRepository} from "../repositories/blogs-rep";
 import {PostsRouter} from "./posts-router";
 import {postsRepository} from "../repositories/posts-rep";
 import {PostsMainType} from "../types/posts/posts-main-type";
-import {getBlogsPagination} from "../helpers/pagination.helper";
+import {getBlogsPagination, getDefaultPagination} from "../helpers/pagination.helper";
 
 export const BlogsRouter = Router()
 
@@ -30,8 +30,9 @@ BlogsRouter.get('/:id', errorsChecking, async (req: Request<{ id: string }>, res
 })
 BlogsRouter.get('/:id/posts', errorsChecking, async (req: Request<{id: string}>, res:Response)=>{
 
-    const result =  await blogsServise.findPostsForBlogsById(req.params.id)
-    res.status(HTTP_statuses.OK_200).send(result)
+    const pagination = getDefaultPagination(req.query)
+    const posts =  await blogsRepository.findPostsForBlogsById(req.params.id, pagination)
+    res.status(HTTP_statuses.OK_200).send(posts)
 
 })
 BlogsRouter.post('/', authBasic, InputValidBlogs.post, errorsChecking, async (req: Request<{}, {}, { id: string, name: string, description: string, websiteUrl: string }>, res: Response) => {

@@ -14,11 +14,11 @@ export const blogsServise = {
         return await blogsRepository.findBlogById(id)
     },
 
-    async findPostsForBlogsById(id:string): Promise<PostsMainType[]>{
-
-        return await blogsRepository.findPostsForBlogsById(id)
-
-    },
+    // async findPostsForBlogsById(id:string): Promise<PostsMainType[]>{
+    //
+    //     return await blogsRepository.findPostsForBlogsById(id)
+    //
+    // },
     async createBlog(data: create_update_Blogs): Promise<BlogsMainType> {
 
         const new_blog: BlogsMainType = {
