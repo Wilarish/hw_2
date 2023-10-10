@@ -39,24 +39,11 @@ export const postsRepository = {
             return post
         }
     },
-    async createPost(data: PostsCreateUpdate): Promise<PostsMainType> {
+    async createPost(post: PostsMainType): Promise<PostsMainType> {
 
-        const find_blog: BlogsMainType | null = await blogsRepository.findBlogById(data.blogId)
+        await posts_db.insertOne({...post})
 
-        const new_post: PostsMainType = {
-
-            id: new Date().toISOString(),
-            title: data.title,
-            shortDescription: data.shortDescription,
-            content: data.content,
-            blogId: data.blogId,
-            blogName: find_blog!.name,
-            createdAt: new Date().toISOString()
-        }
-
-        await posts_db.insertOne({...new_post})
-
-        return new_post
+        return post
     },
     async updatePost(id: string, data: PostsCreateUpdate): Promise<PostsMainType | null> {
 

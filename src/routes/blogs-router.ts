@@ -8,6 +8,7 @@ import {blogsRepository} from "../repositories/blogs-rep";
 import {postsRepository} from "../repositories/posts-rep";
 import {PostsMainType} from "../types/posts/posts-main-type";
 import {getBlogsPagination, getDefaultPagination} from "../helpers/pagination.helper";
+import {postsServises} from "../domain/posts-servises";
 
 export const BlogsRouter = Router()
 
@@ -19,7 +20,7 @@ BlogsRouter.get('/', async(req: Request, res: Response) => {
 })
 BlogsRouter.get('/:id', errorsChecking, async (req: Request<{ id: string }>, res: Response) => {
 
-    const blog: BlogsMainType | null = await blogsServise.findBlogById(req.params.id)
+    const blog: BlogsMainType | null = await blogsRepository.findBlogById(req.params.id)
 
     if (!blog)
         res.sendStatus(HTTP_statuses.NOT_FOUND_404)
@@ -53,7 +54,7 @@ BlogsRouter.post('/:id/posts', authBasic, InputValidPosts.post_NoBlogId, errorsC
     const blog = await blogsRepository.findBlogById(req.params.id)
     if(!blog) return res.sendStatus(HTTP_statuses.NOT_FOUND_404)
 
-    const  new_post:PostsMainType =  await postsRepository.createPost({
+    const  new_post:PostsMainType =  await postsServises.createPost({
         title: req.body.title,
         shortDescription: req.body.shortDescription,
         content: req.body.content,
@@ -68,7 +69,7 @@ BlogsRouter.put('/:id', authBasic, InputValidBlogs.put, errorsChecking, async (r
     id: string
 }, {}, { id: string, name: string, description: string, websiteUrl: string }>, res: Response) => {
 
-    const new_blog: BlogsMainType | null = await blogsServise.findBlogById(req.params.id)
+    const new_blog: BlogsMainType | null = await blogsRepository.findBlogById(req.params.id)
 
     if (new_blog) {
         const result: BlogsMainType | null = await blogsServise.updateBlog(req.params.id, {

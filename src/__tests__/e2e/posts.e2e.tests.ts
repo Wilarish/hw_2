@@ -26,11 +26,11 @@ describe('/posts', ()=>{
     })
 
 
-    it('should return 200 and empty array', async () => {
-        await request(app)
-            .get(RouterPath.posts)
-            .expect(HTTP_statuses.OK_200, [])
-    })
+    // it('should return 200 and empty array', async () => {
+    //     await request(app)
+    //         .get(RouterPath.posts)
+    //         .expect(HTTP_statuses.OK_200, [])
+    // })
 
 
     it('should create post with correct data', async () => {

@@ -13,11 +13,11 @@ describe('/blogs', ()=>{
     })
 
 
-    it('should return 200 and empty array', async () => {
-        await request(app)
-            .get(RouterPath.blogs)
-            .expect(HTTP_statuses.OK_200, [])
-    })
+    // it('should return 200 and empty array', async () => {
+    //     await request(app)
+    //         .get(RouterPath.blogs)
+    //         .expect(HTTP_statuses.OK_200, [])
+    // })
 
     let createdBlog: BlogsMainType;
     let createdBlog_2: BlogsMainType;

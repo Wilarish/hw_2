@@ -8,6 +8,7 @@ import {body} from "express-validator";
 import {getDefaultPagination} from "../helpers/pagination.helper";
 import {DefaultPaginationType, Paginated} from "../types/pagination.type";
 import {blogsRepository} from "../repositories/blogs-rep";
+import {postsServises} from "../domain/posts-servises";
 
 
 export const PostsRouter = Router()
@@ -32,8 +33,7 @@ PostsRouter.get('/:id', errorsChecking ,async (req: Request<{ id: string }>, res
 PostsRouter.post('/',  authBasic,  InputValidPosts.post,  errorsChecking, async  (req:Request<{},{},{ title: string, shortDescription: string, content: string, blogId: string, blogName: string }>, res:Response)=>{
 
 
-
-    const  new_post:PostsMainType =  await postsRepository.createPost({
+    const  new_post:PostsMainType =  await postsServises.createPost({
 
             title: req.body.title,
             shortDescription: req.body.shortDescription,
@@ -49,7 +49,7 @@ PostsRouter.put('/:id',  authBasic,  InputValidPosts.put,  errorsChecking, async
     const new_post:PostsMainType| null|undefined = await postsRepository.findPostById(req.params.id)
 
     if (new_post) {
-        const result: PostsMainType| null = await postsRepository.updatePost(req.params.id, {
+        const result: PostsMainType| null = await postsServises.updatePost(req.params.id, {
 
             title: req.body.title,
             shortDescription: req.body.shortDescription,
@@ -66,7 +66,7 @@ PostsRouter.put('/:id',  authBasic,  InputValidPosts.put,  errorsChecking, async
 })
 PostsRouter.delete('/:id',  authBasic,  async (req: Request<{ id: string }>, res: Response) => {
 
-    const del: boolean = await postsRepository.deletePost(req.params.id)
+    const del: boolean = await postsServises.deletePost(req.params.id)
 
     if (!del) {
         res.sendStatus(HTTP_statuses.NOT_FOUND_404)
