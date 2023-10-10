@@ -1,11 +1,10 @@
-import e, {Response, Request, Router} from "express";
+import  {Response, Request, Router} from "express";
 import {BlogsMainType} from "../types/blogs/blogs-main-type";
 import {HTTP_statuses} from "../data/HTTP_statuses";
 import {authBasic, errorsChecking} from "../middleware/middleware_input_validation";
 import {InputValidBlogs, InputValidPosts} from "../middleware/arrays_of_input_validation";
 import {blogsServise} from "../domain/blogs-servise";
 import {blogsRepository} from "../repositories/blogs-rep";
-import {PostsRouter} from "./posts-router";
 import {postsRepository} from "../repositories/posts-rep";
 import {PostsMainType} from "../types/posts/posts-main-type";
 import {getBlogsPagination, getDefaultPagination} from "../helpers/pagination.helper";
@@ -48,15 +47,17 @@ BlogsRouter.post('/', authBasic, InputValidBlogs.post, errorsChecking, async (re
 BlogsRouter.post('/:id/posts', authBasic, InputValidPosts.post_NoBlogId, errorsChecking, async (req: Request<{
     id: string }, {}, { title: string, shortDescription: string, content: string, blogId: string, blogName: string }>, res: Response)=>{
 
+    const blog = await blogsRepository.findBlogById(req.params.id)
+    if(!blog) return res.sendStatus(HTTP_statuses.BAD_REQUEST_400)
 
     const  new_post:PostsMainType =  await postsRepository.createPost({
         title: req.body.title,
         shortDescription: req.body.shortDescription,
         content: req.body.content,
-        blogId: req.params.id
+        blogId: req.params.id,
     })
 
-    res.status(HTTP_statuses.CREATED_201).send(new_post)
+    return res.status(HTTP_statuses.CREATED_201).send(new_post)
 
 
 })

@@ -7,6 +7,7 @@ import {InputValidPosts} from "../middleware/arrays_of_input_validation";
 import {body} from "express-validator";
 import {getDefaultPagination} from "../helpers/pagination.helper";
 import {DefaultPaginationType, Paginated} from "../types/pagination.type";
+import {blogsRepository} from "../repositories/blogs-rep";
 
 
 export const PostsRouter = Router()
@@ -29,6 +30,8 @@ PostsRouter.get('/:id', errorsChecking ,async (req: Request<{ id: string }>, res
 
 })
 PostsRouter.post('/',  authBasic,  InputValidPosts.post,  errorsChecking, async  (req:Request<{},{},{ title: string, shortDescription: string, content: string, blogId: string, blogName: string }>, res:Response)=>{
+
+
 
     const  new_post:PostsMainType =  await postsRepository.createPost({
 
