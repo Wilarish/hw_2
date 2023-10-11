@@ -1,15 +1,15 @@
-import {paramsCheckingBlogs, paramsCheckingPosts} from "./middleware_input_validation";
+import {paramsCheckingBlogsBody, paramsCheckingPostsBody} from "./middleware_input_validation";
 
 export const InputValidBlogs = {
     get: [],
-    post: [paramsCheckingBlogs.websiteUrl, paramsCheckingBlogs.name, paramsCheckingBlogs.description,],
-    put: [paramsCheckingBlogs.websiteUrl, paramsCheckingBlogs.name, paramsCheckingBlogs.description],
+    post: [paramsCheckingBlogsBody.websiteUrl, paramsCheckingBlogsBody.name, paramsCheckingBlogsBody.description,],
+    put: [paramsCheckingBlogsBody.websiteUrl, paramsCheckingBlogsBody.name, paramsCheckingBlogsBody.description],
     delete: [],
 }
 export const InputValidPosts = {
     get: [],
-    post: [paramsCheckingPosts.title,  paramsCheckingPosts.shortDescription,  paramsCheckingPosts.content,  paramsCheckingPosts.blogId,],
-    post_NoBlogId:[paramsCheckingPosts.title,  paramsCheckingPosts.shortDescription,  paramsCheckingPosts.content],
-    put: [paramsCheckingPosts.title,  paramsCheckingPosts.shortDescription,  paramsCheckingPosts.content,  paramsCheckingPosts.blogId],
+    post: [paramsCheckingPostsBody.title,  paramsCheckingPostsBody.shortDescription,  paramsCheckingPostsBody.content,  paramsCheckingPostsBody.blogId,],
+    post_NoBlogId:[paramsCheckingPostsBody.title,  paramsCheckingPostsBody.shortDescription,  paramsCheckingPostsBody.content],
+    put: [paramsCheckingPostsBody.title,  paramsCheckingPostsBody.shortDescription,  paramsCheckingPostsBody.content,  paramsCheckingPostsBody.blogId],
     delete: [],
 }

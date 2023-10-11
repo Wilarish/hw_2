@@ -2,15 +2,22 @@ import  {Response, Request, NextFunction} from "express";
 import {body, ValidationError, validationResult} from "express-validator";
 import {HTTP_statuses} from "../data/HTTP_statuses";
 import {blogs_db} from "../data/DB";
+import {blogsRepository} from "../repositories/blogs-rep";
 
 
-export const paramsCheckingBlogs = {
+export const paramsCheckingBlogsBody = {
     name: body('name').isString().trim().isLength({min: 1, max: 15}),
     description: body('description').isString().trim().isLength({min: 1, max: 500}),
     websiteUrl: body('websiteUrl').isString().trim().isURL().isLength({min: 1, max: 100}),
 }
+export const blogIdPostsChecking = async (req:Request, res:Response, next:NextFunction) => {
+    const blog = await blogsRepository.findBlogById(req.params.id)
+    if(!blog) res.sendStatus(HTTP_statuses.NOT_FOUND_404)
+    next()
+}
 
-export const paramsCheckingPosts = {
+
+export const paramsCheckingPostsBody = {
     title: body('title').isString().trim().isLength({min: 1, max: 30}),
     shortDescription: body('shortDescription').isString().trim().isLength({min: 1, max: 100}),
     content: body('content').isString().trim().isLength({min: 1, max: 1000}),

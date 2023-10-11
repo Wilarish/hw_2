@@ -1,7 +1,7 @@
 import  {Response, Request, Router} from "express";
 import {BlogsMainType} from "../types/blogs/blogs-main-type";
 import {HTTP_statuses} from "../data/HTTP_statuses";
-import {authBasic, errorsChecking} from "../middleware/middleware_input_validation";
+import {authBasic, blogIdPostsChecking, errorsChecking} from "../middleware/middleware_input_validation";
 import {InputValidBlogs, InputValidPosts} from "../middleware/arrays_of_input_validation";
 import {blogsServise} from "../domain/blogs-servise";
 import {blogsRepository} from "../repositories/blogs-rep";
@@ -28,14 +28,14 @@ BlogsRouter.get('/:id', errorsChecking, async (req: Request<{ id: string }>, res
         res.send(blog)
 
 })
-BlogsRouter.get('/:id/posts', errorsChecking, async (req: Request<{id: string}>, res:Response)=>{
+BlogsRouter.get('/:id/posts',  blogIdPostsChecking,  errorsChecking, async (req: Request<{id: string}>, res:Response)=>{
 
-    const blog = await blogsRepository.findBlogById(req.params.id)
-    if(!blog) return  res.sendStatus(HTTP_statuses.NOT_FOUND_404)
+    // const blog = await blogsRepository.findBlogById(req.params.id)
+    // if(!blog) return  res.sendStatus(HTTP_statuses.NOT_FOUND_404)
 
     const pagination = getDefaultPagination(req.query)
     const posts =  await blogsRepository.findPostsForBlogsById(req.params.id, pagination)
-    return  res.status(HTTP_statuses.OK_200).send(posts)
+    return res.status(HTTP_statuses.OK_200).send(posts)
 
 })
 BlogsRouter.post('/', authBasic, InputValidBlogs.post, errorsChecking, async (req: Request<{}, {}, { id: string, name: string, description: string, websiteUrl: string }>, res: Response) => {
@@ -48,11 +48,11 @@ BlogsRouter.post('/', authBasic, InputValidBlogs.post, errorsChecking, async (re
 
     res.status(HTTP_statuses.CREATED_201).send(new_blog)
 })
-BlogsRouter.post('/:id/posts', authBasic, InputValidPosts.post_NoBlogId, errorsChecking, async (req: Request<{
+BlogsRouter.post('/:id/posts', authBasic,  blogIdPostsChecking, InputValidPosts.post_NoBlogId, errorsChecking, async (req: Request<{
     id: string }, {}, { title: string, shortDescription: string, content: string, blogId: string, blogName: string }>, res: Response)=>{
 
-    const blog = await blogsRepository.findBlogById(req.params.id)
-    if(!blog) return res.sendStatus(HTTP_statuses.NOT_FOUND_404)
+    // const blog = await blogsRepository.findBlogById(req.params.id)
+    // if(!blog) return res.sendStatus(HTTP_statuses.NOT_FOUND_404)
 
     const  new_post:PostsMainType =  await postsServises.createPost({
         title: req.body.title,
