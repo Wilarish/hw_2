@@ -1,4 +1,4 @@
-import {paramsCheckingBlogsBody, paramsCheckingPostsBody} from "./middleware_input_validation";
+import {blogIdPostsChecking, paramsCheckingBlogsBody, paramsCheckingPostsBody} from "./middleware_input_validation";
 
 export const InputValidBlogs = {
     get: [],
@@ -9,7 +9,7 @@ export const InputValidBlogs = {
 export const InputValidPosts = {
     get: [],
     post: [paramsCheckingPostsBody.title,  paramsCheckingPostsBody.shortDescription,  paramsCheckingPostsBody.content,  paramsCheckingPostsBody.blogId,],
-    post_NoBlogId:[paramsCheckingPostsBody.title,  paramsCheckingPostsBody.shortDescription,  paramsCheckingPostsBody.content],
+    postWithUriBlogId:[paramsCheckingPostsBody.title,  paramsCheckingPostsBody.shortDescription,  paramsCheckingPostsBody.content, blogIdPostsChecking],
     put: [paramsCheckingPostsBody.title,  paramsCheckingPostsBody.shortDescription,  paramsCheckingPostsBody.content,  paramsCheckingPostsBody.blogId],
     delete: [],
 }

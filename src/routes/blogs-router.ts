@@ -30,8 +30,7 @@ BlogsRouter.get('/:id', errorsChecking, async (req: Request<{ id: string }>, res
 })
 BlogsRouter.get('/:id/posts',  blogIdPostsChecking,  errorsChecking, async (req: Request<{id: string}>, res:Response)=>{
 
-    // const blog = await blogsRepository.findBlogById(req.params.id)
-    // if(!blog) return  res.sendStatus(HTTP_statuses.NOT_FOUND_404)
+
 
     const pagination = getDefaultPagination(req.query)
     const posts =  await blogsRepository.findPostsForBlogsById(req.params.id, pagination)
@@ -48,11 +47,9 @@ BlogsRouter.post('/', authBasic, InputValidBlogs.post, errorsChecking, async (re
 
     res.status(HTTP_statuses.CREATED_201).send(new_blog)
 })
-BlogsRouter.post('/:id/posts', authBasic,  blogIdPostsChecking, InputValidPosts.post_NoBlogId, errorsChecking, async (req: Request<{
+BlogsRouter.post('/:id/posts', authBasic,  InputValidPosts.postWithUriBlogId, errorsChecking, async (req: Request<{
     id: string }, {}, { title: string, shortDescription: string, content: string, blogId: string, blogName: string }>, res: Response)=>{
 
-    // const blog = await blogsRepository.findBlogById(req.params.id)
-    // if(!blog) return res.sendStatus(HTTP_statuses.NOT_FOUND_404)
 
     const  new_post:PostsMainType =  await postsServises.createPost({
         title: req.body.title,
