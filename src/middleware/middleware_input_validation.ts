@@ -10,7 +10,7 @@ export const paramsCheckingBlogsBody = {
     description: body('description').isString().trim().isLength({min: 1, max: 500}),
     websiteUrl: body('websiteUrl').isString().trim().isURL().isLength({min: 1, max: 100}),
 }
-export const blogIdPostsChecking = async (req:Request, res:Response, next:NextFunction) => {
+export const blogIdPostsChecking = async (req:Request<{id:string}>, res:Response, next:NextFunction) => {
     const blog = await blogsRepository.findBlogById(req.params.id)
     if(!blog) res.sendStatus(HTTP_statuses.NOT_FOUND_404)
     next()
