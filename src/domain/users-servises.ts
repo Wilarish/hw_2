@@ -2,17 +2,16 @@ import {UsersCreate} from "../types/users/users-create";
 import {UsersMainType} from "../types/users/users-main-type";
 import {usersRepository} from "../repositories/users-rep";
 import bcrypt from 'bcrypt';
-import {UserDbType} from "../types/users/user-db-type";
 
 
 export const usresServises = {
-    async createUser(data: UsersCreate) {
+    async createUser(data: UsersCreate): Promise<UsersMainType> {
 
         const passwordSalt: string = await bcrypt.genSalt(10)
-        const passwordHash: string = await this.PasswordHash(data.password, passwordSalt)
+        const passwordHash: string = await this.passwordHash(data.password, passwordSalt)
 
 
-        const new_user: UserDbType = {
+        const new_user: UsersMainType = {
 
             id: new Date().toISOString(),
             login: data.login,
@@ -25,14 +24,26 @@ export const usresServises = {
         return usersRepository.createUser(new_user)
 
     },
-    async PasswordHash(password:string, passwordSalt:string){
+    async passwordHash(password: string, passwordSalt: string): Promise<string> {
         const hash = await bcrypt.hash(password, passwordSalt)
-        console.log('hash' + hash)
+
         return hash
     },
-    async deleteUser(id:string){
+    async deleteUser(id: string): Promise<boolean> {
 
         return usersRepository.deleteUser(id)
+    },
+    async login(loginOrEmail: string, password: string): Promise<boolean> {
+        const user: UsersMainType | null = await usersRepository.findUserByLoginOrEmail(loginOrEmail)
+
+        if (!user) return false
+
+        const hash: string = await this.passwordHash(password, user.passwordSalt)
+        if (hash !== user.passwordHash) return false
+
+        return true
+
+
     }
 
 }

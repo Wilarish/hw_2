@@ -5,12 +5,13 @@ import {DefaultPaginationType, Paginated, UsersPaginationType} from "../types/pa
 import {PostsMainType} from "../types/posts/posts-main-type";
 import {DeleteResult} from "mongodb";
 
+
 export const usersRepository = {
     async findUsers(pagination: UsersPaginationType): Promise<Paginated<UsersMainType>> {
 
         const [items, totalCount] = await Promise.all([
             users_db
-                .find({}, {projection: {_id: 0, passwordSalt:0, passwordHash:0}})
+                .find({}, {projection: {_id: 0, passwordSalt: 0, passwordHash: 0}})
                 .sort({[pagination.sortBy]: pagination.sortDirection})
                 .skip(pagination.skip)
                 .limit(pagination.pageSize)
@@ -29,18 +30,23 @@ export const usersRepository = {
             items
         }
     },
-    async findUserById(id:string){
-       const user:UsersMainType|null = await users_db.findOne({id:id})
+    async findUserByLoginOrEmail(loginOrEmail: string): Promise<UsersMainType | null> {
+        const user = await users_db.findOne({$or: [{login: loginOrEmail}, {email: loginOrEmail}]})
 
-       return user
+        return user
     },
-    async createUser(user:UsersMainType): Promise<UsersMainType>{
+    async findUserById(id: string) {
+        const user: UsersMainType | null = await users_db.findOne({id: id})
+
+        return user
+    },
+    async createUser(user: UsersMainType): Promise<UsersMainType> {
         await users_db.insertOne({...user})
         return user
     },
-    async deleteUser(id:string): Promise<boolean>{
+    async deleteUser(id: string): Promise<boolean> {
 
-        const result:DeleteResult  = await posts_db.deleteOne({id:id})
+        const result: DeleteResult = await posts_db.deleteOne({id: id})
 
         return result.deletedCount === 1
 
