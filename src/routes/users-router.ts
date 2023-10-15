@@ -4,7 +4,7 @@ import {usersRepository} from "../repositories/users-rep";
 import {Paginated, UsersPaginationType} from "../types/pagination.type";
 import {UsersCreate} from "../types/users/users-create";
 import {UsersMainType} from "../types/users/users-main-type";
-import {authBasic} from "../middleware/middleware_input_validation";
+import {authBasic, errorsChecking} from "../middleware/middleware_input_validation";
 import {usresServises} from "../domain/users-servises";
 import {InputValidationUsers} from "../middleware/arrays_of_input_validation";
 import {HTTP_statuses} from "../data/HTTP_statuses";
@@ -18,7 +18,7 @@ UsersRouter.get('/', authBasic, async (req: Request, res:Response) =>{
 
     res.status(HTTP_statuses.OK_200).send(users)
 })
-UsersRouter.post('/', authBasic,  InputValidationUsers.post, async (req:Request<{},{},{login: string, email: string, password: string},{}>, res:Response)=>{
+UsersRouter.post('/', authBasic,  InputValidationUsers.post, errorsChecking,  async (req:Request<{},{},{login: string, email: string, password: string},{}>, res:Response)=>{
     const data:UsersCreate = {
         login: req.body.login,
         email: req.body.email,

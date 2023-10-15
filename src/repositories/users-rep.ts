@@ -1,10 +1,8 @@
 import {UsersMainType} from "../types/users/users-main-type";
 import {posts_db, users_db} from "../data/DB";
 import {Paginated, UsersPaginationType} from "../types/pagination.type";
-
 import {DeleteResult} from "mongodb";
 import {UsersViewType} from "../types/users/users-view-type";
-import {rejects} from "assert";
 
 
 export const usersRepository = {
