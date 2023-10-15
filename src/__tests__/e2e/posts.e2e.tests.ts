@@ -5,9 +5,10 @@ import {PostsMainType} from "../../types/posts/posts-main-type";
 import {PostsCreateUpdate} from "../../types/posts/posts-create-update";
 import {BlogsMainType} from "../../types/blogs/blogs-main-type";
 import {createBlogUtils} from "./utils/createBlog.utils";
-import {create_update_Blogs} from "../../types/blogs/blogs-create-update-type";
-import {posts_db} from "../../data/DB";
+import {BlogsCreateUpdate} from "../../types/blogs/blogs-create-update-type";
+import {Paginated} from "../../types/pagination.type";
 import {postsRepository} from "../../repositories/posts-rep";
+
 
 
 describe('/posts', ()=>{
@@ -26,11 +27,12 @@ describe('/posts', ()=>{
     })
 
 
-    // it('should return 200 and empty array', async () => {
-    //     await request(app)
-    //         .get(RouterPath.posts)
-    //         .expect(HTTP_statuses.OK_200, [])
-    // })
+    it('should return 200 and empty array', async () => {
+        await request(app)
+            .get(RouterPath.posts)
+            .expect(HTTP_statuses.OK_200)
+            
+    })
 
 
     it('should create post with correct data', async () => {
@@ -115,7 +117,7 @@ describe('/posts', ()=>{
     });
     it('should update "blogName" when field "name" in blog has been updated', async () => {
 
-        const data:create_update_Blogs = {
+        const data:BlogsCreateUpdate = {
             name: 'change',
             description: 'change',
             websiteUrl: 'https://www.change.com'

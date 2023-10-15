@@ -1,6 +1,6 @@
 import {blogs_db, posts_db} from "../data/DB";
 import {BlogsMainType} from "../types/blogs/blogs-main-type";
-import {create_update_Blogs} from "../types/blogs/blogs-create-update-type";
+import {BlogsCreateUpdate} from "../types/blogs/blogs-create-update-type";
 import {PostsMainType} from "../types/posts/posts-main-type";
 import {BlogsPaginationType, DefaultPaginationType, Paginated} from "../types/pagination.type";
 import {Filter} from "mongodb";
@@ -69,7 +69,7 @@ export const blogsRepository = {
 
         return new_blog
     },
-    async updateBlog(id: string, data: create_update_Blogs): Promise<BlogsMainType | null> {
+    async updateBlog(id: string, data: BlogsCreateUpdate): Promise<BlogsMainType | null> {
 
         const result = await blogs_db.updateOne({id: id}, {
             $set: {

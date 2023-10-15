@@ -3,6 +3,9 @@ import {MongoClient} from "mongodb";
 import dotenv from 'dotenv'
 import {BlogsMainType} from "../types/blogs/blogs-main-type";
 import {PostsMainType} from "../types/posts/posts-main-type";
+import e from "express";
+import {UsersCreate} from "../types/users/users-create";
+import {UsersMainType} from "../types/users/users-main-type";
 
 dotenv.config()
 
@@ -16,6 +19,8 @@ const client = new MongoClient(mongoURI)
 const db= client.db()
 export const blogs_db = db.collection<BlogsMainType>("blogs")
 export const posts_db = db.collection<PostsMainType>("posts")
+
+export const users_db = db.collection<UsersMainType>("users")
 
 export async function RunDb() {
 

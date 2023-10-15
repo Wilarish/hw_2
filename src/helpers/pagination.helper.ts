@@ -1,4 +1,9 @@
-import {BlogsPaginationType, DefaultPaginationType, SortDirectionEnum} from "../types/pagination.type";
+import {
+    BlogsPaginationType,
+    DefaultPaginationType,
+    SortDirectionEnum,
+    UsersPaginationType
+} from "../types/pagination.type";
 import {BlogsMainType} from "../types/blogs/blogs-main-type";
 
 
@@ -30,4 +35,18 @@ export const getBlogsPagination = (query: any): BlogsPaginationType => {
     if(query.searchNameTerm) defaultValues.searchNameTerm = query.searchNameTerm
 
     return defaultValues
+}
+
+export const  getUsersPagination = (query:any): UsersPaginationType =>{
+
+    const defaultValues: UsersPaginationType = {
+        searchLoginTerm: '',
+        searchEmailTerm: '',
+        ...getDefaultPagination(query)
+    }
+
+    if(query.searchLoginTerm) defaultValues.searchLoginTerm = query.searchLoginTerm
+    if(query.searchEmailTerm) defaultValues.searchEmailTerm = query.searchEmailTerm
+
+    return  defaultValues
 }

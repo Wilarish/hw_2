@@ -5,6 +5,7 @@ import {PostsRouter} from "./routes/posts-router";
 import {blogs_db, posts_db} from "./data/DB";
 import {postsRepository} from "./repositories/posts-rep";
 import {blogsRepository} from "./repositories/blogs-rep";
+import {UsersRouter} from "./routes/users-router";
 
 
 export const app = express()
@@ -13,10 +14,12 @@ app.use(express.json())
 
 export const RouterPath = {
     blogs:'/blogs',
-    posts:'/posts'
+    posts:'/posts',
+    users:'/users'
 }
 app.use(RouterPath.blogs, BlogsRouter)
 app.use(RouterPath.posts, PostsRouter)
+app.use(RouterPath.users, UsersRouter)
 
 
 

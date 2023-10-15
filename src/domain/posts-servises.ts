@@ -3,7 +3,7 @@ import {BlogsMainType} from "../types/blogs/blogs-main-type";
 import {blogsRepository} from "../repositories/blogs-rep";
 import {PostsMainType} from "../types/posts/posts-main-type";
 import {postsRepository} from "../repositories/posts-rep";
-import {create_update_Blogs} from "../types/blogs/blogs-create-update-type";
+import {BlogsCreateUpdate} from "../types/blogs/blogs-create-update-type";
 
 export const postsServises = {
     async createPost(data: PostsCreateUpdate) {

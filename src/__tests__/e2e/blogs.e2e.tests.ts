@@ -2,7 +2,7 @@ import request from "supertest";
 import {app, RouterPath} from "../../settings";
 import {HTTP_statuses} from "../../data/HTTP_statuses";
 import {BlogsMainType} from "../../types/blogs/blogs-main-type";
-import {create_update_Blogs} from "../../types/blogs/blogs-create-update-type";
+import {BlogsCreateUpdate} from "../../types/blogs/blogs-create-update-type";
 describe('/blogs', ()=>{
 
     beforeAll(async ()=>{
@@ -24,7 +24,7 @@ describe('/blogs', ()=>{
 
     it('should create blog with correct data', async () => {
 
-        const data: create_update_Blogs = {
+        const data: BlogsCreateUpdate = {
             name: 'string',
             description: 'string',
             websiteUrl: 'https://www.google.com'
@@ -47,7 +47,7 @@ describe('/blogs', ()=>{
     });
     it('should create blog_2 with correct data', async () => {
 
-        const data: create_update_Blogs = {
+        const data: BlogsCreateUpdate = {
             name: 'string_2',
             description: 'string_2',
             websiteUrl: 'https://www.amazon.com'
@@ -72,7 +72,7 @@ describe('/blogs', ()=>{
     });
     it('shouldn`t сreate blog with incorrect data', async () => {
 
-        const data: create_update_Blogs = {
+        const data: BlogsCreateUpdate = {
             name: 'string_2',
             description: 'string_2',
             websiteUrl: 'https://www.amazon.com'
@@ -86,7 +86,7 @@ describe('/blogs', ()=>{
     });
     it('shouldn`t update blog ', async () => {
 
-        const data:create_update_Blogs = {
+        const data:BlogsCreateUpdate = {
             name: 'string_put',
             description: 'string_put',
             websiteUrl: 'https://www.amazon.com'
@@ -143,7 +143,7 @@ describe('/blogs', ()=>{
     });
     it('shouldn`t update unexpected blog ', async () => {
 
-        const data:create_update_Blogs = {
+        const data:BlogsCreateUpdate = {
             name: 'string_put_@',
             description: 'string_put_@',
             websiteUrl: 'https://www.amazon.com/users/types'
@@ -158,7 +158,7 @@ describe('/blogs', ()=>{
     });
     it('should update blog correct ', async () => {
 
-        const data:create_update_Blogs = {
+        const data:BlogsCreateUpdate = {
             name: 'string_put_@',
             description: 'string_put_@',
             websiteUrl: 'https://www.amazon.com/users/types'

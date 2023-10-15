@@ -1,12 +1,12 @@
 import {BlogsMainType} from "../types/blogs/blogs-main-type";
-import {create_update_Blogs} from "../types/blogs/blogs-create-update-type";
+import {BlogsCreateUpdate} from "../types/blogs/blogs-create-update-type";
 import {blogsRepository} from "../repositories/blogs-rep";
 
 
 
 export const blogsServise = {
 
-    async createBlog(data: create_update_Blogs): Promise<BlogsMainType> {
+    async createBlog(data: BlogsCreateUpdate): Promise<BlogsMainType> {
 
         const new_blog: BlogsMainType = {
             id: new Date().toISOString(),
@@ -20,7 +20,7 @@ export const blogsServise = {
         const createdBlog= await blogsRepository.createBlog(new_blog)
         return createdBlog
     },
-    async updateBlog(id:string, data: create_update_Blogs): Promise<BlogsMainType | null> {
+    async updateBlog(id:string, data: BlogsCreateUpdate): Promise<BlogsMainType | null> {
 
         return await blogsRepository.updateBlog(id, data)
     },

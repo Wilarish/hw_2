@@ -1,4 +1,9 @@
-import {blogIdPostsChecking, paramsCheckingBlogsBody, paramsCheckingPostsBody} from "./middleware_input_validation";
+import {
+    blogIdPostsChecking,
+    paramsCheckingBlogsBody,
+    paramsCheckingPostsBody,
+    paramsCheckingUsersBody
+} from "./middleware_input_validation";
 
 export const InputValidBlogs = {
     get: [],
@@ -12,4 +17,10 @@ export const InputValidPosts = {
     postWithUriBlogId:[paramsCheckingPostsBody.title,  paramsCheckingPostsBody.shortDescription,  paramsCheckingPostsBody.content, blogIdPostsChecking],
     put: [paramsCheckingPostsBody.title,  paramsCheckingPostsBody.shortDescription,  paramsCheckingPostsBody.content,  paramsCheckingPostsBody.blogId],
     delete: [],
+}
+export  const InputValidationUsers = {
+    get:[],
+    post:[paramsCheckingUsersBody.email, paramsCheckingUsersBody.login, paramsCheckingUsersBody.password],
+    put:[],
+    delete:[],
 }

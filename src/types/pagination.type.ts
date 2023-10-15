@@ -17,6 +17,10 @@ export type BlogsPaginationType = DefaultPaginationType & {
     searchNameTerm: string,
 }
 
+export type UsersPaginationType = DefaultPaginationType & {
+    searchLoginTerm: string,
+    searchEmailTerm: string
+}
 
 export type Paginated<T> = {
     pagesCount: number,
