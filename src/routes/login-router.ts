@@ -6,7 +6,7 @@ import {InputValidationLogin} from "../middleware/arrays_of_input_validation";
 
 export  const AuthRouter = Router({})
 
-AuthRouter.get('/login',  InputValidationLogin.get,  errorsChecking , async (req:Request<{},{},{loginOrEmail:string, password:string}>, res:Response)=>{
+AuthRouter.post('/login',  InputValidationLogin.get,  errorsChecking , async (req:Request<{},{},{loginOrEmail:string, password:string}>, res:Response)=>{
     const result: boolean = await usresServises.login(req.body.loginOrEmail, req.body.password)
 
     if(!result) res.sendStatus(HTTP_statuses.UNAUTHORIZED_401)

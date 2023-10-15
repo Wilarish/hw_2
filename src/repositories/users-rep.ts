@@ -47,7 +47,7 @@ export const usersRepository = {
     },
     async deleteUser(id: string): Promise<boolean> {
 
-        const result: DeleteResult = await posts_db.deleteOne({id: id})
+        const result = await users_db.deleteOne({id: id})
 
         return result.deletedCount === 1
 
