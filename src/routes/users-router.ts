@@ -8,6 +8,7 @@ import {authBasic} from "../middleware/middleware_input_validation";
 import {usresServises} from "../domain/users-servises";
 import {InputValidationUsers} from "../middleware/arrays_of_input_validation";
 import {HTTP_statuses} from "../data/HTTP_statuses";
+import {UsersViewType} from "../types/users/users-view-type";
 
 export const UsersRouter = Router({})
 
@@ -23,7 +24,7 @@ UsersRouter.post('/', authBasic,  InputValidationUsers.post, async (req:Request<
         email: req.body.email,
         password: req.body.password
     }
-    const user:UsersMainType =  await usresServises.createUser(data)
+    const user:UsersViewType | null =  await usresServises.createUser(data)
     res.status(HTTP_statuses.CREATED_201).send(user)
 })
 

@@ -2,10 +2,11 @@ import {UsersCreate} from "../types/users/users-create";
 import {UsersMainType} from "../types/users/users-main-type";
 import {usersRepository} from "../repositories/users-rep";
 import bcrypt from 'bcrypt';
+import {UsersViewType} from "../types/users/users-view-type";
 
 
 export const usresServises = {
-    async createUser(data: UsersCreate): Promise<UsersMainType> {
+    async createUser(data: UsersCreate): Promise<UsersViewType|null> {
 
         const passwordSalt: string = await bcrypt.genSalt(10)
         const passwordHash: string = await this.passwordHash(data.password, passwordSalt)
