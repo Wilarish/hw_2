@@ -1,9 +1,9 @@
-import {UsersCreate} from "../types/users/users-create";
 import {UsersMainType} from "../types/users/users-main-type";
 import {posts_db, users_db} from "../data/DB";
-import {DefaultPaginationType, Paginated, UsersPaginationType} from "../types/pagination.type";
-import {PostsMainType} from "../types/posts/posts-main-type";
+import {Paginated, UsersPaginationType} from "../types/pagination.type";
+
 import {DeleteResult} from "mongodb";
+import {UsersViewType} from "../types/users/users-view-type";
 
 
 export const usersRepository = {
@@ -20,7 +20,7 @@ export const usersRepository = {
             users_db.countDocuments()
         ])
 
-        const pagesCount = Math.ceil(totalCount / pagination.pageSize)
+        const pagesCount: number = Math.ceil(totalCount / pagination.pageSize)
 
         return {
             pagesCount,
@@ -36,13 +36,15 @@ export const usersRepository = {
         return user
     },
     async findUserById(id: string) {
-        const user: UsersMainType | null = await users_db.findOne({id: id})
+        const user: UsersViewType | null = await users_db.findOne({id: id})
 
         return user
     },
-    async createUser(user: UsersMainType): Promise<UsersMainType> {
+    async createUser(user: UsersMainType): Promise<UsersViewType| null> {
         await users_db.insertOne({...user})
-        return user
+
+
+        return await this.findUserById(user.id)
     },
     async deleteUser(id: string): Promise<boolean> {
 

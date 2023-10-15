@@ -34,8 +34,8 @@ export const paramsCheckingPostsBody = {
 }
 export const paramsCheckingUsersBody = {
     email: body('email').isString().trim().isEmail().isLength({min:1, max:20}),
-    login: body('login').isString().trim().isLength({min:1, max:20}),
-    password: body('password').isString().trim().isLength({min:5, max: 20})
+    login: body('login').isString().trim().isLength({min:3, max:10}),
+    password: body('password').isString().trim().isLength({min:6, max: 20})
 }
 const errorFormatter = (error: ValidationError) => {
     switch (error.type) {
