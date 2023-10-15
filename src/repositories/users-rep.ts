@@ -4,6 +4,7 @@ import {Paginated, UsersPaginationType} from "../types/pagination.type";
 
 import {DeleteResult} from "mongodb";
 import {UsersViewType} from "../types/users/users-view-type";
+import {rejects} from "assert";
 
 
 export const usersRepository = {
@@ -36,7 +37,7 @@ export const usersRepository = {
         return user
     },
     async findUserById(id: string) {
-        const user: UsersViewType | null = await users_db.findOne({id: id})
+        const user: UsersViewType | null = await users_db.findOne({id: id},{projection: {_id: 0, passwordSalt: 0, passwordHash: 0}})
 
         return user
     },

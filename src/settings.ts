@@ -2,11 +2,10 @@ import express, {Request, Response} from "express"
 import {BlogsRouter} from "./routes/blogs-router";
 import {HTTP_statuses} from "./data/HTTP_statuses";
 import {PostsRouter} from "./routes/posts-router";
-import {blogs_db, posts_db} from "./data/DB";
 import {postsRepository} from "./repositories/posts-rep";
 import {blogsRepository} from "./repositories/blogs-rep";
 import {UsersRouter} from "./routes/users-router";
-import {LoginRouter} from "./routes/login-router";
+import {AuthRouter} from "./routes/login-router";
 
 
 export const app = express()
@@ -17,12 +16,12 @@ export const RouterPath = {
     blogs:'/blogs',
     posts:'/posts',
     users:'/users',
-    login:'/login'
+    login:'/aurh'
 }
 app.use(RouterPath.blogs, BlogsRouter)
 app.use(RouterPath.posts, PostsRouter)
 app.use(RouterPath.users, UsersRouter)
-app.use(RouterPath.login, LoginRouter)
+app.use(RouterPath.login, AuthRouter)
 
 
 
