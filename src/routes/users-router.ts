@@ -6,6 +6,8 @@ import {UsersCreate} from "../types/users/users-create";
 import {UsersMainType} from "../types/users/users-main-type";
 import {authBasic} from "../middleware/middleware_input_validation";
 import {usresServises} from "../domain/users-servises";
+import {InputValidationUsers} from "../middleware/arrays_of_input_validation";
+import {HTTP_statuses} from "../data/HTTP_statuses";
 
 export const UsersRouter = Router({})
 
@@ -13,18 +15,26 @@ UsersRouter.get('/', authBasic, async (req: Request, res:Response) =>{
     const pagination: UsersPaginationType = getUsersPagination(req.query)
     const users:Paginated<UsersMainType> = await usersRepository.findUsers(pagination)
 
-    return users
+    res.status(HTTP_statuses.OK_200).send(users)
 })
-UsersRouter.post('/', authBasic, async (req:Request<{},{},{login: string, email: string, password: string},{}>, res:Response)=>{
+UsersRouter.post('/', authBasic,  InputValidationUsers.post, async (req:Request<{},{},{login: string, email: string, password: string},{}>, res:Response)=>{
     const data:UsersCreate = {
         login: req.body.login,
         email: req.body.email,
         password: req.body.password
     }
-    return await usresServises.createUser(data)
+    const user:UsersMainType =  await usresServises.createUser(data)
+    res.status(HTTP_statuses.CREATED_201).send(user)
 })
 
-UsersRouter.delete('/:id', authBasic, (req:Request<{id:string}>,res:Response)=>{
+UsersRouter.delete('/:id', authBasic, async (req:Request<{id:string}>,res:Response)=>{
 
-    return usresServises.deleteUser(req.params.id)
+    const del: boolean = await usresServises.deleteUser(req.params.id)
+
+    if (!del) {
+        res.sendStatus(HTTP_statuses.NOT_FOUND_404)
+    } else {
+        res.sendStatus(HTTP_statuses.NO_CONTENT_204)
+    }
+
 })

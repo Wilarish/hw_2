@@ -10,7 +10,7 @@ export const usersRepository = {
 
         const [items, totalCount] = await Promise.all([
             users_db
-                .find({}, {projection: {_id: 0}})
+                .find({}, {projection: {_id: 0, passwordSalt:0, passwordHash:0}})
                 .sort({[pagination.sortBy]: pagination.sortDirection})
                 .skip(pagination.skip)
                 .limit(pagination.pageSize)
