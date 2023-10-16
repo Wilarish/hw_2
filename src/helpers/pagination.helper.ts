@@ -45,8 +45,8 @@ export const  getUsersPagination = (query:any): UsersPaginationType =>{
         ...getDefaultPagination(query)
     }
 
-    if(query.searchLoginTerm && query.searchLoginTerm.trim().length >0) defaultValues.searchLoginTerm = query.searchLoginTerm
-    if(query.searchEmailTerm && query.searchEmailTerm.trim().length >0) defaultValues.searchEmailTerm = query.searchEmailTerm
+    if(query.searchLoginTerm) defaultValues.searchLoginTerm = query.searchLoginTerm
+    if(query.searchEmailTerm) defaultValues.searchEmailTerm = query.searchEmailTerm
 
     return  defaultValues
 }

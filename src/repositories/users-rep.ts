@@ -1,9 +1,9 @@
 import {UsersMainType} from "../types/users/users-main-type";
-import {posts_db, users_db} from "../data/DB";
+import { users_db} from "../data/DB";
 import {Paginated, UsersPaginationType} from "../types/pagination.type";
-import {DeleteResult, Filter} from "mongodb";
+import { Filter} from "mongodb";
 import {UsersViewType} from "../types/users/users-view-type";
-import {BlogsMainType} from "../types/blogs/blogs-main-type";
+;
 
 
 export const usersRepository = {
