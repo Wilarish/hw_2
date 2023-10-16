@@ -9,11 +9,11 @@ import {BlogsMainType} from "../types/blogs/blogs-main-type";
 export const usersRepository = {
     async findUsers(pagination: UsersPaginationType): Promise<Paginated<UsersMainType>> {
 
-        const filter: Filter<BlogsMainType> = {$or:[{ login: {$regex: pagination.searchLoginTerm, $options: 'i'}},{email: {$regex: pagination.searchEmailTerm, $options: 'i'}}]}
+        const filter: Filter<UsersMainType> = {$or:[{ login: {$regex: pagination.searchLoginTerm, $options: 'i'}},{email: {$regex: pagination.searchEmailTerm, $options: 'i'}}]}
 
         const [items, totalCount] = await Promise.all([
             users_db
-                .find({filter}, {projection: {_id: 0, passwordSalt: 0, passwordHash: 0}})
+                .find(filter, {projection: {_id: 0, passwordSalt: 0, passwordHash: 0}})
                 .sort({[pagination.sortBy]: pagination.sortDirection})
                 .skip(pagination.skip)
                 .limit(pagination.pageSize)

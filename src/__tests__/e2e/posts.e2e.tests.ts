@@ -26,11 +26,20 @@ describe('/posts', ()=>{
 
     })
 
+    let expectedRes: Paginated<PostsMainType> = {
+        pagesCount: expect.any(Number),
+        page: expect.any(Number),
+        pageSize: expect.any(Number),
+        totalCount: expect.any(Number),
+        items: expect.any(Array)
+    }
+
 
     it('should return 200 and empty array', async () => {
-        await request(app)
+        const res = await request(app)
             .get(RouterPath.posts)
             .expect(HTTP_statuses.OK_200)
+        expect(res.body).toEqual(expectedRes)
             
     })
 
@@ -95,9 +104,12 @@ describe('/posts', ()=>{
         createdPost_2 = response.body;
 
 
-        await request(app)
+        const  res = await request(app)
             .get(RouterPath.posts)
-            .expect(HTTP_statuses.OK_200, [createdPost, createdPost_2])
+            .expect(HTTP_statuses.OK_200)
+
+        expect(res.body).toEqual({...expectedRes, totalCount: 2})
+        expect(res.body.items).toEqual([createdPost_2, createdPost])
 
     });
     it('shouldn`t сreate post with incorrect data', async () => {
