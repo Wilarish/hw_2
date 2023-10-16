@@ -19,7 +19,7 @@ export const usersRepository = {
                 .limit(pagination.pageSize)
                 .toArray(),
 
-            users_db.countDocuments()
+            users_db.countDocuments(filter)
         ])
 
         const pagesCount: number = Math.ceil(totalCount / pagination.pageSize)
