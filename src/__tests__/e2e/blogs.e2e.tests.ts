@@ -3,6 +3,9 @@ import {app, RouterPath} from "../../settings";
 import {HTTP_statuses} from "../../data/HTTP_statuses";
 import {BlogsMainType} from "../../types/blogs/blogs-main-type";
 import {BlogsCreateUpdate} from "../../types/blogs/blogs-create-update-type";
+import {Paginated} from "../../types/pagination.type";
+
+
 describe('/blogs', ()=>{
 
     beforeAll(async ()=>{
@@ -13,11 +16,22 @@ describe('/blogs', ()=>{
     })
 
 
-    // it('should return 200 and empty array', async () => {
-    //     await request(app)
-    //         .get(RouterPath.blogs)
-    //         .expect(HTTP_statuses.OK_200, [])
-    // })
+    let expectedRes: Paginated<BlogsMainType> = {
+        pagesCount: expect.any(Number),
+        page: expect.any(Number),
+        pageSize: expect.any(Number),
+        totalCount: expect.any(Number),
+        items: expect.any(Array)
+    }
+
+
+    it('should return 200 and empty array', async () => {
+
+       const res = await request(app)
+            .get(RouterPath.blogs)
+            .expect(HTTP_statuses.OK_200)
+        expect(res.body).toEqual(expectedRes)
+    })
 
     let createdBlog: BlogsMainType;
     let createdBlog_2: BlogsMainType;
@@ -68,7 +82,8 @@ describe('/blogs', ()=>{
             .expect(HTTP_statuses.OK_200, )
 
 
-        expect(res.body).toEqual([createdBlog, createdBlog_2])
+        expect(res.body).toEqual({...expectedRes, totalCount: 2})
+        expect(res.body.items).toEqual([ createdBlog_2, createdBlog])
     });
     it('shouldn`t сreate blog with incorrect data', async () => {
 

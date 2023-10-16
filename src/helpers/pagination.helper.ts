@@ -32,7 +32,7 @@ export const getBlogsPagination = (query: any): BlogsPaginationType => {
         ...getDefaultPagination(query)
     }
 
-    if(query.searchNameTerm) defaultValues.searchNameTerm = query.searchNameTerm
+    if(query.searchNameTerm && query.searchNameTerm.trim().length > 0) defaultValues.searchNameTerm = query.searchNameTerm
 
     return defaultValues
 }
@@ -45,8 +45,8 @@ export const  getUsersPagination = (query:any): UsersPaginationType =>{
         ...getDefaultPagination(query)
     }
 
-    if(query.searchLoginTerm) defaultValues.searchLoginTerm = query.searchLoginTerm
-    if(query.searchEmailTerm) defaultValues.searchEmailTerm = query.searchEmailTerm
+    if(query.searchLoginTerm && query.searchLoginTerm.trim().length >0) defaultValues.searchLoginTerm = query.searchLoginTerm
+    if(query.searchEmailTerm && query.searchEmailTerm.trim().length >0) defaultValues.searchEmailTerm = query.searchEmailTerm
 
     return  defaultValues
 }
