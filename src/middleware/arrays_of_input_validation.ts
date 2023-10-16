@@ -26,5 +26,5 @@ export  const InputValidationUsers = {
 }
 
 export  const InputValidationLogin={
-    get:[paramsCheckingLogin.loginOrEmail, paramsCheckingLogin.password]
+    post:[paramsCheckingLogin.loginOrEmail, paramsCheckingLogin.password]
 }

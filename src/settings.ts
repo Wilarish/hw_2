@@ -5,7 +5,7 @@ import {PostsRouter} from "./routes/posts-router";
 import {postsRepository} from "./repositories/posts-rep";
 import {blogsRepository} from "./repositories/blogs-rep";
 import {UsersRouter} from "./routes/users-router";
-import {AuthRouter} from "./routes/login-router";
+import {AuthRouter} from "./routes/auth-router";
 import {usersRepository} from "./repositories/users-rep";
 
 
@@ -17,7 +17,7 @@ export const RouterPath = {
     blogs:'/blogs',
     posts:'/posts',
     users:'/users',
-    login:'/aurh'
+    login:'/auth'
 }
 app.use(RouterPath.blogs, BlogsRouter)
 app.use(RouterPath.posts, PostsRouter)
