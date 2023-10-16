@@ -6,6 +6,7 @@ import {postsRepository} from "./repositories/posts-rep";
 import {blogsRepository} from "./repositories/blogs-rep";
 import {UsersRouter} from "./routes/users-router";
 import {AuthRouter} from "./routes/login-router";
+import {usersRepository} from "./repositories/users-rep";
 
 
 export const app = express()
@@ -31,5 +32,6 @@ app.get('/', (req:Request, res:Response) => {
 app.delete('/testing/all-data',  async (req:Request, res:Response)=>{
     await postsRepository.deleteAllPosts()
     await blogsRepository.deleteAllBlogs()
+    await usersRepository.deleteAllUsers()
     res.sendStatus(HTTP_statuses.NO_CONTENT_204)
 })

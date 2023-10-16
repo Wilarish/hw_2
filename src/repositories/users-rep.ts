@@ -52,5 +52,9 @@ export const usersRepository = {
         return result.deletedCount === 1
 
 
+    },
+    async deleteAllUsers(){
+        users_db.deleteMany({})
+        return true
     }
 }
