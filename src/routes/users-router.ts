@@ -36,7 +36,7 @@ UsersRouter.post('/', authBasic,  InputValidationUsers.post, errorsChecking,  as
         email: req.body.email,
         password: req.body.password
     }
-    const user:UsersViewType | null =  await usresServises.createUser(data)
+    const user:UsersMainType | null =  await usresServises.createUser(data)
     res.status(HTTP_statuses.CREATED_201).send(user)
 })
 

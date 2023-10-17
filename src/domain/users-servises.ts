@@ -6,7 +6,7 @@ import {UsersViewType} from "../types/users/users-view-type";
 
 
 export const usresServises = {
-    async createUser(data: UsersCreate): Promise<UsersViewType|null> {
+    async createUser(data: UsersCreate): Promise<UsersMainType|null> {
 
         const passwordSalt: string = await bcrypt.genSalt(10)
         const passwordHash: string = await this.passwordHash(data.password, passwordSalt)

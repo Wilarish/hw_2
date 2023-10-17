@@ -42,7 +42,7 @@ export const usersRepository = {
 
         return user
     },
-    async createUser(user: UsersMainType): Promise<UsersViewType| null> {
+    async createUser(user: UsersMainType): Promise<UsersMainType| null> {
         await users_db.insertOne({...user})
 
 
