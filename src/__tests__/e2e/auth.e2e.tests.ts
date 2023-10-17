@@ -5,7 +5,7 @@ import {createBlogUtils} from "./utils/createBlog.utils";
 import {PostsCreateUpdate} from "../../types/posts/posts-create-update";
 import {BlogsMainType} from "../../types/blogs/blogs-main-type";
 import {PostsMainType} from "../../types/posts/posts-main-type";
-describe('/posts', ()=>{
+describe('/authBasic', ()=>{
     let createdPost:PostsMainType
     let createdBlog: BlogsMainType
 

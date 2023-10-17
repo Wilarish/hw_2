@@ -9,6 +9,6 @@ export  const AuthRouter = Router({})
 AuthRouter.post('/login',  InputValidationLogin.post,  errorsChecking , async (req:Request<{},{},{loginOrEmail:string, password:string}>, res:Response)=>{
     const result: boolean = await usresServises.login(req.body.loginOrEmail, req.body.password)
 
-    if(!result) res.sendStatus(HTTP_statuses.UNAUTHORIZED_401)
-    res.sendStatus(HTTP_statuses.NO_CONTENT_204)
+    if(!result) return res.sendStatus(HTTP_statuses.UNAUTHORIZED_401)
+    return res.sendStatus(HTTP_statuses.NO_CONTENT_204)
 })

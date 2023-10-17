@@ -38,7 +38,7 @@ export const usersRepository = {
         return user
     },
     async findUserById(id: string) {
-        const user: UsersViewType | null = await users_db.findOne({id: id},{projection: {_id: 0, passwordSalt: 0, passwordHash: 0}})
+        const user: UsersMainType | null = await users_db.findOne({id: id},{projection: {_id: 0, passwordSalt: 0, passwordHash: 0}})
 
         return user
     },

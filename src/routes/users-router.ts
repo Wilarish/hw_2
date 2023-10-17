@@ -22,7 +22,7 @@ UsersRouter.get('/', authBasic, async (req: Request, res:Response) =>{
 })
 
 UsersRouter.get('/:id', authBasic, async (req:Request<{id:string}>, res:Response)=>{
-    const user: UsersViewType | null = await usersRepository.findUserById(req.params.id)
+    const user: UsersMainType | null = await usersRepository.findUserById(req.params.id)
 
     if (!user)
         res.sendStatus(HTTP_statuses.NOT_FOUND_404)

@@ -17,12 +17,12 @@ export const RouterPath = {
     blogs:'/blogs',
     posts:'/posts',
     users:'/users',
-    login:'/auth'
+    auth:'/auth'
 }
 app.use(RouterPath.blogs, BlogsRouter)
 app.use(RouterPath.posts, PostsRouter)
 app.use(RouterPath.users, UsersRouter)
-app.use(RouterPath.login, AuthRouter)
+app.use(RouterPath.auth, AuthRouter)
 
 
 
