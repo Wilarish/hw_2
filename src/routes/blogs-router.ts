@@ -45,7 +45,7 @@ BlogsRouter.post('/', authBasic, InputValidBlogs.post, errorsChecking, async (re
         websiteUrl: req.body.websiteUrl
     })
 
-    res.status(HTTP_statuses.CREATED_201).send(new_blog)
+   return res.status(HTTP_statuses.CREATED_201).send(new_blog)
 })
 BlogsRouter.post('/:id/posts', authBasic,  InputValidPosts.postWithUriBlogId, errorsChecking, async (req: Request<{
     id: string }, {}, { title: string, shortDescription: string, content: string, blogId: string, blogName: string }>, res: Response)=>{

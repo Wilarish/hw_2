@@ -27,9 +27,10 @@ export async function RunDb() {
     try {
         await client.connect()
         await client.db().command({ping:1})
+        console.log('Db connect')
 
     } catch (err) {
-        console.log("its error")
+        console.log("its error", err)
         await client.close()
 
     }

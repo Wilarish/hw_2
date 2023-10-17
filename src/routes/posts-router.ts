@@ -17,17 +17,17 @@ PostsRouter.get('/', async (req:Request, res:Response)=>{
     const pagination:DefaultPaginationType = getDefaultPagination(req.query)
     const posts:Paginated<PostsMainType> = await postsRepository.findPosts(pagination)
 
-    res.send(posts)
+   return res.send(posts)
 })
 PostsRouter.get('/:id', errorsChecking ,async (req: Request<{ id: string }>, res: Response) => {
 
     const post: PostsMainType | null = await postsRepository.findPostById(req.params.id)
 
     if (!post)
-        res.sendStatus(HTTP_statuses.NOT_FOUND_404)
+      return  res.sendStatus(HTTP_statuses.NOT_FOUND_404)
 
-    else
-        res.send(post)
+
+     return res.send(post)
 
 })
 PostsRouter.post('/',  authBasic,  InputValidPosts.post,  errorsChecking, async  (req:Request<{},{},{ title: string, shortDescription: string, content: string, blogId: string, blogName: string }>, res:Response)=>{
@@ -42,7 +42,7 @@ PostsRouter.post('/',  authBasic,  InputValidPosts.post,  errorsChecking, async 
     })
 
 
-    res.status(HTTP_statuses.CREATED_201).send(new_post)
+   return res.status(HTTP_statuses.CREATED_201).send(new_post)
 })
 PostsRouter.put('/:id',  authBasic,  InputValidPosts.put,  errorsChecking, async  (req:Request<{id:string},{},{id: string, title: string, shortDescription: string, content: string, blogId: string, blogName: string }>, res:Response)=>{
 
