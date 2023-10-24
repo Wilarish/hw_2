@@ -1,5 +1,7 @@
+import {Request} from "express";
+
 declare global {
-    namespace Express {
+    declare namespace Express {
         export interface Request {
             userId: string | null
         }

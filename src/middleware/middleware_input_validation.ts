@@ -101,7 +101,7 @@ export const authBasic = (req: Request, res: Response, next: NextFunction) => {
     return next()
 }
 
-export const authBearer = async (req: Request, res: Response, next: NextFunction)=>{
+export const authBearer = async (req: Request<any,any,any,any,any>, res: Response, next: NextFunction)=>{
     const authorization = req.headers.authorization //'Bearer fdgnodfgn.gfgsgfsdgfsdg.ggsdsdgsd     // it`s jwt
 
     if (!authorization) return res.sendStatus(HTTP_statuses.UNAUTHORIZED_401)
@@ -112,10 +112,10 @@ export const authBearer = async (req: Request, res: Response, next: NextFunction
         return  res.sendStatus(HTTP_statuses.UNAUTHORIZED_401)
     }
     console.log('userId:', userId)
-    //@ts-ignore
+
     req.userId = userId
 
-//@ts-ignore
+
     console.log('userId in req', req.userId)
     return next()
 

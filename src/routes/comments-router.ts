@@ -22,13 +22,13 @@ commentsRouter.put('/:id',  authBearer, InputValidationCommenst.any, errorsCheck
     const comment: CommentsMainType|null = await commentsRepository.findCommentById(req.params.id)
     if(!comment) return  res.sendStatus(HTTP_statuses.NOT_FOUND_404)
 
-    //@ts-ignore
-    if(req.userId !== comment.commentatorInfo.userId) return res.sendStatus(HTTP_statuses.FORBIDDEN_403)
+
+    if(req.userId !== comment.commentatorInfo.userId.toString()) return res.sendStatus(HTTP_statuses.FORBIDDEN_403)
 
     const data: CommentsCreateUpdate = {content:req.body.content}
 
 
-    //@ts-ignore
+
     const result = await commentsServises.updateComment(data, req.params.id)
     return res.status(HTTP_statuses.NO_CONTENT_204).send(result)
 })
@@ -36,8 +36,8 @@ commentsRouter.delete('/:id',  authBearer, async (req:Request<{id:string}>, res:
     const comment: CommentsMainType|null = await commentsRepository.findCommentById(req.params.id)
     if(!comment) return  res.sendStatus(HTTP_statuses.NOT_FOUND_404)
 
-    //@ts-ignore
-    if(req.userId !== comment.commentatorInfo.userId) return res.sendStatus(HTTP_statuses.FORBIDDEN_403)
+
+    if(req.userId !== comment.commentatorInfo.userId.toString()) return res.sendStatus(HTTP_statuses.FORBIDDEN_403)
 
     const del: boolean = await commentsServises.deleteComment(req.params.id)
 
