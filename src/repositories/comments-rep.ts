@@ -30,7 +30,7 @@ export const commentsRepository = {
 
         const [items, totalCount] = await Promise.all([
             comments_db
-                .find({filter}, {projection: {_id: 0, postId:0}})
+                .find(filter, {projection: {_id: 0, postId:0}})
                 .sort({[pagination.sortBy]: pagination.sortDirection})
                 .skip(pagination.skip)
                 .limit(pagination.pageSize)
