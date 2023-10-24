@@ -1,7 +1,7 @@
 import {Response, Request, Router} from "express";
 import {usresServises} from "../domain/users-servises";
 import {HTTP_statuses} from "../data/HTTP_statuses";
-import {authBearer, errorsChecking} from "../middleware/middleware_input_validation";
+import {errorsChecking} from "../middleware/middleware_input_validation";
 import {InputValidationLogin} from "../middleware/arrays_of_input_validation";
 import {jwtServises} from "../application/jwt-servises";
 import {UsersMainType} from "../types/users/users-main-type";
