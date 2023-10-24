@@ -112,12 +112,8 @@ export const authBearer = async (req: Request, res: Response, next: NextFunction
     if(!userId){
         return  res.sendStatus(HTTP_statuses.UNAUTHORIZED_401)
     }
-    console.log('userId:', userId)
-
     req.userId = userId
 
-
-    console.log('userId in req', req.userId)
     return next()
 
 }

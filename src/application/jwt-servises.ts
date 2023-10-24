@@ -12,10 +12,10 @@ export const jwtServises = {
     async findUserByToken(token:string){
         try {
             const result: any = jwt.verify(token, secret)
-            console.log('payload:', result, result.userId)
+
             return result.userId
         }catch (error){
-            console.log('jwt verify error:', error)
+
             return null
         }
     }
