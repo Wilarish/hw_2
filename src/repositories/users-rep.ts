@@ -1,9 +1,8 @@
 import {UsersMainType} from "../types/users/users-main-type";
 import { users_db} from "../data/DB";
 import {Paginated, UsersPaginationType} from "../types/pagination.type";
-import { Filter} from "mongodb";
-import {UsersViewType} from "../types/users/users-view-type";
-;
+import {Filter, ObjectId} from "mongodb";
+
 
 
 export const usersRepository = {
@@ -38,7 +37,7 @@ export const usersRepository = {
         return user
     },
     async findUserById(id: string) {
-        const user: UsersMainType | null = await users_db.findOne({id: id},{projection: {_id: 0, passwordSalt: 0, passwordHash: 0}})
+        const user: UsersMainType | null = await users_db.findOne({id: new ObjectId(id)},{projection: {_id: 0, passwordSalt: 0, passwordHash: 0}})
 
         return user
     },
@@ -46,11 +45,11 @@ export const usersRepository = {
         await users_db.insertOne({...user})
 
 
-        return await this.findUserById(user.id)
+        return await this.findUserById(user.id.toString())
     },
     async deleteUser(id: string): Promise<boolean> {
 
-        const result = await users_db.deleteOne({id: id})
+        const result = await users_db.deleteOne({id: new ObjectId(id)})
 
         return result.deletedCount === 1
 

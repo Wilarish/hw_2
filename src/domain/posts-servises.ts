@@ -9,19 +9,20 @@ import {CommentsCreateUpdate} from "../types/comments/comments-create-update";
 import {usersRepository} from "../repositories/users-rep";
 import {UsersMainType} from "../types/users/users-main-type";
 import {commentsRepository} from "../repositories/comments-rep";
+import {ObjectId} from "mongodb";
 
 export const postsServises = {
     async createPost(data: PostsCreateUpdate) {
 
-        const find_blog: BlogsMainType | null = await blogsRepository.findBlogById(data.blogId)
+        const find_blog: BlogsMainType | null = await blogsRepository.findBlogById(data.blogId.toString())
 
         const new_post: PostsMainType = {
 
-            id: new Date().toISOString(),
+            id: new ObjectId(),
             title: data.title,
             shortDescription: data.shortDescription,
             content: data.content,
-            blogId: data.blogId,
+            blogId: new ObjectId(data.blogId),
             blogName: find_blog!.name,
             createdAt: new Date().toISOString()
         }
@@ -40,10 +41,10 @@ export const postsServises = {
         if(user){
 
             const new_comment: CommentsMainType = {
-            id: new Date().toISOString(),
+            id: new ObjectId(),
             content: data.content,
             commentatorInfo: {
-                userId: user.id,
+                userId: new ObjectId(user.id) ,
                 userLogin: user.login
             },
             createdAt: new Date().toISOString(),

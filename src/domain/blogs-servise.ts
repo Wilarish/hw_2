@@ -1,6 +1,7 @@
 import {BlogsMainType} from "../types/blogs/blogs-main-type";
 import {BlogsCreateUpdate} from "../types/blogs/blogs-create-update-type";
 import {blogsRepository} from "../repositories/blogs-rep";
+import {ObjectId} from "mongodb";
 
 
 
@@ -9,7 +10,7 @@ export const blogsServise = {
     async createBlog(data: BlogsCreateUpdate): Promise<BlogsMainType> {
 
         const new_blog: BlogsMainType = {
-            id: new Date().toISOString(),
+            id: new ObjectId(),
             name: data.name,
             description: data.description,
             websiteUrl: data.websiteUrl,

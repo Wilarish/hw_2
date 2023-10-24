@@ -4,6 +4,7 @@ import {PostsMainType} from "../types/posts/posts-main-type";
 import {blogsRepository} from "./blogs-rep";
 import {BlogsMainType} from "../types/blogs/blogs-main-type";
 import {DefaultPaginationType, Paginated} from "../types/pagination.type";
+import {ObjectId} from "mongodb";
 
 export const postsRepository = {
 
@@ -32,7 +33,7 @@ export const postsRepository = {
     },
 
     async findPostById(id: string): Promise<PostsMainType | null> {
-        const post: PostsMainType|null = await posts_db.findOne({id:id},{ projection: {  _id: 0 } })
+        const post: PostsMainType|null = await posts_db.findOne({id: new ObjectId(id)},{ projection: {  _id: 0 } })
         if (!post) {
             return null
         } else {
@@ -47,9 +48,9 @@ export const postsRepository = {
     },
     async updatePost(id: string, data: PostsCreateUpdate): Promise<PostsMainType | null> {
 
-        const find_blog: BlogsMainType | null = await blogsRepository.findBlogById(data.blogId)
+        const find_blog: BlogsMainType | null = await blogsRepository.findBlogById(data.blogId.toString())
 
-        const result = await posts_db.updateOne({id:id},{$set:{
+        const result = await posts_db.updateOne({id: new ObjectId(id)},{$set:{
 
             title: data.title,
             shortDescription: data.shortDescription,
@@ -66,7 +67,7 @@ export const postsRepository = {
     },
     async deletePost(id: string): Promise<boolean> {
 
-        const result  = await posts_db.deleteOne({id:id})
+        const result  = await posts_db.deleteOne({id: new ObjectId(id)})
 
         return result.deletedCount === 1
 

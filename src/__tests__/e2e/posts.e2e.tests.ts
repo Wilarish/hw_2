@@ -146,7 +146,7 @@ describe('/posts', ()=>{
             .expect(HTTP_statuses.OK_200 )
 
 
-        let updateDataPostFromDb  = await postsRepository.findPostById(createdPost.id)
+        let updateDataPostFromDb  = await postsRepository.findPostById(createdPost.id.toString())
         if (updateDataPostFromDb) createdPost = updateDataPostFromDb
 
 

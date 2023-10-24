@@ -3,7 +3,7 @@ import {BlogsMainType} from "../types/blogs/blogs-main-type";
 import {BlogsCreateUpdate} from "../types/blogs/blogs-create-update-type";
 import {PostsMainType} from "../types/posts/posts-main-type";
 import {BlogsPaginationType, DefaultPaginationType, Paginated} from "../types/pagination.type";
-import {Filter} from "mongodb";
+import {Filter, ObjectId} from "mongodb";
 
 
 export const blogsRepository = {
@@ -35,12 +35,12 @@ export const blogsRepository = {
 
     async findBlogById(id: string): Promise<BlogsMainType | null> {
 
-        const blog: BlogsMainType | null = await blogs_db.findOne({id: id}, {projection: {_id: 0}})
+        const blog: BlogsMainType | null = await blogs_db.findOne({id: new ObjectId(id)}, {projection: {_id: 0}})
 
         return blog
     },
     async findPostsForBlogsById(id: string, pagination: DefaultPaginationType): Promise<Paginated<PostsMainType>> {
-        const filter: Filter<PostsMainType> = {blogId: id}
+        const filter: Filter<PostsMainType> = {blogId: new ObjectId(id) }
 
         const [items, totalCount] = await Promise.all([
             posts_db
@@ -71,7 +71,7 @@ export const blogsRepository = {
     },
     async updateBlog(id: string, data: BlogsCreateUpdate): Promise<BlogsMainType | null> {
 
-        const result = await blogs_db.updateOne({id: id}, {
+        const result = await blogs_db.updateOne({id: new ObjectId(id) }, {
             $set: {
                 name: data.name,
                 description: data.description,
@@ -79,7 +79,7 @@ export const blogsRepository = {
             }
         })
 
-        await posts_db.updateMany({blogId: id}, {$set: {blogName: data.name}})
+        await posts_db.updateMany({blogId: new ObjectId(id) }, {$set: {blogName: data.name}})
 
         if (result.matchedCount === 1)
             return blogsRepository.findBlogById(id)
@@ -90,7 +90,7 @@ export const blogsRepository = {
     },
     async deleteBlog(id: string): Promise<boolean> {
 
-        const result = await blogs_db.deleteOne({id: id})
+        const result = await blogs_db.deleteOne({id: new ObjectId(id)})
 
         return result.deletedCount === 1
 

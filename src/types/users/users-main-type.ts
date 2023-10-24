@@ -1,5 +1,7 @@
+import {ObjectId} from "mongodb";
+
 export type UsersMainType = {
-    id: string,
+    id: ObjectId,
     login: string,
     email: string,
     passwordSalt: string,

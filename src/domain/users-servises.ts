@@ -2,7 +2,7 @@ import {UsersCreate} from "../types/users/users-create";
 import {UsersMainType} from "../types/users/users-main-type";
 import {usersRepository} from "../repositories/users-rep";
 import bcrypt from 'bcrypt';
-import {UsersViewType} from "../types/users/users-view-type";
+import {ObjectId} from "mongodb";
 
 
 export const usresServises = {
@@ -14,7 +14,7 @@ export const usresServises = {
 
         const new_user: UsersMainType = {
 
-            id: new Date().toISOString(),
+            id: new ObjectId(),
             login: data.login,
             email: data.email,
             passwordSalt,

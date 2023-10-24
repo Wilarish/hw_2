@@ -2,7 +2,7 @@ import {CommentsMainType} from "../types/comments/comments-main-type";
 import {comments_db} from "../data/DB";
 import {DefaultPaginationType, Paginated} from "../types/pagination.type";
 import {PostsMainType} from "../types/posts/posts-main-type";
-import {Filter} from "mongodb";
+import {Filter, ObjectId} from "mongodb";
 import {postsRepository} from "./posts-rep";
 import {CommentsCreateUpdate} from "../types/comments/comments-create-update";
 
@@ -10,10 +10,10 @@ import {CommentsCreateUpdate} from "../types/comments/comments-create-update";
 export const commentsRepository = {
     async createComment(comment:CommentsMainType){
         await comments_db.insertOne({...comment})
-        return this.findCommentById(comment.id)
+        return this.findCommentById(comment.id.toString())
     },
     async findCommentById(id:string){
-        const comment: CommentsMainType|null = await comments_db.findOne({id:id},{ projection: {  _id: 0, postId:0 } })
+        const comment: CommentsMainType|null = await comments_db.findOne({id: new ObjectId(id)},{ projection: {  _id: 0, postId:0 } })
         if (!comment) {
             return null
         } else {
@@ -51,7 +51,7 @@ export const commentsRepository = {
     },
     async updateComment(data: CommentsCreateUpdate, id:string){
 
-        const result = await comments_db.updateOne({id:id}, {$set:{
+        const result = await comments_db.updateOne({id: new ObjectId(id)}, {$set:{
             content:data.content
             }})
 
@@ -61,7 +61,7 @@ export const commentsRepository = {
             return null
     },
     async deleteComment(id:string): Promise<boolean>{
-        const result = await comments_db.deleteOne({id:id})
+        const result = await comments_db.deleteOne({id: new ObjectId(id)})
 
         return result.deletedCount === 1
     }

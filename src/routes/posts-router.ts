@@ -10,6 +10,7 @@ import {postsServises} from "../domain/posts-servises";
 import {CommentsCreateUpdate} from "../types/comments/comments-create-update";
 import {CommentsMainType} from "../types/comments/comments-main-type";
 import {commentsRepository} from "../repositories/comments-rep";
+import {ObjectId} from "mongodb";
 
 
 export const PostsRouter = Router()
@@ -58,7 +59,7 @@ PostsRouter.post('/', authBasic, InputValidPosts.post, errorsChecking, async (re
         title: req.body.title,
         shortDescription: req.body.shortDescription,
         content: req.body.content,
-        blogId: req.body.blogId
+        blogId: new ObjectId(req.body.blogId)
     })
 
 
@@ -74,7 +75,7 @@ PostsRouter.put('/:id', authBasic, InputValidPosts.put, errorsChecking, async (r
             title: req.body.title,
             shortDescription: req.body.shortDescription,
             content: req.body.content,
-            blogId: req.body.blogId
+            blogId: new ObjectId(req.body.blogId)
 
         })
         res.status(HTTP_statuses.NO_CONTENT_204).send(result)

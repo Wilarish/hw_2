@@ -9,6 +9,7 @@ import {postsRepository} from "../repositories/posts-rep";
 import {PostsMainType} from "../types/posts/posts-main-type";
 import {getBlogsPagination, getDefaultPagination} from "../helpers/pagination.helper";
 import {postsServises} from "../domain/posts-servises";
+import {ObjectId} from "mongodb";
 
 export const BlogsRouter = Router()
 
@@ -55,7 +56,7 @@ BlogsRouter.post('/:id/posts', authBasic,  InputValidPosts.postWithUriBlogId, er
         title: req.body.title,
         shortDescription: req.body.shortDescription,
         content: req.body.content,
-        blogId: req.params.id,
+        blogId: new ObjectId(req.params.id) ,
     })
 
     return res.status(HTTP_statuses.CREATED_201).send(new_post)
