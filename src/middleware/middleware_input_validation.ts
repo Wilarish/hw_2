@@ -1,9 +1,10 @@
-import  {Response, Request, NextFunction} from "express";
+import {Response, Request, NextFunction} from "express";
 import {body, ValidationError, validationResult} from "express-validator";
 import {HTTP_statuses} from "../data/HTTP_statuses";
 import {blogs_db} from "../data/DB";
 import {blogsRepository} from "../repositories/blogs-rep";
 import {jwtServises} from "../application/jwt-servises";
+import {ObjectId} from "mongodb";
 
 
 
@@ -25,7 +26,7 @@ export const paramsCheckingPostsBody = {
     content: body('content').isString().trim().isLength({min: 1, max: 1000}),
     blogId: body('blogId').custom(async (value) => {
 
-        const blog = await blogs_db.findOne({id:value})
+        const blog = await blogs_db.findOne({id:new ObjectId(value) })
 
         if (!blog)
             throw new Error("error blogID")
@@ -101,7 +102,7 @@ export const authBasic = (req: Request, res: Response, next: NextFunction) => {
     return next()
 }
 
-export const authBearer = async (req: Request<any,any,any,any,any>, res: Response, next: NextFunction)=>{
+export const authBearer = async (req: Request, res: Response, next: NextFunction)=>{
     const authorization = req.headers.authorization //'Bearer fdgnodfgn.gfgsgfsdgfsdg.ggsdsdgsd     // it`s jwt
 
     if (!authorization) return res.sendStatus(HTTP_statuses.UNAUTHORIZED_401)
