@@ -4,7 +4,7 @@ import {HTTP_statuses} from "../data/HTTP_statuses";
 import {blogs_db} from "../data/DB";
 import {blogsRepository} from "../repositories/blogs-rep";
 import {jwtServises} from "../application/jwt-servises";
-import {UsersMainType} from "../types/users/users-main-type";
+
 
 
 export const paramsCheckingBlogsBody = {
@@ -43,6 +43,11 @@ export const paramsCheckingUsersBody = {
 export const paramsCheckingLogin ={
     loginOrEmail: body('loginOrEmail').isString().trim().isLength({min:1,max:20}),
     password: body('password').isString().trim().isLength({min:6, max: 20})
+}
+
+export const paramsCheckingCommentsBody ={
+    content: body('content').isString().trim().isLength({min:20,max:300})
+
 }
 
 const errorFormatter = (error: ValidationError) => {

@@ -1,12 +1,11 @@
 import {CommentsMainType} from "../types/comments/comments-main-type";
-import {comments_db, posts_db} from "../data/DB";
+import {comments_db} from "../data/DB";
 import {DefaultPaginationType, Paginated} from "../types/pagination.type";
 import {PostsMainType} from "../types/posts/posts-main-type";
 import {Filter} from "mongodb";
-import {BlogsMainType} from "../types/blogs/blogs-main-type";
 import {postsRepository} from "./posts-rep";
 import {CommentsCreateUpdate} from "../types/comments/comments-create-update";
-import {commentsServises} from "../domain/comments-servises";
+
 
 export const commentsRepository = {
     async createComment(comment:CommentsMainType){
@@ -31,13 +30,13 @@ export const commentsRepository = {
 
         const [items, totalCount] = await Promise.all([
             comments_db
-                .find({}, {projection: {_id: 0, postId:0}})
+                .find({filter}, {projection: {_id: 0, postId:0}})
                 .sort({[pagination.sortBy]: pagination.sortDirection})
                 .skip(pagination.skip)
                 .limit(pagination.pageSize)
                 .toArray(),
 
-            comments_db.countDocuments()
+            comments_db.countDocuments(filter)
         ])
 
         const pagesCount = Math.ceil(totalCount / pagination.pageSize)

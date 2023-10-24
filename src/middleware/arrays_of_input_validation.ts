@@ -1,6 +1,6 @@
 import {
     blogIdPostsChecking,
-    paramsCheckingBlogsBody, paramsCheckingLogin,
+    paramsCheckingBlogsBody, paramsCheckingCommentsBody, paramsCheckingLogin,
     paramsCheckingPostsBody,
     paramsCheckingUsersBody
 } from "./middleware_input_validation";
@@ -27,4 +27,7 @@ export  const InputValidationUsers = {
 
 export  const InputValidationLogin={
     post:[paramsCheckingLogin.loginOrEmail, paramsCheckingLogin.password]
+}
+export const InputValidationCommenst = {
+    any:[paramsCheckingCommentsBody.content]
 }

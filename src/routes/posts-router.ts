@@ -3,11 +3,9 @@ import {authBasic, authBearer, errorsChecking} from "../middleware/middleware_in
 import {HTTP_statuses} from "../data/HTTP_statuses";
 import {PostsMainType} from "../types/posts/posts-main-type";
 import {postsRepository} from "../repositories/posts-rep";
-import {InputValidPosts} from "../middleware/arrays_of_input_validation";
-import {body} from "express-validator";
+import {InputValidationCommenst, InputValidPosts} from "../middleware/arrays_of_input_validation";
 import {getDefaultPagination} from "../helpers/pagination.helper";
 import {DefaultPaginationType, Paginated} from "../types/pagination.type";
-import {blogsRepository} from "../repositories/blogs-rep";
 import {postsServises} from "../domain/posts-servises";
 import {CommentsCreateUpdate} from "../types/comments/comments-create-update";
 import {CommentsMainType} from "../types/comments/comments-main-type";
@@ -41,7 +39,7 @@ PostsRouter.get('/:id/comments', async (req: Request<{id:string}>, res: Response
     if(!comments) return res.sendStatus(HTTP_statuses.NOT_FOUND_404)
     return res.status(HTTP_statuses.OK_200).send(comments)
 })
-PostsRouter.post('/:id/comments', authBearer, async (req: Request<{id:string}, {}, { content: string }>, res: Response) => {
+PostsRouter.post('/:id/comments', authBearer, InputValidationCommenst.any, errorsChecking, async (req: Request<{id:string}, {}, { content: string }>, res: Response) => {
 
     const data: CommentsCreateUpdate = {content: req.body.content}
     //@ts-ignore
