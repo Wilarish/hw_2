@@ -90,9 +90,9 @@ PostsRouter.delete('/:id', authBasic, async (req: Request<{ id: string }>, res: 
     const del: boolean = await postsServises.deletePost(req.params.id)
 
     if (!del) {
-        res.sendStatus(HTTP_statuses.NOT_FOUND_404)
-    } else {
-        res.sendStatus(HTTP_statuses.NO_CONTENT_204)
+        return  res.sendStatus(HTTP_statuses.NOT_FOUND_404)
     }
+    return  res.sendStatus(HTTP_statuses.NO_CONTENT_204)
+
 
 })

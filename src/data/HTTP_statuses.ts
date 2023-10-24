@@ -5,6 +5,7 @@ export const HTTP_statuses = {
 
     BAD_REQUEST_400: 400,
     UNAUTHORIZED_401: 401,
+    FORBIDDEN_403:403,
     NOT_FOUND_404: 404,
 
 }

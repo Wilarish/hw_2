@@ -5,6 +5,8 @@ import {PostsMainType} from "../types/posts/posts-main-type";
 import {Filter} from "mongodb";
 import {BlogsMainType} from "../types/blogs/blogs-main-type";
 import {postsRepository} from "./posts-rep";
+import {CommentsCreateUpdate} from "../types/comments/comments-create-update";
+import {commentsServises} from "../domain/comments-servises";
 
 export const commentsRepository = {
     async createComment(comment:CommentsMainType){
@@ -48,4 +50,21 @@ export const commentsRepository = {
             items
         }
     },
+    async updateComment(data: CommentsCreateUpdate, id:string){
+
+        const result = await comments_db.updateOne({id:id}, {$set:{
+            content:data.content
+            }})
+
+        if(result.matchedCount === 1)
+            return commentsRepository.findCommentById(id)
+        else
+            return null
+    },
+    async deleteComment(id:string): Promise<boolean>{
+        const result = await comments_db.deleteOne({id:id})
+
+        return result.deletedCount === 1
+    }
+
 }
