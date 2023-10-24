@@ -22,6 +22,7 @@ export type UsersPaginationType = DefaultPaginationType & {
     searchEmailTerm: string
 }
 
+
 export type Paginated<T> = {
     pagesCount: number,
     page: number,

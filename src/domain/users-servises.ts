@@ -34,15 +34,15 @@ export const usresServises = {
 
         return usersRepository.deleteUser(id)
     },
-    async login(loginOrEmail: string, password: string): Promise<boolean> {
+    async login(loginOrEmail: string, password: string): Promise<UsersMainType| null> {
         const user: UsersMainType | null = await usersRepository.findUserByLoginOrEmail(loginOrEmail)
 
-        if (!user) return false
+        if (!user) return null
 
         const hash: string = await this.passwordHash(password, user.passwordSalt)
-        if (hash !== user.passwordHash) return false
+        if (hash !== user.passwordHash) return null
 
-        return true
+        return user
 
 
     }

@@ -3,6 +3,8 @@ import {body, ValidationError, validationResult} from "express-validator";
 import {HTTP_statuses} from "../data/HTTP_statuses";
 import {blogs_db} from "../data/DB";
 import {blogsRepository} from "../repositories/blogs-rep";
+import {jwtServises} from "../application/jwt-servises";
+import {UsersMainType} from "../types/users/users-main-type";
 
 
 export const paramsCheckingBlogsBody = {
@@ -92,4 +94,24 @@ export const authBasic = (req: Request, res: Response, next: NextFunction) => {
     }
 
     return next()
+}
+
+export const authBearer = async (req: Request, res: Response, next: NextFunction)=>{
+    const authorization = req.headers.authorization //'Bearer fdgnodfgn.gfgsgfsdgfsdg.ggsdsdgsd     // it`s jwt
+
+    if (!authorization) return res.sendStatus(HTTP_statuses.UNAUTHORIZED_401)
+
+    const token = authorization.split(' ')[1]
+    const userId = await jwtServises.findUserByToken(token)
+    if(!userId){
+        return  res.sendStatus(HTTP_statuses.UNAUTHORIZED_401)
+    }
+    console.log('userId:', userId)
+    //@ts-ignore
+    req.userId = userId
+
+//@ts-ignore
+    console.log('userId in req', req.userId)
+    return next()
+
 }

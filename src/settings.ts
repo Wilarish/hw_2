@@ -7,6 +7,7 @@ import {blogsRepository} from "./repositories/blogs-rep";
 import {UsersRouter} from "./routes/users-router";
 import {AuthRouter} from "./routes/auth-router";
 import {usersRepository} from "./repositories/users-rep";
+import {commentsRouter} from "./routes/comments-router";
 
 
 export const app = express()
@@ -17,12 +18,14 @@ export const RouterPath = {
     blogs:'/blogs',
     posts:'/posts',
     users:'/users',
-    auth:'/auth'
+    auth:'/auth',
+    comments:'/comments'
 }
 app.use(RouterPath.blogs, BlogsRouter)
 app.use(RouterPath.posts, PostsRouter)
 app.use(RouterPath.users, UsersRouter)
 app.use(RouterPath.auth, AuthRouter)
+app.use(RouterPath.comments, commentsRouter)
 
 
 
