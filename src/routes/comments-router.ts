@@ -30,7 +30,7 @@ commentsRouter.put('/:id',  authBearer, InputValidationCommenst.any, errorsCheck
 
     //@ts-ignore
     const result = await commentsServises.updateComment(data, req.params.id)
-    return res.status(HTTP_statuses.OK_200).send(result)
+    return res.status(HTTP_statuses.NO_CONTENT_204).send(result)
 })
 commentsRouter.delete('/:id',  authBearer, async (req:Request<{id:string}>, res:Response)=>{
     const comment: CommentsMainType|null = await commentsRepository.findCommentById(req.params.id)
