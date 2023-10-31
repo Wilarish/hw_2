@@ -1,7 +1,7 @@
 import {UsersCreate} from "../types/users/users-create";
 import {UsersMainType} from "../types/users/users-main-type";
 import bcrypt from "bcrypt";
-import {ObjectId, UUID} from "mongodb";
+import {ObjectId} from "mongodb";
 import {usersRepository} from "../repositories/users-rep";
 import {randomUUID} from "crypto";
 import { add } from "date-fns";

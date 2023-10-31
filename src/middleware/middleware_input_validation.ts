@@ -136,9 +136,10 @@ export const authBearer = async (req: Request, res: Response, next: NextFunction
     if (!authorization) return res.sendStatus(HTTP_statuses.UNAUTHORIZED_401)
 
     const token = authorization.split(' ')[1]
+    if( authorization.split(' ')[0] !== "Bearer") return res.sendStatus(HTTP_statuses.UNAUTHORIZED_401)
     const userId = await jwtServises.findUserByToken(token)
     if(!userId){
-        return  res.sendStatus(HTTP_statuses.UNAUTHORIZED_401)
+        return res.sendStatus(HTTP_statuses.UNAUTHORIZED_401)
     }
     req.userId = userId
 
