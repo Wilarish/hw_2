@@ -5,6 +5,8 @@ import {blogs_db} from "../data/DB";
 import {blogsRepository} from "../repositories/blogs-rep";
 import {jwtServises} from "../application/jwt-servises";
 import {ObjectId} from "mongodb";
+import {usersRepository} from "../repositories/users-rep";
+import * as wasi from "wasi";
 
 
 
@@ -36,8 +38,16 @@ export const paramsCheckingPostsBody = {
     })
 }
 export const paramsCheckingUsersBody = {
-    email: body('email').isString().trim().isEmail().isLength({min:1, max:50}).matches('^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$'),
-    login: body('login').isString().trim().isLength({min:3, max:10}),
+    email: body('email').isString().trim().isEmail().isLength({min:1, max:50}).matches('^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').custom(async(email) => {
+        const user = await usersRepository.findUserByLoginOrEmail(email);
+        if(user) throw new Error('User with this email already exist')
+        return true;
+    }),
+    login: body('login').isString().trim().isLength({min:3, max:10}).custom(async (login)=>{
+        const user = await usersRepository.findUserByLoginOrEmail(login);
+        if(user) throw new Error('User with this login already exist')
+        return true;
+    }),
     password: body('password').isString().trim().isLength({min:6, max: 20})
 }
 
