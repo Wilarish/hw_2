@@ -36,7 +36,7 @@ export const paramsCheckingPostsBody = {
     })
 }
 export const paramsCheckingUsersBody = {
-    email: body('email').isString().trim().isEmail().isLength({min:1, max:20}),
+    email: body('email').isString().trim().isEmail().isLength({min:1, max:40}),
     login: body('login').isString().trim().isLength({min:3, max:10}),
     password: body('password').isString().trim().isLength({min:6, max: 20})
 }
@@ -49,6 +49,10 @@ export const paramsCheckingLogin ={
 export const paramsCheckingCommentsBody ={
     content: body('content').isString().trim().isLength({min:20,max:300})
 
+}
+export const paramsCheckingAuth={
+    code: body('code').isString().trim().isLength({min:1}),
+    email: body('email').isString().trim().isEmail().isLength({min:1, max:40}),
 }
 
 const errorFormatter = (error: ValidationError) => {

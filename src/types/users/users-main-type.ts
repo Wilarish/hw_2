@@ -6,5 +6,11 @@ export type UsersMainType = {
     email: string,
     passwordSalt: string,
     passwordHash:string,
-    createdAt: string
+    createdAt: string,
+    emailConfirmation: ConfirmationEmailType
+}
+export type ConfirmationEmailType = {
+    confirmationCode: string,
+    expirationDate:Date | string,
+    isConfirmed: boolean
 }

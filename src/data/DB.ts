@@ -20,9 +20,7 @@ const client = new MongoClient(mongoURI)
 const db= client.db()
 export const blogs_db = db.collection<BlogsMainType>("blogs")
 export const posts_db = db.collection<PostsMainType>("posts")
-
 export const users_db = db.collection<UsersMainType>("users")
-
 export const comments_db = db.collection<CommentsMainType>("comments")
 
 export async function RunDb() {

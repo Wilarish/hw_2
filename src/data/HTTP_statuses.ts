@@ -8,6 +8,8 @@ export const HTTP_statuses = {
     FORBIDDEN_403:403,
     NOT_FOUND_404: 404,
 
+    SERVER_ERROR_500:500,
+
 }
 export type HTTPstatusKeys = keyof typeof HTTP_statuses
 export type HTTPStatusType = typeof HTTP_statuses[HTTPstatusKeys]

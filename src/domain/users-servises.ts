@@ -19,32 +19,25 @@ export const usresServises = {
             email: data.email,
             passwordSalt,
             passwordHash,
-            createdAt: new Date().toISOString()
+            createdAt: new Date().toISOString(),
+            emailConfirmation: {
+                confirmationCode: "SuperUs erCode",
+                expirationDate:new Date().toISOString(),
+                isConfirmed: true
+            }
+
         }
 
         return usersRepository.createUser(new_user)
 
     },
     async passwordHash(password: string, passwordSalt: string): Promise<string> {
-        const hash = await bcrypt.hash(password, passwordSalt)
-
-        return hash
+        return await bcrypt.hash(password, passwordSalt)
     },
     async deleteUser(id: string): Promise<boolean> {
 
         return usersRepository.deleteUser(id)
     },
-    async login(loginOrEmail: string, password: string): Promise<UsersMainType| null> {
-        const user: UsersMainType | null = await usersRepository.findUserByLoginOrEmail(loginOrEmail)
 
-        if (!user) return null
-
-        const hash: string = await this.passwordHash(password, user.passwordSalt)
-        if (hash !== user.passwordHash) return null
-
-        return user
-
-
-    }
 
 }

@@ -12,7 +12,7 @@ export const usersRepository = {
 
         const [items, totalCount] = await Promise.all([
             users_db
-                .find(filter, {projection: {_id: 0, passwordSalt: 0, passwordHash: 0}})
+                .find(filter, {projection: {_id: 0, passwordSalt: 0, passwordHash: 0, emailConfirmation:0}})
                 .sort({[pagination.sortBy]: pagination.sortDirection})
                 .skip(pagination.skip)
                 .limit(pagination.pageSize)
@@ -41,6 +41,11 @@ export const usersRepository = {
 
         return user
     },
+    async findUserByConfirmationCode(code:string){
+        const user: UsersMainType | null = await users_db.findOne({'emailConfirmation.confirmationCode': code})
+
+        return user
+    },
     async createUser(user: UsersMainType): Promise<UsersMainType| null> {
         await users_db.insertOne({...user})
 
@@ -55,8 +60,13 @@ export const usersRepository = {
 
 
     },
-    async deleteAllUsers(){
+    async deleteAllUsers():Promise<boolean>{
         users_db.deleteMany({})
         return true
+    },
+    async updateConfirmation(id:ObjectId):Promise<boolean>{
+        const result = await users_db.updateOne({id:id},{$set:{'emailConfirmation.isConfirmed': true}})
+
+        return result.modifiedCount === 1
     }
 }

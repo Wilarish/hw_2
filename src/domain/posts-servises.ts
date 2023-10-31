@@ -3,7 +3,6 @@ import {BlogsMainType} from "../types/blogs/blogs-main-type";
 import {blogsRepository} from "../repositories/blogs-rep";
 import {PostsMainType} from "../types/posts/posts-main-type";
 import {postsRepository} from "../repositories/posts-rep";
-import {BlogsCreateUpdate} from "../types/blogs/blogs-create-update-type";
 import {CommentsMainType} from "../types/comments/comments-main-type";
 import {CommentsCreateUpdate} from "../types/comments/comments-create-update";
 import {usersRepository} from "../repositories/users-rep";
