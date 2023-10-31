@@ -3,12 +3,9 @@ import {UsersMainType} from "../types/users/users-main-type";
 import bcrypt from "bcrypt";
 import {ObjectId, UUID} from "mongodb";
 import {usersRepository} from "../repositories/users-rep";
-import {isIPv4} from "net";
 import {randomUUID} from "crypto";
 import { add } from "date-fns";
-import {EmailAdapter} from "../adapters/email-adapter";
 import {EmailServices} from "./email-services";
-import e from "express";
 
 export const AuthService={
     async createUser(data: UsersCreate): Promise<UsersMainType|null> {

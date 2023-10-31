@@ -55,7 +55,7 @@ AuthRouter.post('/registration-confirmation',paramsCheckingAuth.code, errorsChec
 
 })
 
-AuthRouter.post('registration-email-resending', paramsCheckingAuth.email, errorsChecking , async (req:Request<{},{},{email:string}>, res:Response)=>{
+AuthRouter.post('/registration-email-resending', paramsCheckingAuth.email, errorsChecking , async (req:Request<{},{},{email:string}>, res:Response)=>{
     const result: boolean = await AuthService.resendCode(req.body.email)
 
     if (!result) return res.sendStatus(HTTP_statuses.BAD_REQUEST_400)
