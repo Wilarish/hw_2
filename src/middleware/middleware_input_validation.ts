@@ -36,13 +36,13 @@ export const paramsCheckingPostsBody = {
     })
 }
 export const paramsCheckingUsersBody = {
-    email: body('email').isString().trim().isEmail().isLength({min:1, max:20}),
+    email: body('email').isString().trim().isEmail().isLength({min:1, max:50}),
     login: body('login').isString().trim().isLength({min:3, max:10}),
     password: body('password').isString().trim().isLength({min:6, max: 20})
 }
 
 export const paramsCheckingLogin ={
-    loginOrEmail: body('loginOrEmail').isString().trim().isLength({min:1,max:20}),
+    loginOrEmail: body('loginOrEmail').isString().trim().isLength({min:1,max:50}),
     password: body('password').isString().trim().isLength({min:6, max: 20})
 }
 
@@ -52,7 +52,7 @@ export const paramsCheckingCommentsBody ={
 }
 export const paramsCheckingAuth={
     code: body('code').isString().trim().isLength({min:1}),
-    email: body('email').isString().trim().isEmail().isLength({min:1, max:20}),
+    email: body('email').isString().trim().isEmail().isLength({min:1, max:50}),
 }
 
 const errorFormatter = (error: ValidationError) => {
