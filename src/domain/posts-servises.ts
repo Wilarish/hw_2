@@ -36,14 +36,14 @@ export const postsServises = {
 
         if(!post) return null
 
-        console.log("postid when created comment: "+postid)
+        console.log("postid when created comment: "+postid, "userId:", userid)
         if(user){
 
             const new_comment: CommentsMainType = {
             id: new ObjectId(),
             content: data.content,
             commentatorInfo: {
-                userId: new ObjectId(user.id) ,
+                userId: new ObjectId(userid) ,
                 userLogin: user.login
             },
             createdAt: new Date().toISOString(),
