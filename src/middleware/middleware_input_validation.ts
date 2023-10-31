@@ -36,7 +36,7 @@ export const paramsCheckingPostsBody = {
     })
 }
 export const paramsCheckingUsersBody = {
-    email: body('email').isString().trim().isEmail().isLength({min:1, max:50}),
+    email: body('email').isString().trim().isEmail().isLength({min:1, max:50}).matches('^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$'),
     login: body('login').isString().trim().isLength({min:3, max:10}),
     password: body('password').isString().trim().isLength({min:6, max: 20})
 }
