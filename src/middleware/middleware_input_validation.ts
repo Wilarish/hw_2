@@ -38,7 +38,7 @@ export const paramsCheckingPostsBody = {
     })
 }
 export const paramsCheckingUsersBody = {
-    email: body('email').isString().trim().isEmail().isLength({min:1, max:50}).matches('^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').custom(async(email) => {
+    email: body('email').isString().trim().isEmail().isLength({min:1, max:50}).custom(async(email) => {
         const user = await usersRepository.findUserByLoginOrEmail(email);
         if(user) throw new Error('User with this email already exist')
         return true;
