@@ -6,6 +6,7 @@ import {blogsRepository} from "../repositories/blogs-rep";
 import {jwtServises} from "../application/jwt-servises";
 import {ObjectId} from "mongodb";
 import {usersRepository} from "../repositories/users-rep";
+import nodemailer from "nodemailer";
 
 
 
@@ -30,8 +31,7 @@ export const paramsCheckingPostsBody = {
 
         const blog = await blogs_db.findOne({id:new ObjectId(value) })
 
-        if (!blog)
-            throw new Error("error blogID")
+        if (!blog) throw new Error("error blogID")
 
         return true
 
@@ -39,11 +39,13 @@ export const paramsCheckingPostsBody = {
 }
 export const paramsCheckingUsersBody = {
     email: body('email').isString().trim().isEmail().isLength({min:1, max:50}).custom(async(email) => {
+
         const user = await usersRepository.findUserByLoginOrEmail(email);
         if(user) throw new Error('User with this email already exist')
         return true;
     }),
     login: body('login').isString().trim().isLength({min:3, max:10}).custom(async (login)=>{
+
         const user = await usersRepository.findUserByLoginOrEmail(login);
         if(user) throw new Error('User with this login already exist')
         return true;
@@ -61,8 +63,18 @@ export const paramsCheckingCommentsBody ={
 
 }
 export const paramsCheckingAuth={
-    code: body('code').isString().trim().isLength({min:1}),
-    email: body('email').isString().trim().isEmail().isLength({min:1, max:50}),
+    code: body('code').isString().trim().isLength({min:1}).custom(async (code)=>{
+
+        const user = await usersRepository.findUserByConfirmationCode(code)
+        if(!user) throw new Error("this code is not exist")
+        return true
+    }),
+    email: body('email').isString().trim().isEmail().isLength({min:1, max:50}).custom(async (email)=>{
+
+        const user = await usersRepository.findUserByLoginOrEmail(email);
+        if(user?.emailConfirmation.isConfirmed) throw new Error("This email is already confirmed")
+        return true
+    }),
 }
 
 const errorFormatter = (error: ValidationError) => {
