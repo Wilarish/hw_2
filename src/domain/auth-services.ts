@@ -64,10 +64,12 @@ export const AuthService={
 
         if(!user) return false
 
-        user.emailConfirmation.confirmationCode = new UUID().toString()
+        const newConfirmationCode = randomUUID();
+        user.emailConfirmation.confirmationCode = newConfirmationCode;
+        await usersRepository.updateConfirmationCode(user.id,newConfirmationCode)
 
         try {
-            await EmailServices.SendEmailForRegistration(user)
+            await EmailServices.SendEmailForRegistration(user)//user.email, newConfirmationCode
         }
         catch (error){
             console.error(error)
