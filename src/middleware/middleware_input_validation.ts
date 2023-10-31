@@ -67,7 +67,7 @@ export const paramsCheckingAuth={
 
         const user = await usersRepository.findUserByConfirmationCode(code)
         if(!user) throw new Error("this code is not exist")
-        if(user.emailConfirmation.confirmationCode) throw new Error("this code is already confirmed")
+        if(user.emailConfirmation.isConfirmed) throw new Error("this code is already confirmed")
         return true
     }),
     email: body('email').isString().trim().isEmail().isLength({min:1, max:50}).custom(async (email)=>{
