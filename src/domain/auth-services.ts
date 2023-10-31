@@ -1,7 +1,7 @@
 import {UsersCreate} from "../types/users/users-create";
 import {UsersMainType} from "../types/users/users-main-type";
 import bcrypt from "bcrypt";
-import {ObjectId} from "mongodb";
+import {ObjectId, UUID} from "mongodb";
 import {usersRepository} from "../repositories/users-rep";
 import {isIPv4} from "net";
 import {randomUUID} from "crypto";
@@ -66,6 +66,8 @@ export const AuthService={
         const user:UsersMainType|null = await usersRepository.findUserByLoginOrEmail(email)
 
         if(!user) return false
+
+        user.emailConfirmation.confirmationCode = new UUID().toString()
 
         try {
             await EmailServices.SendEmailForRegistration(user)
