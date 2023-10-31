@@ -6,12 +6,12 @@ export const EmailServices={
 
         const subject: string = "Registration"
 
-        // const message: string ='<h1>Thank for your registration</h1>\n' +
-        //     ' <p>To finish registration please follow the link below:\n' +
-        //     '     <a href=\'https://somesite.com/confirm-email?code=\'>complete registration</a>\n' +
-        //     ' </p>'
+        const message: string =`<h1>Thanks for your registration</h1>
+        <p>To finish registration please follow the link below:
+            <a href='https://somesite.com/confirm-email?code=${user.emailConfirmation.confirmationCode}'>complete registration</a>
+        </p>`
 
-        const message = 'https://hw-00qb.onrender.com/auth/registration-confirmation?code='+ user.emailConfirmation.confirmationCode
+        //const message = 'https://hw-00qb.onrender.com/auth/registration-confirmation?code='+ user.emailConfirmation.confirmationCode
 
         return EmailAdapter.SendEmail(user.email, subject, message)
     }
