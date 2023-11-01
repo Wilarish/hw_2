@@ -1,6 +1,6 @@
 import request from "supertest";
 import {app, RouterPath} from "../../settings";
-import {HTTP_statuses} from "../../data/HTTP_statuses";
+import {HTTP_STATUSES} from "../../data/HTTP_STATUSES";
 import {BlogsMainType} from "../../types/blogs/blogs-main-type";
 import {BlogsCreateUpdate} from "../../types/blogs/blogs-create-update-type";
 import {Paginated} from "../../types/pagination.type";
@@ -11,7 +11,7 @@ describe('/blogs', ()=>{
     beforeAll(async ()=>{
         await request(app)
             .delete('/testing/all-data')
-            .expect(HTTP_statuses.NO_CONTENT_204)
+            .expect(HTTP_STATUSES.NO_CONTENT_204)
 
     })
 
@@ -29,7 +29,7 @@ describe('/blogs', ()=>{
 
        const res = await request(app)
             .get(RouterPath.blogs)
-            .expect(HTTP_statuses.OK_200)
+            .expect(HTTP_STATUSES.OK_200)
         expect(res.body).toEqual(expectedRes)
     })
 
@@ -48,7 +48,7 @@ describe('/blogs', ()=>{
              .post(RouterPath.blogs)
              .set("Authorization", "Basic YWRtaW46cXdlcnR5")
              .send(data)
-             .expect(HTTP_statuses.CREATED_201)
+             .expect(HTTP_STATUSES.CREATED_201)
 
         createdBlog = response.body;
 
@@ -56,7 +56,7 @@ describe('/blogs', ()=>{
 
         await request(app)
             .get(`${RouterPath.blogs}/${createdBlog.id}`)
-            .expect(HTTP_statuses.OK_200, createdBlog)
+            .expect(HTTP_STATUSES.OK_200, createdBlog)
 
     });
     it('should create blog_2 with correct data', async () => {
@@ -72,14 +72,14 @@ describe('/blogs', ()=>{
             .post(RouterPath.blogs)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send(data)
-            .expect(HTTP_statuses.CREATED_201)
+            .expect(HTTP_STATUSES.CREATED_201)
 
         createdBlog_2 = response.body;
 
 
        const res = await request(app)
             .get(RouterPath.blogs)
-            .expect(HTTP_statuses.OK_200, )
+            .expect(HTTP_STATUSES.OK_200, )
 
 
         expect(res.body).toEqual({...expectedRes, totalCount: 2})
@@ -97,7 +97,7 @@ describe('/blogs', ()=>{
             .post(RouterPath.blogs)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send({...data, name:123})
-            .expect(HTTP_statuses.BAD_REQUEST_400)
+            .expect(HTTP_STATUSES.BAD_REQUEST_400)
     });
     it('shouldn`t update blog ', async () => {
 
@@ -111,7 +111,7 @@ describe('/blogs', ()=>{
             .put(`${RouterPath.blogs}/${createdBlog.id}`)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send({...data, name: 123})
-            .expect(HTTP_statuses.BAD_REQUEST_400 )
+            .expect(HTTP_STATUSES.BAD_REQUEST_400 )
 
         expect(notStringName.body).toEqual({
             errorsMessages: [
@@ -126,7 +126,7 @@ describe('/blogs', ()=>{
             .put(`${RouterPath.blogs}/${createdBlog.id}`)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send({...data, description: 1111})
-            .expect(HTTP_statuses.BAD_REQUEST_400 )
+            .expect(HTTP_STATUSES.BAD_REQUEST_400 )
 
         expect(descriptionIsNotString.body).toEqual({
             errorsMessages: [
@@ -140,7 +140,7 @@ describe('/blogs', ()=>{
             .put(`${RouterPath.blogs}/${createdBlog.id}`)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send({...data, websiteUrl: '-----/////'})
-            .expect(HTTP_statuses.BAD_REQUEST_400 )
+            .expect(HTTP_STATUSES.BAD_REQUEST_400 )
 
         expect(notUrl.body).toEqual({
             errorsMessages: [
@@ -154,7 +154,7 @@ describe('/blogs', ()=>{
 
         await request(app)
             .get(`${RouterPath.blogs}/${createdBlog.id}`)
-            .expect(HTTP_statuses.OK_200, createdBlog)
+            .expect(HTTP_STATUSES.OK_200, createdBlog)
     });
     it('shouldn`t update unexpected blog ', async () => {
 
@@ -168,7 +168,7 @@ describe('/blogs', ()=>{
             .put(`${RouterPath.blogs}/${-100}`)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send(data)
-            .expect(HTTP_statuses.NOT_FOUND_404)
+            .expect(HTTP_STATUSES.NOT_FOUND_404)
 
     });
     it('should update blog correct ', async () => {
@@ -182,12 +182,12 @@ describe('/blogs', ()=>{
             .put(`${RouterPath.blogs}/${createdBlog.id}`)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send(data)
-            .expect(HTTP_statuses.NO_CONTENT_204)
+            .expect(HTTP_STATUSES.NO_CONTENT_204)
 
 
         const result =  await request(app)
             .get(`${RouterPath.blogs}/${createdBlog.id}`)
-            .expect(HTTP_statuses.OK_200 )
+            .expect(HTTP_STATUSES.OK_200 )
 
         expect(result.body).toEqual({
             ...createdBlog,
@@ -199,11 +199,11 @@ describe('/blogs', ()=>{
         await request(app)
             .delete(`${RouterPath.blogs}/${createdBlog.id}`)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
-            .expect(HTTP_statuses.NO_CONTENT_204)
+            .expect(HTTP_STATUSES.NO_CONTENT_204)
 
         await request(app)
             .get(`${RouterPath.blogs}/${createdBlog.id}`)
-            .expect(HTTP_statuses.NOT_FOUND_404)
+            .expect(HTTP_STATUSES.NOT_FOUND_404)
 
     });
     it('shouldn`t delete unexpected blog', async () => {
@@ -212,11 +212,11 @@ describe('/blogs', ()=>{
         await request(app)
             .delete(`${RouterPath.blogs}/${-100}`)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
-            .expect(HTTP_statuses.NOT_FOUND_404)
+            .expect(HTTP_STATUSES.NOT_FOUND_404)
 
         await request(app)
             .get(`${RouterPath.blogs}/${-100}`)
-            .expect(HTTP_statuses.NOT_FOUND_404)
+            .expect(HTTP_STATUSES.NOT_FOUND_404)
 
     });
 

@@ -1,6 +1,6 @@
 import request from "supertest";
 import {app, RouterPath} from "../../settings";
-import {HTTP_statuses} from "../../data/HTTP_statuses";
+import {HTTP_STATUSES} from "../../data/HTTP_STATUSES";
 import {PostsMainType} from "../../types/posts/posts-main-type";
 import {PostsCreateUpdate} from "../../types/posts/posts-create-update";
 import {BlogsMainType} from "../../types/blogs/blogs-main-type";
@@ -22,7 +22,7 @@ describe('/posts', ()=>{
     beforeAll(async ()=>{
         await request(app)
             .delete('/testing/all-data')
-            .expect(HTTP_statuses.NO_CONTENT_204)
+            .expect(HTTP_STATUSES.NO_CONTENT_204)
 
     })
 
@@ -38,7 +38,7 @@ describe('/posts', ()=>{
     it('should return 200 and empty array', async () => {
         const res = await request(app)
             .get(RouterPath.posts)
-            .expect(HTTP_statuses.OK_200)
+            .expect(HTTP_STATUSES.OK_200)
         expect(res.body).toEqual(expectedRes)
             
     })
@@ -61,7 +61,7 @@ describe('/posts', ()=>{
             .post(RouterPath.posts)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send(data)
-            .expect(HTTP_statuses.CREATED_201)
+            .expect(HTTP_STATUSES.CREATED_201)
 
         expect(response.body).toEqual({
             id: expect.any(String),
@@ -74,7 +74,7 @@ describe('/posts', ()=>{
 
         await request(app)
             .get(`${RouterPath.posts}/${createdPost.id}`)
-            .expect(HTTP_statuses.OK_200, createdPost)
+            .expect(HTTP_STATUSES.OK_200, createdPost)
 
     });
     it('should create post_2 with correct data', async () => {
@@ -92,7 +92,7 @@ describe('/posts', ()=>{
             .post(RouterPath.posts)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send(data)
-            .expect(HTTP_statuses.CREATED_201)
+            .expect(HTTP_STATUSES.CREATED_201)
 
         expect(response.body).toEqual({
             id: expect.any(String),
@@ -106,7 +106,7 @@ describe('/posts', ()=>{
 
         const  res = await request(app)
             .get(RouterPath.posts)
-            .expect(HTTP_statuses.OK_200)
+            .expect(HTTP_STATUSES.OK_200)
 
         expect(res.body).toEqual({...expectedRes, totalCount: 2})
         expect(res.body.items).toEqual([createdPost_2, createdPost])
@@ -125,7 +125,7 @@ describe('/posts', ()=>{
             .post(RouterPath.posts)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send({...data, title:123})
-            .expect(HTTP_statuses.BAD_REQUEST_400)
+            .expect(HTTP_STATUSES.BAD_REQUEST_400)
     });
     it('should update "blogName" when field "name" in blog has been updated', async () => {
 
@@ -138,12 +138,12 @@ describe('/posts', ()=>{
             .put(`${RouterPath.blogs}/${createdBlog.id}`)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send(data)
-            .expect(HTTP_statuses.NO_CONTENT_204)
+            .expect(HTTP_STATUSES.NO_CONTENT_204)
 
 
         const result =  await request(app)
             .get(`${RouterPath.blogs}/${createdBlog.id}`)
-            .expect(HTTP_statuses.OK_200 )
+            .expect(HTTP_STATUSES.OK_200 )
 
 
         let updateDataPostFromDb  = await postsRepository.findPostById(createdPost.id.toString())
@@ -152,13 +152,13 @@ describe('/posts', ()=>{
 
         await request(app)
             .get(`${RouterPath.posts}/${createdPost.id}`)
-            .expect(HTTP_statuses.OK_200, {...createdPost, blogName:"change"})
+            .expect(HTTP_STATUSES.OK_200, {...createdPost, blogName:"change"})
 
 
 
         await request(app)
             .get(`${RouterPath.posts}/${createdPost_2.id}`)
-            .expect(HTTP_statuses.OK_200, {...createdPost_2, blogName:"change"})
+            .expect(HTTP_STATUSES.OK_200, {...createdPost_2, blogName:"change"})
 
     });
     it('shouldn`t update post ', async () => {
@@ -174,7 +174,7 @@ describe('/posts', ()=>{
             .put(`${RouterPath.posts}/${createdPost.id}`)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send({...data, title: 123})
-            .expect(HTTP_statuses.BAD_REQUEST_400 )
+            .expect(HTTP_STATUSES.BAD_REQUEST_400 )
 
         expect(notStringTitle.body).toEqual({
             errorsMessages: [
@@ -189,7 +189,7 @@ describe('/posts', ()=>{
             .put(`${RouterPath.posts}/${createdPost.id}`)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send({...data, shortDescription: ''})
-            .expect(HTTP_statuses.BAD_REQUEST_400 )
+            .expect(HTTP_STATUSES.BAD_REQUEST_400 )
 
         expect(northingInDescription.body).toEqual({
             errorsMessages: [
@@ -203,7 +203,7 @@ describe('/posts', ()=>{
             .put(`${RouterPath.posts}/${createdPost.id}`)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send({...data, content: 123})
-            .expect(HTTP_statuses.BAD_REQUEST_400 )
+            .expect(HTTP_STATUSES.BAD_REQUEST_400 )
 
         expect(notStringContent.body).toEqual({
             errorsMessages: [
@@ -216,7 +216,7 @@ describe('/posts', ()=>{
 
         await request(app)
             .get(`${RouterPath.posts}/${createdPost.id}`)
-            .expect(HTTP_statuses.OK_200, createdPost)
+            .expect(HTTP_STATUSES.OK_200, createdPost)
     });
     it('shouldn`t update unexpected post ', async () => {
 
@@ -231,7 +231,7 @@ describe('/posts', ()=>{
             .put(`${RouterPath.posts}/${-100}`)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send(data)
-            .expect(HTTP_statuses.NOT_FOUND_404)
+            .expect(HTTP_STATUSES.NOT_FOUND_404)
 
     });
     it('should update post correct ', async () => {
@@ -246,12 +246,12 @@ describe('/posts', ()=>{
             .put(`${RouterPath.posts}/${createdPost.id}`)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send(data)
-            .expect(HTTP_statuses.NO_CONTENT_204)
+            .expect(HTTP_STATUSES.NO_CONTENT_204)
 
 
         const result =  await request(app)
             .get(`${RouterPath.posts}/${createdPost.id}`)
-            .expect(HTTP_statuses.OK_200 )
+            .expect(HTTP_STATUSES.OK_200 )
 
         expect(result.body).toEqual({
             ...createdPost,
@@ -263,11 +263,11 @@ describe('/posts', ()=>{
         await request(app)
             .delete(`${RouterPath.posts}/${createdPost.id}`)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
-            .expect(HTTP_statuses.NO_CONTENT_204)
+            .expect(HTTP_STATUSES.NO_CONTENT_204)
 
         await request(app)
             .get(`${RouterPath.posts}/${createdPost.id}`)
-            .expect(HTTP_statuses.NOT_FOUND_404)
+            .expect(HTTP_STATUSES.NOT_FOUND_404)
 
     });
     it('shouldn`t delete unexpected post', async () => {
@@ -276,11 +276,11 @@ describe('/posts', ()=>{
         await request(app)
             .delete(`${RouterPath.posts}/${-100}`)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
-            .expect(HTTP_statuses.NOT_FOUND_404)
+            .expect(HTTP_STATUSES.NOT_FOUND_404)
 
         await request(app)
             .get(`${RouterPath.posts}/${-100}`)
-            .expect(HTTP_statuses.NOT_FOUND_404)
+            .expect(HTTP_STATUSES.NOT_FOUND_404)
 
     });
 

@@ -1,7 +1,7 @@
-import {EmailAdapter} from "../adapters/email-adapter";
+import {emailAdapter} from "../adapters/email-adapter";
 import {UsersMainType} from "../types/users/users-main-type";
 
-export const EmailServices={
+export const emailServices={
     async SendEmailForRegistration(user:UsersMainType){
 
         const subject: string = "Registration"
@@ -13,6 +13,6 @@ export const EmailServices={
 
         //const message = 'https://hw-00qb.onrender.com/auth/registration-confirmation?code='+ user.emailConfirmation.confirmationCode
 
-        return EmailAdapter.SendEmail(user.email, subject, message)
+        return emailAdapter.SendEmail(user.email, subject, message)
     }
 }

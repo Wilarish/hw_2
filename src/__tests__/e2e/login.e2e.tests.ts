@@ -1,6 +1,6 @@
 import request from "supertest";
 import {app, RouterPath} from "../../settings";
-import {HTTP_statuses} from "../../data/HTTP_statuses";
+import {HTTP_STATUSES} from "../../data/HTTP_STATUSES";
 import {Paginated} from "../../types/pagination.type";
 import {UsersMainType} from "../../types/users/users-main-type";
 import {UsersCreate} from "../../types/users/users-create";
@@ -9,7 +9,7 @@ describe('/login',()=>{
     beforeAll(async ()=>{
         await request(app)
             .delete('/testing/all-data')
-            .expect(HTTP_statuses.NO_CONTENT_204)
+            .expect(HTTP_STATUSES.NO_CONTENT_204)
 
     })
     let createdUser:UsersMainType
@@ -27,7 +27,7 @@ describe('/login',()=>{
         const res = await request(app)
             .get(RouterPath.users)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
-            .expect(HTTP_statuses.OK_200)
+            .expect(HTTP_STATUSES.OK_200)
         expect(res.body).toEqual(expectedRes)
 
     })
@@ -47,7 +47,7 @@ describe('/login',()=>{
             .post(RouterPath.users)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send(data)
-            .expect(HTTP_statuses.CREATED_201 )
+            .expect(HTTP_STATUSES.CREATED_201 )
 
         expect(response.body).toEqual({
             id: expect.any(String),
@@ -61,7 +61,7 @@ describe('/login',()=>{
         const  res = await request(app)
             .get(RouterPath.users)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
-            .expect(HTTP_statuses.OK_200)
+            .expect(HTTP_STATUSES.OK_200)
 
         expect(res.body).toEqual(expectedRes)
         expect(res.body.items).toEqual([createdUser])
@@ -75,7 +75,7 @@ describe('/login',()=>{
                 loginOrEmail: "loginnnnnn",
                 password: "password"
             })
-            .expect(HTTP_statuses.UNAUTHORIZED_401)
+            .expect(HTTP_STATUSES.UNAUTHORIZED_401)
 
         await request(app)
             .post(RouterPath.auth + '/login')
@@ -83,7 +83,7 @@ describe('/login',()=>{
                 loginOrEmail: "login",
                 password: "passworddddd"
             })
-            .expect(HTTP_statuses.UNAUTHORIZED_401)
+            .expect(HTTP_STATUSES.UNAUTHORIZED_401)
 
     });
 
@@ -94,7 +94,7 @@ describe('/login',()=>{
                 loginOrEmail: 1234,
                 password: "password"
             })
-            .expect(HTTP_statuses.BAD_REQUEST_400)
+            .expect(HTTP_STATUSES.BAD_REQUEST_400)
 
         await request(app)
             .post(RouterPath.auth + '/login')
@@ -102,7 +102,7 @@ describe('/login',()=>{
                 loginOrEmail: "login",
                 password: 12345
             })
-            .expect(HTTP_statuses.BAD_REQUEST_400)
+            .expect(HTTP_STATUSES.BAD_REQUEST_400)
 
     });
 
@@ -113,6 +113,6 @@ describe('/login',()=>{
                 loginOrEmail: 'login',
                 password: 'password'
             })
-            .expect(HTTP_statuses.NO_CONTENT_204)
+            .expect(HTTP_STATUSES.NO_CONTENT_204)
     });
 })

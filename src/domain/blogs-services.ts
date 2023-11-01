@@ -5,7 +5,7 @@ import {ObjectId} from "mongodb";
 
 
 
-export const blogsServise = {
+export const blogsServices = {
 
     async createBlog(data: BlogsCreateUpdate): Promise<BlogsMainType> {
 

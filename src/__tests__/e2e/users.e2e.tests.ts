@@ -2,7 +2,7 @@ import request from "supertest";
 import {UsersMainType} from "../../types/users/users-main-type";
 import {UsersCreate} from "../../types/users/users-create";
 import {app, RouterPath} from "../../settings";
-import {HTTP_statuses} from "../../data/HTTP_statuses";
+import {HTTP_STATUSES} from "../../data/HTTP_STATUSES";
 import {Paginated} from "../../types/pagination.type";
 import {PostsMainType} from "../../types/posts/posts-main-type";
 import {createBlogUtils} from "./utils/createBlog.utils";
@@ -18,7 +18,7 @@ describe('/users', ()=>{
     beforeAll(async ()=>{
         await request(app)
             .delete('/testing/all-data')
-            .expect(HTTP_statuses.NO_CONTENT_204)
+            .expect(HTTP_STATUSES.NO_CONTENT_204)
 
     })
 
@@ -35,7 +35,7 @@ describe('/users', ()=>{
         const res = await request(app)
             .get(RouterPath.users)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
-            .expect(HTTP_statuses.OK_200)
+            .expect(HTTP_STATUSES.OK_200)
         expect(res.body).toEqual(expectedRes)
 
     })
@@ -55,7 +55,7 @@ describe('/users', ()=>{
             .post(RouterPath.users)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send(data)
-            .expect(HTTP_statuses.CREATED_201 )
+            .expect(HTTP_STATUSES.CREATED_201 )
 
         expect(response.body).toEqual({
             id: expect.any(String),
@@ -69,7 +69,7 @@ describe('/users', ()=>{
         const  res = await request(app)
             .get(RouterPath.users)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
-            .expect(HTTP_statuses.OK_200)
+            .expect(HTTP_STATUSES.OK_200)
 
         expect(res.body).toEqual(expectedRes)
         expect(res.body.items).toEqual([createdUser])
@@ -89,7 +89,7 @@ describe('/users', ()=>{
             .post(RouterPath.users)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send(data)
-            .expect(HTTP_statuses.CREATED_201 )
+            .expect(HTTP_STATUSES.CREATED_201 )
 
         expect(response.body).toEqual({
             id: expect.any(String),
@@ -103,7 +103,7 @@ describe('/users', ()=>{
         const  res = await request(app)
             .get(RouterPath.users)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
-            .expect(HTTP_statuses.OK_200)
+            .expect(HTTP_STATUSES.OK_200)
 
         expect(res.body).toEqual(expectedRes)
         expect(res.body.items).toEqual([createdUser_2, createdUser])
@@ -121,7 +121,7 @@ describe('/users', ()=>{
             .post(RouterPath.users)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send({...data, login:123})
-            .expect(HTTP_statuses.BAD_REQUEST_400)
+            .expect(HTTP_STATUSES.BAD_REQUEST_400)
 
         expect(notStringLogin.body).toEqual({
             errorsMessages: [
@@ -136,7 +136,7 @@ describe('/users', ()=>{
             .post(RouterPath.users)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send({...data, email:12345})
-            .expect(HTTP_statuses.BAD_REQUEST_400)
+            .expect(HTTP_STATUSES.BAD_REQUEST_400)
 
         expect(notStringEmail.body).toEqual({
             errorsMessages: [
@@ -151,7 +151,7 @@ describe('/users', ()=>{
             .post(RouterPath.users)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send({...data, password:123456})
-            .expect(HTTP_statuses.BAD_REQUEST_400)
+            .expect(HTTP_STATUSES.BAD_REQUEST_400)
 
         expect(notStringPassword.body).toEqual({
             errorsMessages: [
@@ -169,12 +169,12 @@ describe('/users', ()=>{
         await request(app)
             .delete(`${RouterPath.users}/${createdUser.id}`)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
-            .expect(HTTP_statuses.NO_CONTENT_204)
+            .expect(HTTP_STATUSES.NO_CONTENT_204)
 
         await request(app)
             .get(`${RouterPath.users}/${createdUser.id}`)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
-            .expect(HTTP_statuses.NOT_FOUND_404)
+            .expect(HTTP_STATUSES.NOT_FOUND_404)
 
     });
     it('shouldn`t delete unexpected user', async () => {
@@ -183,12 +183,12 @@ describe('/users', ()=>{
         await request(app)
             .delete(`${RouterPath.users}/${-100}`)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
-            .expect(HTTP_statuses.NOT_FOUND_404)
+            .expect(HTTP_STATUSES.NOT_FOUND_404)
 
         await request(app)
             .get(`${RouterPath.users}/${-100}`)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
-            .expect(HTTP_statuses.NOT_FOUND_404)
+            .expect(HTTP_STATUSES.NOT_FOUND_404)
 
     });
 

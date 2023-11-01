@@ -5,7 +5,7 @@ import bcrypt from 'bcrypt';
 import {ObjectId} from "mongodb";
 
 
-export const usresServises = {
+export const usersServices = {
     async createUser(data: UsersCreate): Promise<UsersMainType|null> {
 
         const passwordSalt: string = await bcrypt.genSalt(10)

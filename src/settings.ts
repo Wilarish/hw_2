@@ -1,6 +1,6 @@
 import express, {Request, Response} from "express"
 import {BlogsRouter} from "./routes/blogs-router";
-import {HTTP_statuses} from "./data/HTTP_statuses";
+import {HTTP_STATUSES} from "./data/HTTP_STATUSES";
 import {PostsRouter} from "./routes/posts-router";
 import {postsRepository} from "./repositories/posts-rep";
 import {blogsRepository} from "./repositories/blogs-rep";
@@ -36,5 +36,5 @@ app.delete('/testing/all-data',  async (req:Request, res:Response)=>{
     await postsRepository.deleteAllPosts()
     await blogsRepository.deleteAllBlogs()
     await usersRepository.deleteAllUsers()
-    res.sendStatus(HTTP_statuses.NO_CONTENT_204)
+    res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
 })

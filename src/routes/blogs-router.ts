@@ -1,19 +1,21 @@
-import  {Response, Request, Router} from "express";
+import {Response, Request, Router} from "express";
 import {BlogsMainType} from "../types/blogs/blogs-main-type";
-import {HTTP_statuses} from "../data/HTTP_statuses";
-import {authBasic, blogIdPostsChecking, errorsChecking} from "../middleware/middleware_input_validation";
+import {HTTP_STATUSES} from "../data/HTTP_STATUSES";
 import {InputValidBlogs, InputValidPosts} from "../middleware/arrays_of_input_validation";
-import {blogsServise} from "../domain/blogs-servise";
+import {blogsServices} from "../domain/blogs-services";
 import {blogsRepository} from "../repositories/blogs-rep";
-import {postsRepository} from "../repositories/posts-rep";
 import {PostsMainType} from "../types/posts/posts-main-type";
 import {getBlogsPagination, getDefaultPagination} from "../helpers/pagination.helper";
-import {postsServises} from "../domain/posts-servises";
+import {postsServices} from "../domain/posts-services";
 import {ObjectId} from "mongodb";
+import {errorsChecking} from "../middleware/errors_checking";
+import {uriBlogIdPostsChecking} from "../middleware/input_valid/input_posts";
+import {authBasic} from "../middleware/auth/auth_basic";
+import {Paginated} from "../types/pagination.type";
 
 export const BlogsRouter = Router()
 
-BlogsRouter.get('/', async(req: Request, res: Response) => {
+BlogsRouter.get('/', async (req: Request, res: Response) => {
     const pagination = getBlogsPagination(req.query)
     const blogs = await blogsRepository.findBlogs(pagination)
 
@@ -24,42 +26,56 @@ BlogsRouter.get('/:id', errorsChecking, async (req: Request<{ id: string }>, res
     const blog: BlogsMainType | null = await blogsRepository.findBlogById(req.params.id)
 
     if (!blog)
-        res.sendStatus(HTTP_statuses.NOT_FOUND_404)
+        res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
     else
         res.send(blog)
 
 })
-BlogsRouter.get('/:id/posts',  blogIdPostsChecking,  errorsChecking, async (req: Request<{id: string}>, res:Response)=>{
+BlogsRouter.get('/:id/posts', uriBlogIdPostsChecking, errorsChecking, async (req: Request<{
+    id: string
+}>, res: Response) => {
 
     console.log(typeof req.params.id)
 
     const pagination = getDefaultPagination(req.query)
-    const posts =  await blogsRepository.findPostsForBlogsById(req.params.id, pagination)
-    return res.status(HTTP_statuses.OK_200).send(posts)
+    const posts: Paginated<PostsMainType> = await blogsRepository.findPostsForBlogsById(req.params.id, pagination)
+    return res.status(HTTP_STATUSES.OK_200).send(posts)
 
 })
-BlogsRouter.post('/', authBasic, InputValidBlogs.post, errorsChecking, async (req: Request<{}, {}, { id: string, name: string, description: string, websiteUrl: string }>, res: Response) => {
+BlogsRouter.post('/', authBasic, InputValidBlogs.post, errorsChecking, async (req: Request<{}, {}, {
+    id: string,
+    name: string,
+    description: string,
+    websiteUrl: string
+}>, res: Response) => {
 
-    const new_blog: BlogsMainType = await blogsServise.createBlog({
+    const new_blog: BlogsMainType = await blogsServices.createBlog({
         name: req.body.name,
         description: req.body.description,
         websiteUrl: req.body.websiteUrl
     })
 
-   return res.status(HTTP_statuses.CREATED_201).send(new_blog)
+    return res.status(HTTP_STATUSES.CREATED_201).send(new_blog)
 })
-BlogsRouter.post('/:id/posts', authBasic,  InputValidPosts.postWithUriBlogId, errorsChecking, async (req: Request<{
-    id: string }, {}, { title: string, shortDescription: string, content: string, blogId: string, blogName: string }>, res: Response)=>{
+BlogsRouter.post('/:id/posts', authBasic, InputValidPosts.postWithUriBlogId, errorsChecking, async (req: Request<{
+    id: string
+}, {}, {
+    title: string,
+    shortDescription: string,
+    content: string,
+    blogId: string,
+    blogName: string
+}>, res: Response) => {
 
 
-    const  new_post:PostsMainType =  await postsServises.createPost({
+    const new_post: PostsMainType = await postsServices.createPost({
         title: req.body.title,
         shortDescription: req.body.shortDescription,
         content: req.body.content,
-        blogId: new ObjectId(req.params.id) ,
+        blogId: new ObjectId(req.params.id),
     })
 
-    return res.status(HTTP_statuses.CREATED_201).send(new_post)
+    return res.status(HTTP_STATUSES.CREATED_201).send(new_post)
 
 
 })
@@ -69,27 +85,25 @@ BlogsRouter.put('/:id', authBasic, InputValidBlogs.put, errorsChecking, async (r
 
     const new_blog: BlogsMainType | null = await blogsRepository.findBlogById(req.params.id)
 
-    if (new_blog) {
-        const result: BlogsMainType | null = await blogsServise.updateBlog(req.params.id, {
-            name: req.body.name,
-            description: req.body.description,
-            websiteUrl: req.body.websiteUrl
-        })
-        res.status(HTTP_statuses.NO_CONTENT_204).send(result)
-    } else
-        res.sendStatus(HTTP_statuses.NOT_FOUND_404)
+    if (!new_blog) return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+
+    const result: BlogsMainType | null = await blogsServices.updateBlog(req.params.id, {
+        name: req.body.name,
+        description: req.body.description,
+        websiteUrl: req.body.websiteUrl
+    })
+    return res.status(HTTP_STATUSES.NO_CONTENT_204).send(result)
 
 
 })
 BlogsRouter.delete('/:id', authBasic, async (req: Request<{ id: string }>, res: Response) => {
 
-    const del:boolean = await blogsServise.deleteBlog(req.params.id)
+    const del: boolean = await blogsServices.deleteBlog(req.params.id)
 
-    if (!del) {
-        res.sendStatus(HTTP_statuses.NOT_FOUND_404)
-    } else {
-        res.sendStatus(HTTP_statuses.NO_CONTENT_204)
-    }
+    if (!del) return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+
+    return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
+
 
 })
 

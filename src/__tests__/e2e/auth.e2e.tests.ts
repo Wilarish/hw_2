@@ -1,6 +1,6 @@
 import request from "supertest";
 import {app, RouterPath} from "../../settings";
-import {HTTP_statuses} from "../../data/HTTP_statuses";
+import {HTTP_STATUSES} from "../../data/HTTP_STATUSES";
 import {createBlogUtils} from "./utils/createBlog.utils";
 import {PostsCreateUpdate} from "../../types/posts/posts-create-update";
 import {BlogsMainType} from "../../types/blogs/blogs-main-type";
@@ -26,7 +26,7 @@ describe('/authBasic', ()=>{
             .post(RouterPath.posts)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send(data)
-            .expect(HTTP_statuses.CREATED_201)
+            .expect(HTTP_STATUSES.CREATED_201)
 
         expect(response.body).toEqual({
             id: expect.any(String),
@@ -39,7 +39,7 @@ describe('/authBasic', ()=>{
 
         await request(app)
             .get(`${RouterPath.posts}/${createdPost.id}`)
-            .expect(HTTP_statuses.OK_200, createdPost)
+            .expect(HTTP_STATUSES.OK_200, createdPost)
 
     });
 
@@ -50,15 +50,15 @@ describe('/authBasic', ()=>{
 
         await request(app)
             .post(RouterPath.posts)
-            .expect(HTTP_statuses.UNAUTHORIZED_401)
+            .expect(HTTP_STATUSES.UNAUTHORIZED_401)
 
         await request(app)
             .put(`${RouterPath.posts}/${createdBlog.id}`)
-            .expect(HTTP_statuses.UNAUTHORIZED_401)
+            .expect(HTTP_STATUSES.UNAUTHORIZED_401)
 
         await request(app)
             .delete(`${RouterPath.posts}/${createdBlog.id}`)
-            .expect(HTTP_statuses.UNAUTHORIZED_401)
+            .expect(HTTP_STATUSES.UNAUTHORIZED_401)
 
 //______________________
 
@@ -67,17 +67,17 @@ describe('/authBasic', ()=>{
         await request(app)
             .post(RouterPath.posts)
             .set("Authorization", "Basic YWRtaW46cXdnR5")
-            .expect(HTTP_statuses.UNAUTHORIZED_401)
+            .expect(HTTP_STATUSES.UNAUTHORIZED_401)
 
         await request(app)
             .put(`${RouterPath.posts}/${createdBlog.id}`)
             .set("Authorization", "Basic YWRtaW46cXdnR5")
-            .expect(HTTP_statuses.UNAUTHORIZED_401)
+            .expect(HTTP_STATUSES.UNAUTHORIZED_401)
 
         await request(app)
             .delete(`${RouterPath.posts}/${createdBlog.id}`)
             .set("Authorization", "Basic YWRtaW46cXdnR5")
-            .expect(HTTP_statuses.UNAUTHORIZED_401)
+            .expect(HTTP_STATUSES.UNAUTHORIZED_401)
 
 //______________________
 
@@ -86,17 +86,17 @@ describe('/authBasic', ()=>{
         await request(app)
             .post(RouterPath.posts)
             .set("Authorization", "Bas YWRtaW46cXdlcnR5")
-            .expect(HTTP_statuses.UNAUTHORIZED_401)
+            .expect(HTTP_STATUSES.UNAUTHORIZED_401)
 
         await request(app)
             .put(`${RouterPath.blogs}/${createdBlog.id}`)
             .set("Authorization", "Bas YWRtaW46cXdlcnR5")
-            .expect(HTTP_statuses.UNAUTHORIZED_401)
+            .expect(HTTP_STATUSES.UNAUTHORIZED_401)
 
         await request(app)
             .delete(`${RouterPath.blogs}/${createdBlog.id}`)
             .set("Authorization", "Bas YWRtaW46cXdlcnR5")
-            .expect(HTTP_statuses.UNAUTHORIZED_401)
+            .expect(HTTP_STATUSES.UNAUTHORIZED_401)
 
 //_______________________
 
@@ -105,17 +105,17 @@ describe('/authBasic', ()=>{
         await request(app)
             .post(RouterPath.posts)
             .set("Authortion", "Basic YWRtaW46cXdlcnR5")
-            .expect(HTTP_statuses.UNAUTHORIZED_401)
+            .expect(HTTP_STATUSES.UNAUTHORIZED_401)
 
         await request(app)
             .put(`${RouterPath.blogs}/${createdBlog.id}`)
             .set("Authortion", "Basic YWRtaW46cXdlcnR5")
-            .expect(HTTP_statuses.UNAUTHORIZED_401)
+            .expect(HTTP_STATUSES.UNAUTHORIZED_401)
 
         await request(app)
             .delete(`${RouterPath.blogs}/${createdBlog.id}`)
             .set("Authortion", "Basic YWRtaW46cXdlcnR5")
-            .expect(HTTP_statuses.UNAUTHORIZED_401)
+            .expect(HTTP_STATUSES.UNAUTHORIZED_401)
 
     });
 
@@ -125,15 +125,15 @@ describe('/authBasic', ()=>{
 
         await request(app)
             .post(RouterPath.posts)
-            .expect(HTTP_statuses.UNAUTHORIZED_401)
+            .expect(HTTP_STATUSES.UNAUTHORIZED_401)
 
         await request(app)
             .put(`${RouterPath.posts}/${createdPost.id}`)
-            .expect(HTTP_statuses.UNAUTHORIZED_401)
+            .expect(HTTP_STATUSES.UNAUTHORIZED_401)
 
         await request(app)
             .delete(`${RouterPath.posts}/${createdPost.id}`)
-            .expect(HTTP_statuses.UNAUTHORIZED_401)
+            .expect(HTTP_STATUSES.UNAUTHORIZED_401)
 
 //______________________
 
@@ -142,17 +142,17 @@ describe('/authBasic', ()=>{
         await request(app)
             .post(RouterPath.posts)
             .set("Authorization", "Basic YWRtaW46cXdnR5")
-            .expect(HTTP_statuses.UNAUTHORIZED_401)
+            .expect(HTTP_STATUSES.UNAUTHORIZED_401)
 
         await request(app)
             .put(`${RouterPath.posts}/${createdPost.id}`)
             .set("Authorization", "Basic YWRtaW46cXdnR5")
-            .expect(HTTP_statuses.UNAUTHORIZED_401)
+            .expect(HTTP_STATUSES.UNAUTHORIZED_401)
 
         await request(app)
             .delete(`${RouterPath.posts}/${createdPost.id}`)
             .set("Authorization", "Basic YWRtaW46cXdnR5")
-            .expect(HTTP_statuses.UNAUTHORIZED_401)
+            .expect(HTTP_STATUSES.UNAUTHORIZED_401)
 
 //______________________
 
@@ -161,17 +161,17 @@ describe('/authBasic', ()=>{
         await request(app)
             .post(RouterPath.posts)
             .set("Authorization", "Bas YWRtaW46cXdlcnR5")
-            .expect(HTTP_statuses.UNAUTHORIZED_401)
+            .expect(HTTP_STATUSES.UNAUTHORIZED_401)
 
         await request(app)
             .put(`${RouterPath.posts}/${createdPost.id}`)
             .set("Authorization", "Bas YWRtaW46cXdlcnR5")
-            .expect(HTTP_statuses.UNAUTHORIZED_401)
+            .expect(HTTP_STATUSES.UNAUTHORIZED_401)
 
         await request(app)
             .delete(`${RouterPath.posts}/${createdPost.id}`)
             .set("Authorization", "Bas YWRtaW46cXdlcnR5")
-            .expect(HTTP_statuses.UNAUTHORIZED_401)
+            .expect(HTTP_STATUSES.UNAUTHORIZED_401)
 
 //_______________________
 
@@ -180,17 +180,17 @@ describe('/authBasic', ()=>{
         await request(app)
             .post(RouterPath.posts)
             .set("Authortion", "Basic YWRtaW46cXdlcnR5")
-            .expect(HTTP_statuses.UNAUTHORIZED_401)
+            .expect(HTTP_STATUSES.UNAUTHORIZED_401)
 
         await request(app)
             .put(`${RouterPath.posts}/${createdPost.id}`)
             .set("Authortion", "Basic YWRtaW46cXdlcnR5")
-            .expect(HTTP_statuses.UNAUTHORIZED_401)
+            .expect(HTTP_STATUSES.UNAUTHORIZED_401)
 
         await request(app)
             .delete(`${RouterPath.posts}/${createdPost.id}`)
             .set("Authortion", "Basic YWRtaW46cXdlcnR5")
-            .expect(HTTP_statuses.UNAUTHORIZED_401)
+            .expect(HTTP_STATUSES.UNAUTHORIZED_401)
 
     });
 

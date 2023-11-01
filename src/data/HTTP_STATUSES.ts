@@ -1,4 +1,4 @@
-export const HTTP_statuses = {
+export const HTTP_STATUSES = {
     OK_200: 200,
     CREATED_201: 201,
     NO_CONTENT_204: 204,
@@ -11,5 +11,3 @@ export const HTTP_statuses = {
     SERVER_ERROR_500:500,
 
 }
-export type HTTPstatusKeys = keyof typeof HTTP_statuses
-export type HTTPStatusType = typeof HTTP_statuses[HTTPstatusKeys]

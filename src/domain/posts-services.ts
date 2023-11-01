@@ -10,7 +10,7 @@ import {UsersMainType} from "../types/users/users-main-type";
 import {commentsRepository} from "../repositories/comments-rep";
 import {ObjectId} from "mongodb";
 
-export const postsServises = {
+export const postsServices = {
     async createPost(data: PostsCreateUpdate) {
 
         const find_blog: BlogsMainType | null = await blogsRepository.findBlogById(data.blogId.toString())
@@ -29,25 +29,24 @@ export const postsServises = {
         return postsRepository.createPost(new_post)
 
     },
-    async createCommentForPost(userid:string, postid:string, data:CommentsCreateUpdate){
+    async createCommentForPost(userId:string, postId:string, data:CommentsCreateUpdate){
 
-        const user:UsersMainType| null = await usersRepository.findUserById(userid)
-        const post:PostsMainType| null = await postsRepository.findPostById(postid)
+        const user:UsersMainType| null = await usersRepository.findUserById(userId)
+        const post:PostsMainType| null = await postsRepository.findPostById(postId)
 
         if(!post) return null
-
-        console.log("postid when created comment: "+postid, "userId:", userid)
+        
         if(user){
 
             const new_comment: CommentsMainType = {
             id: new ObjectId(),
             content: data.content,
             commentatorInfo: {
-                userId: new ObjectId(userid) ,
+                userId: new ObjectId(userId) ,
                 userLogin: user.login
             },
             createdAt: new Date().toISOString(),
-            postId:postid
+            postId:postId
         }
             return await commentsRepository.createComment(new_comment)
         }

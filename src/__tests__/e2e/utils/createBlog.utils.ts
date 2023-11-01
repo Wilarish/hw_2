@@ -1,7 +1,7 @@
 
 import request from "supertest";
 import {app, RouterPath} from "../../../settings";
-import {HTTP_statuses} from "../../../data/HTTP_statuses";
+import {HTTP_STATUSES} from "../../../data/HTTP_STATUSES";
 import {blogs} from "../constants/blogsConstants";
 
 export const createBlogUtils = async() => {
@@ -12,7 +12,7 @@ export const createBlogUtils = async() => {
         .post(RouterPath.blogs)
         .set("Authorization", "Basic YWRtaW46cXdlcnR5")
         .send(blogs.correctBlog1)
-        .expect(HTTP_statuses.CREATED_201)
+        .expect(HTTP_STATUSES.CREATED_201)
 
     return res.body
 

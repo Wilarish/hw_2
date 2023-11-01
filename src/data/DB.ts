@@ -3,8 +3,6 @@ import {MongoClient} from "mongodb";
 import dotenv from 'dotenv'
 import {BlogsMainType} from "../types/blogs/blogs-main-type";
 import {PostsMainType} from "../types/posts/posts-main-type";
-import e from "express";
-import {UsersCreate} from "../types/users/users-create";
 import {UsersMainType} from "../types/users/users-main-type";
 import {CommentsMainType} from "../types/comments/comments-main-type";
 
