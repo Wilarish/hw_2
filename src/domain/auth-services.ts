@@ -33,7 +33,7 @@ export const authServices = {
         const result: UsersMainType|null = await usersRepository.createUser(new_user)
 
         try {
-            await emailServices.SendEmailForRegistration(new_user)
+            await emailServices.SendEmailForRegistration(new_user.email, new_user.emailConfirmation.confirmationCode)
         } catch (error) {
             console.error(error)
             return null
@@ -49,8 +49,6 @@ export const authServices = {
         const user: UsersMainType | null = await usersRepository.findUserByConfirmationCode(code)
 
         if (!user) return false
-        // if (user.emailConfirmation.confirmationCode !== code) return false
-        // if (user.emailConfirmation.expirationDate < new Date()) return false
 
         const result: boolean = await usersRepository.updateConfirmation(user.id)
         return result
@@ -62,11 +60,11 @@ export const authServices = {
         if (!user) return false
 
         const newConfirmationCode = randomUUID();
-        user.emailConfirmation.confirmationCode = newConfirmationCode;
+        // user.emailConfirmation.confirmationCode = newConfirmationCode;
         await usersRepository.updateConfirmationCode(user.id, newConfirmationCode)
 
         try {
-            await emailServices.SendEmailForRegistration(user)//user.email, newConfirmationCode
+            await emailServices.SendEmailForRegistration(user.email, newConfirmationCode)//user.email, newConfirmationCode
         } catch (error) {
             console.error(error)
             return false
