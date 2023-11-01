@@ -1,5 +1,4 @@
 import {emailAdapter} from "../adapters/email-adapter";
-import {UsersMainType} from "../types/users/users-main-type";
 
 export const emailServices={
     async SendEmailForRegistration(email:string, confirmationCode:string){

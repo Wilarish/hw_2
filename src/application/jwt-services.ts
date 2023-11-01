@@ -4,8 +4,7 @@ const secret = process.env.SECRET_JWT || "123"
 export const jwtServices = {
 
     async createJwt (userId:string){
-        const token = jwt.sign({userId},secret,{expiresIn:'1h'})
-        return token
+        return jwt.sign({userId},secret,{expiresIn:'1h'})
     },
     async findUserByToken(token:string){
         try {

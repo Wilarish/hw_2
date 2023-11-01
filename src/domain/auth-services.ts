@@ -50,8 +50,8 @@ export const authServices = {
 
         if (!user) return false
 
-        const result: boolean = await usersRepository.updateConfirmation(user.id)
-        return result
+        return  await usersRepository.updateConfirmation(user.id)
+
     },
     async resendCode(email: string): Promise<boolean> {
 
@@ -60,7 +60,7 @@ export const authServices = {
         if (!user) return false
 
         const newConfirmationCode = randomUUID();
-        // user.emailConfirmation.confirmationCode = newConfirmationCode;
+
         await usersRepository.updateConfirmationCode(user.id, newConfirmationCode)
 
         try {
