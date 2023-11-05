@@ -33,12 +33,13 @@ export const postsRepository = {
     },
 
     async findPostById(id: string): Promise<PostsMainType | null> {
-        const post: PostsMainType|null = await posts_db.findOne({id: new ObjectId(id)},{ projection: {  _id: 0 } })
-        if (!post) {
-            return null
-        } else {
-            return post
-        }
+
+
+        const post: PostsMainType | null = await posts_db.findOne({id: new ObjectId(id)}, {projection: {_id: 0}})
+        if (!post) return null
+
+        return post
+
     },
     async createPost(post: PostsMainType): Promise<PostsMainType> {
 
@@ -50,14 +51,16 @@ export const postsRepository = {
 
         const find_blog: BlogsMainType | null = await blogsRepository.findBlogById(data.blogId.toString())
 
-        const result = await posts_db.updateOne({id: new ObjectId(id)},{$set:{
+        const result = await posts_db.updateOne({id: new ObjectId(id)}, {
+            $set: {
 
-            title: data.title,
-            shortDescription: data.shortDescription,
-            content : data.content,
-            blogId : data.blogId,
-            blogName : find_blog!.name
-        }})
+                title: data.title,
+                shortDescription: data.shortDescription,
+                content: data.content,
+                blogId: data.blogId,
+                blogName: find_blog!.name
+            }
+        })
 
 
         if (result.matchedCount === 1)
@@ -67,7 +70,7 @@ export const postsRepository = {
     },
     async deletePost(id: string): Promise<boolean> {
 
-        const result  = await posts_db.deleteOne({id: new ObjectId(id)})
+        const result = await posts_db.deleteOne({id: new ObjectId(id)})
 
         return result.deletedCount === 1
 

@@ -32,12 +32,12 @@ export const usersRepository = {
         }
     },
     async findUserByLoginOrEmail(loginOrEmail: string): Promise<UsersMainType | null> {
-        const user = await users_db.findOne({$or: [{login: loginOrEmail}, {email: loginOrEmail}]})
+        const user: UsersMainType | null = await users_db.findOne({$or: [{login: loginOrEmail}, {email: loginOrEmail}]} )
 
         return user
     },
     async findUserById(id: string) {
-        const user: UsersMainType | null = await users_db.findOne({id: new ObjectId(id)},{projection: {_id: 0, passwordSalt: 0, passwordHash: 0}})
+        const user: UsersMainType | null = await users_db.findOne({id: new ObjectId(id)},{projection: {_id: 0, passwordSalt: 0, passwordHash: 0, emailConfirmation:0}})
 
         return user
     },

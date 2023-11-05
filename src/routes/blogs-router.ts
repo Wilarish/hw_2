@@ -12,6 +12,7 @@ import {errorsChecking} from "../middleware/errors_checking";
 import {uriBlogIdPostsChecking} from "../middleware/input_valid/input_posts";
 import {authBasic} from "../middleware/auth/auth_basic";
 import {Paginated} from "../types/pagination.type";
+import {reqIdValidation} from "../middleware/req_id/id_valid";
 
 export const BlogsRouter = Router()
 
@@ -21,7 +22,7 @@ BlogsRouter.get('/', async (req: Request, res: Response) => {
 
     return res.send(blogs)
 })
-BlogsRouter.get('/:id', errorsChecking, async (req: Request<{ id: string }>, res: Response) => {
+BlogsRouter.get('/:id',reqIdValidation.id, errorsChecking, errorsChecking, async (req: Request<{ id: string }>, res: Response) => {
 
     const blog: BlogsMainType | null = await blogsRepository.findBlogById(req.params.id)
 
@@ -31,7 +32,7 @@ BlogsRouter.get('/:id', errorsChecking, async (req: Request<{ id: string }>, res
         res.send(blog)
 
 })
-BlogsRouter.get('/:id/posts', uriBlogIdPostsChecking, errorsChecking, async (req: Request<{
+BlogsRouter.get('/:id/posts',reqIdValidation.id, errorsChecking, uriBlogIdPostsChecking, errorsChecking, async (req: Request<{
     id: string
 }>, res: Response) => {
 
@@ -57,7 +58,7 @@ BlogsRouter.post('/', authBasic, InputValidBlogs.post, errorsChecking, async (re
 
     return res.status(HTTP_STATUSES.CREATED_201).send(new_blog)
 })
-BlogsRouter.post('/:id/posts', authBasic, InputValidPosts.postWithUriBlogId, errorsChecking, async (req: Request<{
+BlogsRouter.post('/:id/posts', authBasic, reqIdValidation.id, errorsChecking, InputValidPosts.postWithUriBlogId, errorsChecking, async (req: Request<{
     id: string
 }, {}, {
     title: string,
@@ -96,7 +97,7 @@ BlogsRouter.put('/:id', authBasic, InputValidBlogs.put, errorsChecking, async (r
 
 
 })
-BlogsRouter.delete('/:id', authBasic, async (req: Request<{ id: string }>, res: Response) => {
+BlogsRouter.delete('/:id', reqIdValidation.id, errorsChecking, authBasic, async (req: Request<{ id: string }>, res: Response) => {
 
     const del: boolean = await blogsServices.deleteBlog(req.params.id)
 

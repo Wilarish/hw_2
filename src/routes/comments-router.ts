@@ -7,18 +7,19 @@ import {CommentsMainType} from "../types/comments/comments-main-type";
 import {InputValidationComments} from "../middleware/arrays_of_input_validation";
 import {authBearer} from "../middleware/auth/auth_bearer";
 import {errorsChecking} from "../middleware/errors_checking";
+import {reqIdValidation} from "../middleware/req_id/id_valid";
 
 
 export const commentsRouter = Router({})
 
 
-commentsRouter.get('/:id',async (req:Request<{id:string}>, res:Response)=>{
+commentsRouter.get('/:id',reqIdValidation.id, errorsChecking ,async (req:Request<{id:string}>, res:Response)=>{
     const comment: CommentsMainType|null  = await commentsRepository.findCommentById(req.params.id)
 
     if(!comment) return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
     return res.status(HTTP_STATUSES.OK_200).send(comment)
 })
-commentsRouter.put('/:id',  authBearer, InputValidationComments.any, errorsChecking, async (req:Request<{id:string}>, res:Response)=>{
+commentsRouter.put('/:id',  authBearer, InputValidationComments.put, errorsChecking, async (req:Request<{id:string}>, res:Response)=>{
 
     const comment: CommentsMainType|null = await commentsRepository.findCommentById(req.params.id)
     if(!comment) return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
@@ -30,10 +31,10 @@ commentsRouter.put('/:id',  authBearer, InputValidationComments.any, errorsCheck
 
 
 
-    const result = await commentsServices.updateComment(data, req.params.id)
+    const result:CommentsMainType|null = await commentsServices.updateComment(data, req.params.id)
     return res.status(HTTP_STATUSES.NO_CONTENT_204).send(result)
 })
-commentsRouter.delete('/:id',  authBearer, async (req:Request<{id:string}>, res:Response)=>{
+commentsRouter.delete('/:id',reqIdValidation.id, errorsChecking,  authBearer, async (req:Request<{id:string}>, res:Response)=>{
     const comment: CommentsMainType|null = await commentsRepository.findCommentById(req.params.id)
     if(!comment) return  res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
 

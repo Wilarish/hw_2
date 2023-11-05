@@ -3,7 +3,7 @@ import {usersRepository} from "../../repositories/users-rep";
 import {UsersMainType} from "../../types/users/users-main-type";
 
 export const paramsCheckingAuth = {
-    code: body('code').isString().trim().isLength({min: 1}).custom(async (code) => {
+    code: body('code').isString().trim().isLength({min: 1}).withMessage('middleware error').custom(async (code) => {
 
         const user: UsersMainType | null = await usersRepository.findUserByConfirmationCode(code)
         if (!user) throw new Error("this code is not exist")

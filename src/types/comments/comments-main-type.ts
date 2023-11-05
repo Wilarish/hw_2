@@ -1,4 +1,5 @@
 import {ObjectId} from "mongodb";
+import e from "express";
 
 export type CommentsMainType= {
     "id": ObjectId,
@@ -7,7 +8,7 @@ export type CommentsMainType= {
     "createdAt": string,
     "postId":string
 }
-type commentatorInfo = {
+export type commentatorInfo = {
     "userId": ObjectId,
     "userLogin": string
 }

@@ -147,12 +147,13 @@ describe('/posts', ()=>{
 
 
         let updateDataPostFromDb  = await postsRepository.findPostById(createdPost.id.toString())
+        console.log(updateDataPostFromDb)
         if (updateDataPostFromDb) createdPost = updateDataPostFromDb
 
 
         await request(app)
             .get(`${RouterPath.posts}/${createdPost.id}`)
-            .expect(HTTP_STATUSES.OK_200, {...createdPost, blogName:"change"})
+            .expect(HTTP_STATUSES.OK_200, {...createdPost, id:createdPost.id.toString() , blogId:createdPost.blogId.toString()})
 
 
 
@@ -216,7 +217,7 @@ describe('/posts', ()=>{
 
         await request(app)
             .get(`${RouterPath.posts}/${createdPost.id}`)
-            .expect(HTTP_STATUSES.OK_200, createdPost)
+            .expect(HTTP_STATUSES.OK_200, {...createdPost, id:createdPost.id.toString(),blogId:createdPost.blogId.toString()})
     });
     it('shouldn`t update unexpected post ', async () => {
 
@@ -231,7 +232,7 @@ describe('/posts', ()=>{
             .put(`${RouterPath.posts}/${-100}`)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send(data)
-            .expect(HTTP_STATUSES.NOT_FOUND_404)
+            .expect(HTTP_STATUSES.BAD_REQUEST_400)
 
     });
     it('should update post correct ', async () => {
@@ -255,7 +256,8 @@ describe('/posts', ()=>{
 
         expect(result.body).toEqual({
             ...createdPost,
-            ...data
+            ...data,
+            id:createdPost.id.toString(),blogId:createdPost.blogId.toString()
         })
     });
     it('should delete post', async () => {
@@ -274,13 +276,13 @@ describe('/posts', ()=>{
 
 
         await request(app)
-            .delete(`${RouterPath.posts}/${-100}`)
+            .delete(`${RouterPath.posts}/${100}`)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
-            .expect(HTTP_STATUSES.NOT_FOUND_404)
+            .expect(HTTP_STATUSES.BAD_REQUEST_400)
 
         await request(app)
-            .get(`${RouterPath.posts}/${-100}`)
-            .expect(HTTP_STATUSES.NOT_FOUND_404)
+            .get(`${RouterPath.posts}/${100}`)
+            .expect(HTTP_STATUSES.BAD_REQUEST_400)
 
     });
 

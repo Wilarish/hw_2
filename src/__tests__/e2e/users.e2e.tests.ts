@@ -4,11 +4,6 @@ import {UsersCreate} from "../../types/users/users-create";
 import {app, RouterPath} from "../../settings";
 import {HTTP_STATUSES} from "../../data/HTTP_STATUSES";
 import {Paginated} from "../../types/pagination.type";
-import {PostsMainType} from "../../types/posts/posts-main-type";
-import {createBlogUtils} from "./utils/createBlog.utils";
-import {PostsCreateUpdate} from "../../types/posts/posts-create-update";
-import {BlogsCreateUpdate} from "../../types/blogs/blogs-create-update-type";
-import {postsRepository} from "../../repositories/posts-rep";
 
 describe('/users', ()=>{
 
@@ -183,10 +178,10 @@ describe('/users', ()=>{
         await request(app)
             .delete(`${RouterPath.users}/${-100}`)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
-            .expect(HTTP_STATUSES.NOT_FOUND_404)
+            .expect(HTTP_STATUSES.BAD_REQUEST_400)
 
         await request(app)
-            .get(`${RouterPath.users}/${-100}`)
+            .get(`${RouterPath.users}/111122223333444455556666`)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .expect(HTTP_STATUSES.NOT_FOUND_404)
 

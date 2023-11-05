@@ -3,15 +3,16 @@ import {uriBlogIdPostsChecking, paramsCheckingPostsBody} from "./input_valid/inp
 import {paramsCheckingUsersBody} from "./input_valid/input_users";
 import {paramsCheckingCommentsBody} from "./input_valid/input_comments";
 import {paramsCheckingAuth} from "./input_valid/input_auth";
+import {reqIdValidation} from "./req_id/id_valid";
 
 export const InputValidBlogs = {
     post: [paramsCheckingBlogsBody.websiteUrl, paramsCheckingBlogsBody.name, paramsCheckingBlogsBody.description,],
-    put: [paramsCheckingBlogsBody.websiteUrl, paramsCheckingBlogsBody.name, paramsCheckingBlogsBody.description],
+    put: [paramsCheckingBlogsBody.websiteUrl, paramsCheckingBlogsBody.name, paramsCheckingBlogsBody.description, reqIdValidation.id],
 }
 export const InputValidPosts = {
     post: [paramsCheckingPostsBody.title, paramsCheckingPostsBody.shortDescription, paramsCheckingPostsBody.content, paramsCheckingPostsBody.blogId,],
     postWithUriBlogId: [paramsCheckingPostsBody.title, paramsCheckingPostsBody.shortDescription, paramsCheckingPostsBody.content, uriBlogIdPostsChecking],
-    put: [paramsCheckingPostsBody.title, paramsCheckingPostsBody.shortDescription, paramsCheckingPostsBody.content, paramsCheckingPostsBody.blogId],
+    put: [paramsCheckingPostsBody.title, paramsCheckingPostsBody.shortDescription, paramsCheckingPostsBody.content, paramsCheckingPostsBody.blogId, reqIdValidation.id],
 }
 export const InputValidationUsers = {
     post: [paramsCheckingUsersBody.email, paramsCheckingUsersBody.login, paramsCheckingUsersBody.password],
@@ -19,7 +20,8 @@ export const InputValidationUsers = {
 
 
 export const InputValidationComments = {
-    any: [paramsCheckingCommentsBody.content]
+    post: [paramsCheckingCommentsBody.content],
+    put:[paramsCheckingCommentsBody.content, reqIdValidation.id]
 }
 export const InputValidationAuth = {
     registrationConfirmation: [paramsCheckingAuth.code],

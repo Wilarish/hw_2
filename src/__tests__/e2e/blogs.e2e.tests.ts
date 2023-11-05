@@ -168,7 +168,7 @@ describe('/blogs', ()=>{
             .put(`${RouterPath.blogs}/${-100}`)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send(data)
-            .expect(HTTP_STATUSES.NOT_FOUND_404)
+            .expect(HTTP_STATUSES.BAD_REQUEST_400)
 
     });
     it('should update blog correct ', async () => {
@@ -212,11 +212,11 @@ describe('/blogs', ()=>{
         await request(app)
             .delete(`${RouterPath.blogs}/${-100}`)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
-            .expect(HTTP_STATUSES.NOT_FOUND_404)
+            .expect(HTTP_STATUSES.BAD_REQUEST_400)
 
         await request(app)
             .get(`${RouterPath.blogs}/${-100}`)
-            .expect(HTTP_STATUSES.NOT_FOUND_404)
+            .expect(HTTP_STATUSES.BAD_REQUEST_400)
 
     });
 

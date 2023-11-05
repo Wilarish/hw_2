@@ -2,7 +2,7 @@ import request from "supertest";
 import {app, RouterPath} from "../../settings";
 import {HTTP_STATUSES} from "../../data/HTTP_STATUSES";
 import {Paginated} from "../../types/pagination.type";
-import {UsersMainType} from "../../types/users/users-main-type";
+import { UsersMainType} from "../../types/users/users-main-type";
 import {UsersCreate} from "../../types/users/users-create";
 
 describe('/login',()=>{
@@ -47,13 +47,14 @@ describe('/login',()=>{
             .post(RouterPath.users)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send(data)
-            .expect(HTTP_STATUSES.CREATED_201 )
+            .expect(HTTP_STATUSES.CREATED_201)
 
         expect(response.body).toEqual({
             id: expect.any(String),
             login:'login',
             email:expect.any(String),
             createdAt: expect.any(String)
+
         })
 
         createdUser = response.body;
@@ -113,6 +114,6 @@ describe('/login',()=>{
                 loginOrEmail: 'login',
                 password: 'password'
             })
-            .expect(HTTP_STATUSES.NO_CONTENT_204)
+            .expect(HTTP_STATUSES.OK_200)
     });
 })
