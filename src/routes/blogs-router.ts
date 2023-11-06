@@ -36,7 +36,6 @@ BlogsRouter.get('/:id/posts',reqIdValidation.id, errorsChecking, uriBlogIdPostsC
     id: string
 }>, res: Response) => {
 
-    console.log(typeof req.params.id)
 
     const pagination = getDefaultPagination(req.query)
     const posts: Paginated<PostsMainType> = await blogsRepository.findPostsForBlogsById(req.params.id, pagination)
