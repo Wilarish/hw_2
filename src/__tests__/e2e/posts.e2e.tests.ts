@@ -147,7 +147,7 @@ describe('/posts', ()=>{
 
 
         let updateDataPostFromDb  = await postsRepository.findPostById(createdPost.id.toString())
-        console.log(updateDataPostFromDb)
+
         if (updateDataPostFromDb) createdPost = updateDataPostFromDb
 
 
