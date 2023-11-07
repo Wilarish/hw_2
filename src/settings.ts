@@ -8,10 +8,12 @@ import {UsersRouter} from "./routes/users-router";
 import {AuthRouter} from "./routes/auth-router";
 import {usersRepository} from "./repositories/users-rep";
 import {commentsRouter} from "./routes/comments-router";
+import cookieParser from "cookie-parser";
 
 
 export const app = express()
 
+app.use(cookieParser())
 app.use(express.json())
 
 export const RouterPath = {

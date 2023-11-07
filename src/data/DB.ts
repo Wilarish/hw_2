@@ -1,31 +1,32 @@
-
 import {MongoClient} from "mongodb";
 import dotenv from 'dotenv'
 import {BlogsMainType} from "../types/blogs/blogs-main-type";
 import {PostsMainType} from "../types/posts/posts-main-type";
 import {UsersMainType} from "../types/users/users-main-type";
 import {CommentsMainType} from "../types/comments/comments-main-type";
+import {RefreshTokenDBType} from "../types/token/refresh-token-DB-type";
 
 dotenv.config()
 
 
 const mongoURI = process.env.MONGO_URL || 'mongodb://0.0.0.0:27017/Posts_Blogs_HW2'
 
-if(!mongoURI)
+if (!mongoURI)
     throw new Error("!err url")
 const client = new MongoClient(mongoURI)
 
-const db= client.db()
+const db = client.db()
 export const blogs_db = db.collection<BlogsMainType>("blogs")
 export const posts_db = db.collection<PostsMainType>("posts")
 export const users_db = db.collection<UsersMainType>("users")
 export const comments_db = db.collection<CommentsMainType>("comments")
+export const blackList_db = db.collection<RefreshTokenDBType>("blackList")
 
 export async function RunDb() {
 
     try {
         await client.connect()
-        await client.db().command({ping:1})
+        await client.db().command({ping: 1})
         console.log('Db connect')
 
     } catch (err) {

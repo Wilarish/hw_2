@@ -8,7 +8,7 @@ import {PostsMainType} from "../types/posts/posts-main-type";
 import {getBlogsPagination, getDefaultPagination} from "../helpers/pagination.helper";
 import {postsServices} from "../domain/posts-services";
 import {ObjectId} from "mongodb";
-import {errorsChecking} from "../middleware/errors_checking";
+import {errorsCheckingForStatus400} from "../middleware/errors_checking";
 import {uriBlogIdPostsChecking} from "../middleware/input_valid/input_posts";
 import {authBasic} from "../middleware/auth/auth_basic";
 import {Paginated} from "../types/pagination.type";
@@ -22,7 +22,7 @@ BlogsRouter.get('/', async (req: Request, res: Response) => {
 
     return res.send(blogs)
 })
-BlogsRouter.get('/:id',reqIdValidation.id, errorsChecking, errorsChecking, async (req: Request<{ id: string }>, res: Response) => {
+BlogsRouter.get('/:id',reqIdValidation.id, errorsCheckingForStatus400, errorsCheckingForStatus400, async (req: Request<{ id: string }>, res: Response) => {
 
     const blog: BlogsMainType | null = await blogsRepository.findBlogById(req.params.id)
 
@@ -32,7 +32,7 @@ BlogsRouter.get('/:id',reqIdValidation.id, errorsChecking, errorsChecking, async
         res.send(blog)
 
 })
-BlogsRouter.get('/:id/posts',reqIdValidation.id, errorsChecking, uriBlogIdPostsChecking, errorsChecking, async (req: Request<{
+BlogsRouter.get('/:id/posts',reqIdValidation.id, errorsCheckingForStatus400, uriBlogIdPostsChecking, errorsCheckingForStatus400, async (req: Request<{
     id: string
 }>, res: Response) => {
 
@@ -42,7 +42,7 @@ BlogsRouter.get('/:id/posts',reqIdValidation.id, errorsChecking, uriBlogIdPostsC
     return res.status(HTTP_STATUSES.OK_200).send(posts)
 
 })
-BlogsRouter.post('/', authBasic, InputValidBlogs.post, errorsChecking, async (req: Request<{}, {}, {
+BlogsRouter.post('/', authBasic, InputValidBlogs.post, errorsCheckingForStatus400, async (req: Request<{}, {}, {
     id: string,
     name: string,
     description: string,
@@ -57,7 +57,7 @@ BlogsRouter.post('/', authBasic, InputValidBlogs.post, errorsChecking, async (re
 
     return res.status(HTTP_STATUSES.CREATED_201).send(new_blog)
 })
-BlogsRouter.post('/:id/posts', authBasic, reqIdValidation.id, errorsChecking, InputValidPosts.postWithUriBlogId, errorsChecking, async (req: Request<{
+BlogsRouter.post('/:id/posts', authBasic, reqIdValidation.id, errorsCheckingForStatus400, InputValidPosts.postWithUriBlogId, errorsCheckingForStatus400, async (req: Request<{
     id: string
 }, {}, {
     title: string,
@@ -79,7 +79,7 @@ BlogsRouter.post('/:id/posts', authBasic, reqIdValidation.id, errorsChecking, In
 
 
 })
-BlogsRouter.put('/:id', authBasic, InputValidBlogs.put, errorsChecking, async (req: Request<{
+BlogsRouter.put('/:id', authBasic, InputValidBlogs.put, errorsCheckingForStatus400, async (req: Request<{
     id: string
 }, {}, { id: string, name: string, description: string, websiteUrl: string }>, res: Response) => {
 
@@ -96,7 +96,7 @@ BlogsRouter.put('/:id', authBasic, InputValidBlogs.put, errorsChecking, async (r
 
 
 })
-BlogsRouter.delete('/:id', reqIdValidation.id, errorsChecking, authBasic, async (req: Request<{ id: string }>, res: Response) => {
+BlogsRouter.delete('/:id', reqIdValidation.id, errorsCheckingForStatus400, authBasic, async (req: Request<{ id: string }>, res: Response) => {
 
     const del: boolean = await blogsServices.deleteBlog(req.params.id)
 

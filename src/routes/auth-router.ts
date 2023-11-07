@@ -7,12 +7,18 @@ import {
 import {jwtServices} from "../application/jwt-services";
 import {UsersMainType} from "../types/users/users-main-type";
 import {authServices} from "../domain/auth-services";
-import {errorsChecking} from "../middleware/errors_checking";
+import {errorsCheckingForStatus400, errorsCheckingForStatus401} from "../middleware/errors_checking";
+import {CheckJwtToken} from "../middleware/auth/refresh_token";
 
 
 export const AuthRouter = Router({})
 
-AuthRouter.post('/login', InputValidationAuth.login, errorsChecking, async (req: Request<{}, {}, {
+
+AuthRouter.get('/me', CheckJwtToken.accessToken, errorsCheckingForStatus401, async (req:Request, res:Response)=>{
+    const result = await jwtServices.getInformationAboutMe(req.cookies.accessToken)
+    res.status(HTTP_STATUSES.OK_200).send(result)
+})
+AuthRouter.post('/login', InputValidationAuth.login, errorsCheckingForStatus400, async (req: Request<{}, {}, {
     loginOrEmail: string,
     password: string
 }>, res: Response) => {
@@ -22,33 +28,57 @@ AuthRouter.post('/login', InputValidationAuth.login, errorsChecking, async (req:
         return res.sendStatus(HTTP_STATUSES.UNAUTHORIZED_401)
     }
 
+    const accessToken: string = await jwtServices.createAccessJwt(user.id.toString())
+    const refreshToken: string = await jwtServices.createRefreshJwt(user.id.toString())
 
-    const token = await jwtServices.createJwt(user.id.toString())
-    return res.status(HTTP_STATUSES.OK_200).send({
-        accessToken: token
-    })
+    return res
+        .cookie('accessToken', accessToken, {httpOnly: true, secure: true})
+        .cookie('refreshToken', refreshToken, {httpOnly: true, secure: true})
+        .status(HTTP_STATUSES.OK_200)
+        .send({
+            accessToken: accessToken
+        })
+})
+AuthRouter.post('/refresh-token', CheckJwtToken.refreshToken, errorsCheckingForStatus401,async (req: Request, res: Response) => {
+    const result = await jwtServices.refreshToken(req.cookies.refreshToken)
+    return res
+        .cookie('accessToken', result.accessToken, {httpOnly: true, secure: true})
+        .cookie('refreshToken', result.refreshToken, {httpOnly: true, secure: true})
+        .status(HTTP_STATUSES.OK_200)
+        .send({
+            accessToken: result.accessToken
+        })
+})
+AuthRouter.post('/logout', CheckJwtToken.refreshToken, errorsCheckingForStatus401,async (req: Request, res: Response) => {
+    const result = await jwtServices.revokeToken(req.cookies.refreshToken)
+
+    if(result) return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
+    return res.sendStatus(HTTP_STATUSES.SERVER_ERROR_500)
+
 })
 
-AuthRouter.post('/registration', InputValidationUsers.post, errorsChecking, async (req: Request<{}, {}, {
+AuthRouter.post('/registration', InputValidationUsers.post, errorsCheckingForStatus400, async (req: Request<{}, {}, {
     login: string,
     password: string,
     email: string
 }>, res: Response) => {
 
-    const user: UsersMainType|null  = await authServices.createUser({
+    const user: UsersMainType | null = await authServices.createUser({
 
         login: req.body.login,
         password: req.body.password,
         email: req.body.email
     })
 
-    if(!user) return res.sendStatus(HTTP_STATUSES.SERVER_ERROR_500)
+    if (!user) return res.sendStatus(HTTP_STATUSES.SERVER_ERROR_500)
 
     return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
 
 })
 
-AuthRouter.post('/registration-confirmation',InputValidationAuth.registrationConfirmation, errorsChecking, async (req:Request<{},{},{code:string}>, res:Response)=>{
+AuthRouter.post('/registration-confirmation', InputValidationAuth.registrationConfirmation, errorsCheckingForStatus400, async (req: Request<{}, {}, {
+    code: string
+}>, res: Response) => {
 
     const result: boolean = await authServices.confirmEmail(req.body.code)
 
@@ -58,7 +88,9 @@ AuthRouter.post('/registration-confirmation',InputValidationAuth.registrationCon
 
 })
 
-AuthRouter.post('/registration-email-resending', InputValidationAuth.registrationEmailResending, errorsChecking , async (req:Request<{},{},{email:string}>, res:Response)=>{
+AuthRouter.post('/registration-email-resending', InputValidationAuth.registrationEmailResending, errorsCheckingForStatus400, async (req: Request<{}, {}, {
+    email: string
+}>, res: Response) => {
     const result: boolean = await authServices.resendCode(req.body.email)
 
     if (!result) return res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400)

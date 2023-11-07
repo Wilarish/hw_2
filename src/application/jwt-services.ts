@@ -1,10 +1,16 @@
 import jwt from 'jsonwebtoken'
+import {jwtRepository} from "../repositories/jwt-rep";
+import {usersRepository} from "../repositories/users-rep";
+import {UsersMainType} from "../types/users/users-main-type";
 
 const secret = process.env.SECRET_JWT || "123"
 export const jwtServices = {
 
-    async createJwt (userId:string){
-        return jwt.sign({userId},secret,{expiresIn:'1h'})
+    async createAccessJwt (userId:string){
+        return jwt.sign({userId},secret,{expiresIn:'10s'})
+    },
+    async createRefreshJwt (userId:string){
+        return jwt.sign({userId},secret,{expiresIn:'20s'})
     },
     async findUserByToken(token:string){
         try {
@@ -14,6 +20,31 @@ export const jwtServices = {
         }catch (error){
 
             return null
+        }
+    },
+    async refreshToken(token:string){
+        const userId = await this.findUserByToken(token)
+
+        await jwtRepository.addRefreshTokenToBlackList(token)
+
+        const refreshToken = await this.createRefreshJwt(userId)
+        const accessToken = await this.createAccessJwt(userId)
+
+        return {
+            refreshToken,
+            accessToken
+        }
+    },
+    async revokeToken(token:string){
+        await jwtRepository.addRefreshTokenToBlackList(token)
+        return true
+    },
+    async getInformationAboutMe(token:string){
+        const user:UsersMainType|null = await usersRepository.findUserById(await this.findUserByToken(token))
+        return{
+            email:user?.email,
+            login:user?.login,
+            userId:user?.id
         }
     }
 }

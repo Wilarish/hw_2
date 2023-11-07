@@ -10,7 +10,7 @@ import {CommentsCreateUpdate} from "../types/comments/comments-create-update";
 import {CommentsMainType} from "../types/comments/comments-main-type";
 import {commentsRepository} from "../repositories/comments-rep";
 import {ObjectId} from "mongodb";
-import {errorsChecking} from "../middleware/errors_checking";
+import {errorsCheckingForStatus400} from "../middleware/errors_checking";
 import {authBearer} from "../middleware/auth/auth_bearer";
 import {authBasic} from "../middleware/auth/auth_basic";
 import {reqIdValidation} from "../middleware/req_id/id_valid";
@@ -24,7 +24,7 @@ PostsRouter.get('/', async (req: Request, res: Response) => {
 
     return res.send(posts)
 })
-PostsRouter.get('/:id',reqIdValidation.id,  errorsChecking, async (req: Request<{ id: string }>, res: Response) => {
+PostsRouter.get('/:id',reqIdValidation.id,  errorsCheckingForStatus400, async (req: Request<{ id: string }>, res: Response) => {
 
     const post: PostsMainType | null = await postsRepository.findPostById(req.params.id)
 
@@ -41,7 +41,7 @@ PostsRouter.get('/:id/comments', async (req: Request<{ id: string }>, res: Respo
     if (!comments) return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
     return res.status(HTTP_STATUSES.OK_200).send(comments)
 })
-PostsRouter.post('/:id/comments', authBearer,reqIdValidation.id, InputValidationComments.post, errorsChecking, async (req: Request<{
+PostsRouter.post('/:id/comments', authBearer,reqIdValidation.id, InputValidationComments.post, errorsCheckingForStatus400, async (req: Request<{
     id: string
 }, {}, { content: string }>, res: Response) => {
 
@@ -54,7 +54,7 @@ PostsRouter.post('/:id/comments', authBearer,reqIdValidation.id, InputValidation
     return res.status(HTTP_STATUSES.CREATED_201).send(new_comment)
 
 })
-PostsRouter.post('/', authBasic, InputValidPosts.post, errorsChecking, async (req: Request<{}, {}, {
+PostsRouter.post('/', authBasic, InputValidPosts.post, errorsCheckingForStatus400, async (req: Request<{}, {}, {
     title: string,
     shortDescription: string,
     content: string,
@@ -74,7 +74,7 @@ PostsRouter.post('/', authBasic, InputValidPosts.post, errorsChecking, async (re
 
     return res.status(HTTP_STATUSES.CREATED_201).send(new_post)
 })
-PostsRouter.put('/:id', authBasic, InputValidPosts.put, errorsChecking, async (req: Request<{ id: string }, {}, {
+PostsRouter.put('/:id', authBasic, InputValidPosts.put, errorsCheckingForStatus400, async (req: Request<{ id: string }, {}, {
     id: string,
     title: string,
     shortDescription: string,
@@ -98,7 +98,7 @@ PostsRouter.put('/:id', authBasic, InputValidPosts.put, errorsChecking, async (r
 
 
 })
-PostsRouter.delete('/:id', authBasic,reqIdValidation.id, errorsChecking, async (req: Request<{ id: string }>, res: Response) => {
+PostsRouter.delete('/:id', authBasic,reqIdValidation.id, errorsCheckingForStatus400, async (req: Request<{ id: string }>, res: Response) => {
 
     const del: boolean = await postsServices.deletePost(req.params.id)
 

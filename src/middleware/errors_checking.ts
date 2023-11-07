@@ -19,10 +19,18 @@ const errorFormatter = (error: ValidationError) => {
 }
 
 
-export const errorsChecking = (req: Request, res: Response, next: NextFunction) => {
+export const errorsCheckingForStatus400 = (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req).formatWith(errorFormatter);
 
     if (!errors.isEmpty()) {
         res.status(HTTP_STATUSES.BAD_REQUEST_400).send({errorsMessages: errors.array({onlyFirstError: true})});
+    } else next();
+}
+
+export const errorsCheckingForStatus401 = (req: Request, res: Response, next: NextFunction) => {
+    const errors = validationResult(req).formatWith(errorFormatter);
+
+    if (!errors.isEmpty()) {
+        res.status(HTTP_STATUSES.UNAUTHORIZED_401).send({errorsMessages: errors.array({onlyFirstError: true})});
     } else next();
 }

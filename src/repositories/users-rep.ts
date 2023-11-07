@@ -73,5 +73,6 @@ export const usersRepository = {
         const result = await users_db.updateOne({id:id},{$set:{'emailConfirmation.confirmationCode': code}})
 
         return result.modifiedCount === 1
-    }
+    },
+
 }
