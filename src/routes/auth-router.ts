@@ -9,13 +9,14 @@ import {UsersMainType} from "../types/users/users-main-type";
 import {authServices} from "../domain/auth-services";
 import {errorsCheckingForStatus400, errorsCheckingForStatus401} from "../middleware/errors_checking";
 import {CheckJwtToken} from "../middleware/auth/refresh_token";
+import {authBearer} from "../middleware/auth/auth_bearer";
 
 
 export const AuthRouter = Router({})
 
 
-AuthRouter.get('/me', CheckJwtToken.accessToken,  errorsCheckingForStatus401, async (req:Request, res:Response)=>{
-    const result = await jwtServices.getInformationAboutMe(req.cookies.accessToken)
+AuthRouter.get('/me', authBearer, async (req:Request, res:Response)=>{
+    const result = await jwtServices.getInformationAboutMe(req.userId)
     res.status(HTTP_STATUSES.OK_200).send(result)
 })
 AuthRouter.post('/login', InputValidationAuth.login, errorsCheckingForStatus400, async (req: Request<{}, {}, {
@@ -32,7 +33,6 @@ AuthRouter.post('/login', InputValidationAuth.login, errorsCheckingForStatus400,
     const refreshToken: string = await jwtServices.createRefreshJwt(user.id.toString())
 
     return res
-        .cookie('accessToken', accessToken, {httpOnly: true, secure: true})
         .cookie('refreshToken', refreshToken, {httpOnly: true, secure: true})
         .status(HTTP_STATUSES.OK_200)
         .send({
@@ -42,7 +42,7 @@ AuthRouter.post('/login', InputValidationAuth.login, errorsCheckingForStatus400,
 AuthRouter.post('/refresh-token', CheckJwtToken.refreshToken, errorsCheckingForStatus401,async (req: Request, res: Response) => {
     const result = await jwtServices.refreshToken(req.cookies.refreshToken)
     return res
-        .cookie('accessToken', result.accessToken, {httpOnly: true, secure: true})
+
         .cookie('refreshToken', result.refreshToken, {httpOnly: true, secure: true})
         .status(HTTP_STATUSES.OK_200)
         .send({
@@ -52,7 +52,7 @@ AuthRouter.post('/refresh-token', CheckJwtToken.refreshToken, errorsCheckingForS
 AuthRouter.post('/logout', CheckJwtToken.refreshToken, errorsCheckingForStatus401,async (req: Request, res: Response) => {
     const result = await jwtServices.revokeToken(req.cookies.refreshToken)
 
-    if(result) return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
+    if(result) return res.clearCookie('refreshToken').sendStatus(HTTP_STATUSES.NO_CONTENT_204)
     return res.sendStatus(HTTP_STATUSES.SERVER_ERROR_500)
 
 })

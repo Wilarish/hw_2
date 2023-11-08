@@ -39,8 +39,8 @@ export const jwtServices = {
         await jwtRepository.addRefreshTokenToBlackList(token)
         return true
     },
-    async getInformationAboutMe(token:string){
-        const user:UsersMainType|null = await usersRepository.findUserById(await this.findUserByToken(token))
+    async getInformationAboutMe(userId:string){
+        const user:UsersMainType|null = await usersRepository.findUserById(userId)
         return{
             email:user?.email,
             login:user?.login,
