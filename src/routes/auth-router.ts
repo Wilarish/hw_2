@@ -14,7 +14,7 @@ import {CheckJwtToken} from "../middleware/auth/refresh_token";
 export const AuthRouter = Router({})
 
 
-AuthRouter.get('/me', CheckJwtToken.accessToken, errorsCheckingForStatus401, async (req:Request, res:Response)=>{
+AuthRouter.get('/me', CheckJwtToken.accessToken,  errorsCheckingForStatus401, async (req:Request, res:Response)=>{
     const result = await jwtServices.getInformationAboutMe(req.cookies.accessToken)
     res.status(HTTP_STATUSES.OK_200).send(result)
 })
