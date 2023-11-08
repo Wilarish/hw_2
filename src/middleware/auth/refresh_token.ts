@@ -15,13 +15,5 @@ export const CheckJwtToken = {
         return true
 
     }),
-    accessToken: cookie('accessToken').isString().trim().isLength({min: 3}).custom(async (token) => {
 
-        const user: UsersMainType | null = await jwtServices.findUserByToken(token)
-
-        if (!user) throw new Error('not valid token...user')
-
-        return true
-
-    })
 }
