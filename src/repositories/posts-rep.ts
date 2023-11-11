@@ -2,7 +2,6 @@ import {posts_db} from "../data/DB";
 import {PostsCreateUpdate, PostsMainType} from "../types/posts-types";
 import {blogsRepository} from "./blogs-rep";
 import {BlogsMainType} from "../types/blogs-types";
-import {DefaultPaginationType, Paginated} from "../types/pagination.type";
 import {ObjectId} from "mongodb";
 
 export const postsRepository = {

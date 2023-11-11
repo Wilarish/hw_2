@@ -1,8 +1,6 @@
 import {blogs_db, posts_db} from "../data/DB";
 import {BlogsCreateUpdate, BlogsMainType} from "../types/blogs-types";
-import {PostsMainType} from "../types/posts-types";
-import { DefaultPaginationType, Paginated} from "../types/pagination.type";
-import {Filter, ObjectId} from "mongodb";
+import {ObjectId} from "mongodb";
 
 
 export const blogsRepository = {

@@ -4,7 +4,7 @@ import {HTTP_STATUSES} from "../data/HTTP_STATUSES";
 import {InputValidBlogs, InputValidPosts} from "../middleware/arrays_of_input_validation";
 import {blogsServices} from "../domain/blogs-services";
 import {blogsRepository} from "../repositories/blogs-rep";
-import {PostsMainType, PostsViewType} from "../types/posts-types";
+import {PostsViewType} from "../types/posts-types";
 import {getBlogsPagination, getDefaultPagination} from "../helpers/pagination.helper";
 import {postsServices} from "../domain/posts-services";
 import {ObjectId} from "mongodb";
@@ -21,11 +21,13 @@ export const BlogsRouter = Router()
 
 BlogsRouter.get('/', async (req: Request, res: Response) => {
     const pagination = getBlogsPagination(req.query)
-    const blogs:Paginated<BlogsViewType> = await queryBlogsRepository.queryFindPaginatedBlogs(pagination)
+    const blogs: Paginated<BlogsViewType> = await queryBlogsRepository.queryFindPaginatedBlogs(pagination)
 
     return res.send(blogs)
 })
-BlogsRouter.get('/:id',reqIdValidation.id, errorsCheckingForStatus400, errorsCheckingForStatus400, async (req: Request<{ id: string }>, res: Response) => {
+BlogsRouter.get('/:id', reqIdValidation.id, errorsCheckingForStatus400, errorsCheckingForStatus400, async (req: Request<{
+    id: string
+}>, res: Response) => {
 
     const blog: BlogsViewType | null = await queryBlogsRepository.queryFindBlogById(req.params.id)
 
@@ -35,7 +37,7 @@ BlogsRouter.get('/:id',reqIdValidation.id, errorsCheckingForStatus400, errorsChe
         res.send(blog)
 
 })
-BlogsRouter.get('/:id/posts',reqIdValidation.id, errorsCheckingForStatus400, uriBlogIdPostsChecking, errorsCheckingForStatus400, async (req: Request<{
+BlogsRouter.get('/:id/posts', reqIdValidation.id, errorsCheckingForStatus400, uriBlogIdPostsChecking, errorsCheckingForStatus400, async (req: Request<{
     id: string
 }>, res: Response) => {
 
@@ -57,9 +59,9 @@ BlogsRouter.post('/', authBasic, InputValidBlogs.post, errorsCheckingForStatus40
         description: req.body.description,
         websiteUrl: req.body.websiteUrl
     })
-    if(!idOfCreatedBlog) return res.sendStatus(HTTP_STATUSES.SERVER_ERROR_500)
+    if (!idOfCreatedBlog) return res.sendStatus(HTTP_STATUSES.SERVER_ERROR_500)
 
-    const blog:BlogsViewType | null = await queryBlogsRepository.queryFindBlogById(idOfCreatedBlog)
+    const blog: BlogsViewType | null = await queryBlogsRepository.queryFindBlogById(idOfCreatedBlog)
 
     return res.status(HTTP_STATUSES.CREATED_201).send(blog)
 })
@@ -74,15 +76,15 @@ BlogsRouter.post('/:id/posts', authBasic, reqIdValidation.id, errorsCheckingForS
 }>, res: Response) => {
 
 
-    const new_postId: string|null = await postsServices.createPost({
+    const new_postId: string | null = await postsServices.createPost({
         title: req.body.title,
         shortDescription: req.body.shortDescription,
         content: req.body.content,
         blogId: new ObjectId(req.params.id),
     })
-    if(!new_postId) return  res.sendStatus(HTTP_STATUSES.SERVER_ERROR_500)
+    if (!new_postId) return res.sendStatus(HTTP_STATUSES.SERVER_ERROR_500)
 
-    const newPost:PostsViewType|null = await queryPostsRepository.queryFindPostById(new_postId)
+    const newPost: PostsViewType | null = await queryPostsRepository.queryFindPostById(new_postId)
 
     return res.status(HTTP_STATUSES.CREATED_201).send(newPost)
 
@@ -101,13 +103,15 @@ BlogsRouter.put('/:id', authBasic, InputValidBlogs.put, errorsCheckingForStatus4
         description: req.body.description,
         websiteUrl: req.body.websiteUrl
     })
-    if(!result) return  res.sendStatus(HTTP_STATUSES.SERVER_ERROR_500)
+    if (!result) return res.sendStatus(HTTP_STATUSES.SERVER_ERROR_500)
 
     return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
 
 
 })
-BlogsRouter.delete('/:id', reqIdValidation.id, errorsCheckingForStatus400, authBasic, async (req: Request<{ id: string }>, res: Response) => {
+BlogsRouter.delete('/:id', reqIdValidation.id, errorsCheckingForStatus400, authBasic, async (req: Request<{
+    id: string
+}>, res: Response) => {
 
     const del: boolean = await blogsServices.deleteBlog(req.params.id)
 

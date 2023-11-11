@@ -6,7 +6,7 @@ import {InputValidationComments, InputValidPosts} from "../middleware/arrays_of_
 import {getDefaultPagination} from "../helpers/pagination.helper";
 import {DefaultPaginationType, Paginated} from "../types/pagination.type";
 import {postsServices} from "../domain/posts-services";
-import {CommentsCreateUpdate, CommentsMainType, CommentsViewType} from "../types/comments-types";
+import {CommentsCreateUpdate,CommentsViewType} from "../types/comments-types";
 import {ObjectId} from "mongodb";
 import {errorsCheckingForStatus400} from "../middleware/errors_checking";
 import {authBearer} from "../middleware/auth/auth_bearer";

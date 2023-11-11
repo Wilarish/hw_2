@@ -1,7 +1,6 @@
 import {UsersMainType} from "../types/users-types";
 import { users_db} from "../data/DB";
-import {Paginated, UsersPaginationType} from "../types/pagination.type";
-import {Filter, ObjectId} from "mongodb";
+import {ObjectId} from "mongodb";
 
 
 

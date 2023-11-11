@@ -1,9 +1,6 @@
 import {CommentsCreateUpdate, CommentsMainType} from "../types/comments-types";
 import {comments_db} from "../data/DB";
-import {DefaultPaginationType, Paginated} from "../types/pagination.type";
-import {PostsMainType} from "../types/posts-types";
-import {Filter, ObjectId} from "mongodb";
-import {postsRepository} from "./posts-rep";
+import {ObjectId} from "mongodb";
 
 export const commentsRepository = {
     async createComment(comment: CommentsMainType): Promise<string> {
