@@ -2,8 +2,7 @@ import request from "supertest";
 import {app, RouterPath} from "../../settings";
 import {HTTP_STATUSES} from "../../data/HTTP_STATUSES";
 import {Paginated} from "../../types/pagination.type";
-import { UsersMainType} from "../../types/users/users-main-type";
-import {UsersCreate} from "../../types/users/users-create";
+import {UsersCreate, UsersMainType} from "../../types/users-types";
 
 describe('/login',()=>{
     beforeAll(async ()=>{

@@ -1,13 +1,11 @@
 import request from "supertest";
-import {UsersMainType} from "../../types/users/users-main-type";
-import {UsersCreate} from "../../types/users/users-create";
+import {UsersCreate, UsersMainType} from "../../types/users-types";
 import {app, RouterPath} from "../../settings";
 import {HTTP_STATUSES} from "../../data/HTTP_STATUSES";
 import {createBlogUtils} from "./utils/createBlog.utils";
-import {PostsCreateUpdate} from "../../types/posts/posts-create-update";
-import {BlogsMainType} from "../../types/blogs/blogs-main-type";
-import {PostsMainType} from "../../types/posts/posts-main-type";
-import {CommentsMainType} from "../../types/comments/comments-main-type";
+import {BlogsMainType} from "../../types/blogs-types";
+import {PostsCreateUpdate, PostsMainType} from "../../types/posts-types";
+import {CommentsMainType} from "../../types/comments-types";
 
 describe('/authBearer', () => {
     let createdUser: UsersMainType;

@@ -1,36 +1,11 @@
-import {PostsCreateUpdate} from "../types/posts/posts-create-update";
-import {blogs_db, posts_db} from "../data/DB";
-import {PostsMainType} from "../types/posts/posts-main-type";
+import {posts_db} from "../data/DB";
+import {PostsCreateUpdate, PostsMainType} from "../types/posts-types";
 import {blogsRepository} from "./blogs-rep";
-import {BlogsMainType} from "../types/blogs/blogs-main-type";
+import {BlogsMainType} from "../types/blogs-types";
 import {DefaultPaginationType, Paginated} from "../types/pagination.type";
 import {ObjectId} from "mongodb";
 
 export const postsRepository = {
-
-    async findPosts(pagination: DefaultPaginationType): Promise<Paginated<PostsMainType>> {
-
-        const [items, totalCount] = await Promise.all([
-            posts_db
-                .find({}, {projection: {_id: 0}})
-                .sort({[pagination.sortBy]: pagination.sortDirection})
-                .skip(pagination.skip)
-                .limit(pagination.pageSize)
-                .toArray(),
-
-            posts_db.countDocuments()
-        ])
-
-        const pagesCount = Math.ceil(totalCount / pagination.pageSize)
-
-        return {
-            pagesCount,
-            page: pagination.pageNumber,
-            pageSize: pagination.pageSize,
-            totalCount,
-            items
-        }
-    },
 
     async findPostById(id: string): Promise<PostsMainType | null> {
 
@@ -41,13 +16,12 @@ export const postsRepository = {
         return post
 
     },
-    async createPost(post: PostsMainType): Promise<PostsMainType> {
+    async createPost(post: PostsMainType): Promise<string> {
 
-        await posts_db.insertOne({...post})
-
-        return post
+        await posts_db.insertOne(post)
+        return post.id.toString()
     },
-    async updatePost(id: string, data: PostsCreateUpdate): Promise<PostsMainType | null> {
+    async updatePost(id: string, data: PostsCreateUpdate): Promise<string | null> {
 
         const find_blog: BlogsMainType | null = await blogsRepository.findBlogById(data.blogId.toString())
 
@@ -64,7 +38,7 @@ export const postsRepository = {
 
 
         if (result.matchedCount === 1)
-            return postsRepository.findPostById(id)
+            return id
         else
             return null
     },

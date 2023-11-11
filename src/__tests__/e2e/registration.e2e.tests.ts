@@ -1,13 +1,8 @@
-import {UsersMainType} from "../../types/users/users-main-type";
-import {UsersCreate} from "../../types/users/users-create";
+import {UsersCreate, UsersMainType} from "../../types/users-types";
 import {HTTP_STATUSES} from "../../data/HTTP_STATUSES";
 import request from "supertest";
 import {app, RouterPath} from "../../settings";
-import {ObjectId} from "mongodb";
-import {commentatorInfo} from "../../types/comments/comments-main-type";
-import {type} from "os";
 import {usersRepository} from "../../repositories/users-rep";
-import e from "express";
 
 describe('/auth', () => {
     let createdUser: UsersMainType;

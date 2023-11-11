@@ -5,7 +5,7 @@ import {
     InputValidationUsers
 } from "../middleware/arrays_of_input_validation";
 import {jwtServices} from "../application/jwt-services";
-import {UsersMainType} from "../types/users/users-main-type";
+import {UsersMainType} from "../types/users-types";
 import {authServices} from "../domain/auth-services";
 import {errorsCheckingForStatus400, errorsCheckingForStatus401} from "../middleware/errors_checking";
 import {CheckJwtToken} from "../middleware/auth/refresh_token";
@@ -15,7 +15,7 @@ import {authBearer} from "../middleware/auth/auth_bearer";
 export const AuthRouter = Router({})
 
 
-AuthRouter.get('/me', authBearer, async (req:Request, res:Response)=>{
+AuthRouter.get('/me', authBearer, async (req: Request, res: Response) => {
     const result = await jwtServices.getInformationAboutMe(req.userId)
     res.status(HTTP_STATUSES.OK_200).send(result)
 })
@@ -39,7 +39,7 @@ AuthRouter.post('/login', InputValidationAuth.login, errorsCheckingForStatus400,
             accessToken: accessToken
         })
 })
-AuthRouter.post('/refresh-token', CheckJwtToken.refreshToken, errorsCheckingForStatus401,async (req: Request, res: Response) => {
+AuthRouter.post('/refresh-token', CheckJwtToken.refreshToken, errorsCheckingForStatus401, async (req: Request, res: Response) => {
     const result = await jwtServices.refreshToken(req.cookies.refreshToken)
     return res
 
@@ -49,11 +49,13 @@ AuthRouter.post('/refresh-token', CheckJwtToken.refreshToken, errorsCheckingForS
             accessToken: result.accessToken
         })
 })
-AuthRouter.post('/logout', CheckJwtToken.refreshToken, errorsCheckingForStatus401,async (req: Request, res: Response) => {
-    const result = await jwtServices.revokeToken(req.cookies.refreshToken)
+AuthRouter.post('/logout', CheckJwtToken.refreshToken, errorsCheckingForStatus401, async (req: Request, res: Response) => {
+    const result: boolean = await jwtServices.revokeToken(req.cookies.refreshToken)
 
-    if(result) return res.clearCookie('refreshToken').sendStatus(HTTP_STATUSES.NO_CONTENT_204)
-    return res.sendStatus(HTTP_STATUSES.SERVER_ERROR_500)
+    if (!result) return res.sendStatus(HTTP_STATUSES.SERVER_ERROR_500)
+
+    return res.clearCookie('refreshToken').sendStatus(HTTP_STATUSES.NO_CONTENT_204)
+
 
 })
 
@@ -63,14 +65,14 @@ AuthRouter.post('/registration', InputValidationUsers.post, errorsCheckingForSta
     email: string
 }>, res: Response) => {
 
-    const user: UsersMainType | null = await authServices.createUser({
+    const result: boolean = await authServices.createUser({
 
         login: req.body.login,
         password: req.body.password,
         email: req.body.email
     })
 
-    if (!user) return res.sendStatus(HTTP_STATUSES.SERVER_ERROR_500)
+    if (!result) return res.sendStatus(HTTP_STATUSES.SERVER_ERROR_500)
 
     return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
 

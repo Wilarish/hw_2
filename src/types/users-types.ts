@@ -1,5 +1,12 @@
 import {ObjectId} from "mongodb";
 
+export type UsersViewType = {
+    id: ObjectId,
+    login: string,
+    email: string,
+    createdAt: string,
+}
+
 export type UsersMainType = {
     id: ObjectId,
     login: string,
@@ -13,4 +20,10 @@ export type ConfirmationEmailType = {
     confirmationCode: string,
     expirationDate:Date | string,
     isConfirmed: boolean
+}
+
+export type UsersCreate= {
+    login: string,
+    password: string,
+    email: string
 }

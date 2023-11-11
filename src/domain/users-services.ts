@@ -1,12 +1,12 @@
-import {UsersCreate} from "../types/users/users-create";
-import {UsersMainType} from "../types/users/users-main-type";
+
+import {UsersCreate, UsersMainType} from "../types/users-types";
 import {usersRepository} from "../repositories/users-rep";
 import bcrypt from 'bcrypt';
 import {ObjectId} from "mongodb";
 
 
 export const usersServices = {
-    async createUser(data: UsersCreate): Promise<UsersMainType|null> {
+    async createUser(data: UsersCreate): Promise<string> {
 
         const passwordSalt: string = await bcrypt.genSalt(10)
         const passwordHash: string = await this.passwordHash(data.password, passwordSalt)
@@ -28,7 +28,7 @@ export const usersServices = {
 
         }
 
-        return usersRepository.createUser(new_user)
+        return await usersRepository.createUser(new_user)
 
     },
     async passwordHash(password: string, passwordSalt: string): Promise<string> {

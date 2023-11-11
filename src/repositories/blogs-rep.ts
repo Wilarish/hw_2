@@ -1,75 +1,24 @@
 import {blogs_db, posts_db} from "../data/DB";
-import {BlogsMainType} from "../types/blogs/blogs-main-type";
-import {BlogsCreateUpdate} from "../types/blogs/blogs-create-update-type";
-import {PostsMainType} from "../types/posts/posts-main-type";
-import {BlogsPaginationType, DefaultPaginationType, Paginated} from "../types/pagination.type";
+import {BlogsCreateUpdate, BlogsMainType} from "../types/blogs-types";
+import {PostsMainType} from "../types/posts-types";
+import { DefaultPaginationType, Paginated} from "../types/pagination.type";
 import {Filter, ObjectId} from "mongodb";
 
 
 export const blogsRepository = {
 
-    async findBlogs(pagination: BlogsPaginationType): Promise<Paginated<BlogsMainType>> {
-        const filter: Filter<BlogsMainType> = {name: {$regex: pagination.searchNameTerm, $options: 'i'}}
-
-        const [items, totalCount] = await Promise.all([
-            blogs_db
-                .find(filter, {projection: {_id: 0}})
-                .sort({[pagination.sortBy]: pagination.sortDirection})
-                .skip(pagination.skip)
-                .limit(pagination.pageSize)
-                .toArray(),
-
-            blogs_db.countDocuments(filter)
-        ])
-
-        const pagesCount = Math.ceil(totalCount / pagination.pageSize)
-
-        return {
-            pagesCount,
-            page: pagination.pageNumber,
-            pageSize: pagination.pageSize,
-            totalCount,
-            items
-        }
-    },
-
     async findBlogById(id: string): Promise<BlogsMainType | null> {
 
-        const blog: BlogsMainType | null = await blogs_db.findOne({id: new ObjectId(id)}, {projection: {_id: 0}})
-
-        return blog
+        return  await blogs_db.findOne({id: new ObjectId(id)})
     },
-    async findPostsForBlogsById(id: string, pagination: DefaultPaginationType): Promise<Paginated<PostsMainType>> {
-        const filter: Filter<PostsMainType> = {blogId: new ObjectId(id) }
 
-        const [items, totalCount] = await Promise.all([
-            posts_db
-                .find(filter, {projection: {_id: 0}})
-                .sort({[pagination.sortBy]: pagination.sortDirection})
-                .skip(pagination.skip)
-                .limit(pagination.pageSize)
-                .toArray(),
-
-            posts_db.countDocuments(filter)
-        ])
-
-        const pagesCount = Math.ceil(totalCount / pagination.pageSize)
-
-        return {
-            pagesCount,
-            page: pagination.pageNumber,
-            pageSize: pagination.pageSize,
-            totalCount,
-            items
-        }
-    },
-    async createBlog(new_blog: BlogsMainType): Promise<BlogsMainType> {
+    async createBlog(new_blog: BlogsMainType): Promise<string> {
 
         await blogs_db.insertOne({...new_blog})
 
-        return new_blog
+        return new_blog.id.toString()
     },
-    async updateBlog(id: string, data: BlogsCreateUpdate): Promise<BlogsMainType | null> {
+    async updateBlog(id: string, data: BlogsCreateUpdate): Promise<boolean> {
 
         const result = await blogs_db.updateOne({id: new ObjectId(id) }, {
             $set: {
@@ -81,10 +30,7 @@ export const blogsRepository = {
 
         await posts_db.updateMany({blogId: new ObjectId(id) }, {$set: {blogName: data.name}})
 
-        if (result.matchedCount === 1)
-            return blogsRepository.findBlogById(id)
-        else
-            return null
+        return result.matchedCount === 1;
 
 
     },

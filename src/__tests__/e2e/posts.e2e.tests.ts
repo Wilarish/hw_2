@@ -1,11 +1,9 @@
 import request from "supertest";
 import {app, RouterPath} from "../../settings";
 import {HTTP_STATUSES} from "../../data/HTTP_STATUSES";
-import {PostsMainType} from "../../types/posts/posts-main-type";
-import {PostsCreateUpdate} from "../../types/posts/posts-create-update";
-import {BlogsMainType} from "../../types/blogs/blogs-main-type";
+import {PostsCreateUpdate, PostsMainType} from "../../types/posts-types";
+import {BlogsCreateUpdate, BlogsMainType} from "../../types/blogs-types";
 import {createBlogUtils} from "./utils/createBlog.utils";
-import {BlogsCreateUpdate} from "../../types/blogs/blogs-create-update-type";
 import {Paginated} from "../../types/pagination.type";
 import {postsRepository} from "../../repositories/posts-rep";
 

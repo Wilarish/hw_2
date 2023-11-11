@@ -1,5 +1,4 @@
-import {UsersCreate} from "../types/users/users-create";
-import {UsersMainType} from "../types/users/users-main-type";
+import {UsersCreate, UsersMainType} from "../types/users-types";
 import bcrypt from "bcrypt";
 import {ObjectId} from "mongodb";
 import {usersRepository} from "../repositories/users-rep";
@@ -8,7 +7,7 @@ import {add} from "date-fns";
 import {emailServices} from "./email-services";
 
 export const authServices = {
-    async createUser(data: UsersCreate): Promise<UsersMainType | null> {
+    async createUser(data: UsersCreate): Promise<boolean> {
 
         const passwordSalt: string = await bcrypt.genSalt(10)
         const passwordHash: string = await this.passwordHash(data.password, passwordSalt)
@@ -30,16 +29,16 @@ export const authServices = {
 
         }
 
-        const result: UsersMainType|null = await usersRepository.createUser(new_user)
+        await usersRepository.createUser(new_user)
 
         try {
             await emailServices.SendEmailForRegistration(new_user.email, new_user.emailConfirmation.confirmationCode)
         } catch (error) {
             console.error(error)
-            return null
+            return false
         }
 
-        return result
+        return true
 
     },
     async passwordHash(password: string, passwordSalt: string): Promise<string> {

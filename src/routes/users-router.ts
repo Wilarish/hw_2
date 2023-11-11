@@ -1,27 +1,27 @@
 import {Response, Request, Router} from "express";
 import {getUsersPagination} from "../helpers/pagination.helper";
-import {usersRepository} from "../repositories/users-rep";
 import {Paginated, UsersPaginationType} from "../types/pagination.type";
-import {UsersCreate} from "../types/users/users-create";
-import {UsersMainType} from "../types/users/users-main-type";
+import {UsersCreate, UsersViewType} from "../types/users-types";
 import {usersServices} from "../domain/users-services";
 import {InputValidationUsers} from "../middleware/arrays_of_input_validation";
 import {HTTP_STATUSES} from "../data/HTTP_STATUSES";
 import {authBasic} from "../middleware/auth/auth_basic";
 import {errorsCheckingForStatus400} from "../middleware/errors_checking";
 import {reqIdValidation} from "../middleware/req_id/id_valid";
+import {queryUsersRepository} from "../repositories/query/query-users-rep";
+
 
 export const UsersRouter = Router({})
 
 UsersRouter.get('/', authBasic, async (req: Request, res: Response) => {
     const pagination: UsersPaginationType = getUsersPagination(req.query)
-    const users: Paginated<UsersMainType> = await usersRepository.findUsers(pagination)
+    const users: Paginated<UsersViewType> = await queryUsersRepository.queryFindPaginatedUsers(pagination)
 
     res.status(HTTP_STATUSES.OK_200).send(users)
 })
 
 UsersRouter.get('/:id', authBasic, reqIdValidation.id, errorsCheckingForStatus400, async (req: Request<{ id: string }>, res: Response) => {
-    const user: UsersMainType | null = await usersRepository.findUserById(req.params.id)
+    const user: UsersViewType | null = await queryUsersRepository.queryFindUserById(req.params.id)
 
     if (!user)
         res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
@@ -39,8 +39,12 @@ UsersRouter.post('/', authBasic, InputValidationUsers.post, errorsCheckingForSta
         email: req.body.email,
         password: req.body.password
     }
-    const user: UsersMainType | null = await usersServices.createUser(data)
-    res.status(HTTP_STATUSES.CREATED_201).send(user)
+    const idOfCreatedUser: string = await usersServices.createUser(data)
+    if(!idOfCreatedUser) return res.sendStatus(HTTP_STATUSES.SERVER_ERROR_500)
+
+    const user:UsersViewType|null = await queryUsersRepository.queryFindUserById(idOfCreatedUser)
+
+    return res.status(HTTP_STATUSES.CREATED_201).send(user)
 })
 
 UsersRouter.delete('/:id', authBasic, reqIdValidation.id, errorsCheckingForStatus400, async (req: Request<{ id: string }>, res: Response) => {

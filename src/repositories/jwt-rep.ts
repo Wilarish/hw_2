@@ -1,5 +1,5 @@
 import {blackList_db} from "../data/DB";
-import {RefreshTokenDBType} from "../types/token/refresh-token-DB-type";
+import {RefreshTokenDBType} from "../types/refresh-token-DB-type";
 
 
 export const jwtRepository = {
@@ -12,7 +12,7 @@ export const jwtRepository = {
     async findRefreshTokenInBlackList(token:string): Promise<boolean>{
         const tokenFind: RefreshTokenDBType| null =  await blackList_db.findOne({refreshToken:token}, {projection: {_id: 0}})
         if(!tokenFind) return false
-        
+
         return true
     }
 

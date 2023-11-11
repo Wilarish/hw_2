@@ -1,7 +1,7 @@
 import {cookie} from "express-validator";
 import {jwtRepository} from "../../repositories/jwt-rep";
 import {jwtServices} from "../../application/jwt-services";
-import {UsersMainType} from "../../types/users/users-main-type";
+import {UsersMainType} from "../../types/users-types";
 
 export const CheckJwtToken = {
     refreshToken: cookie('refreshToken').isString().trim().isLength({min: 3}).custom(async (token) => {

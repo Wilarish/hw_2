@@ -1,8 +1,7 @@
 import request from "supertest";
 import {app, RouterPath} from "../../settings";
 import {HTTP_STATUSES} from "../../data/HTTP_STATUSES";
-import {BlogsMainType} from "../../types/blogs/blogs-main-type";
-import {BlogsCreateUpdate} from "../../types/blogs/blogs-create-update-type";
+import {BlogsCreateUpdate, BlogsMainType} from "../../types/blogs-types";
 import {Paginated} from "../../types/pagination.type";
 
 

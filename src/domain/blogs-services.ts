@@ -1,5 +1,4 @@
-import {BlogsMainType} from "../types/blogs/blogs-main-type";
-import {BlogsCreateUpdate} from "../types/blogs/blogs-create-update-type";
+import {BlogsCreateUpdate, BlogsMainType} from "../types/blogs-types";
 import {blogsRepository} from "../repositories/blogs-rep";
 import {ObjectId} from "mongodb";
 
@@ -7,7 +6,7 @@ import {ObjectId} from "mongodb";
 
 export const blogsServices = {
 
-    async createBlog(data: BlogsCreateUpdate): Promise<BlogsMainType> {
+    async createBlog(data: BlogsCreateUpdate): Promise<string> {
 
         const new_blog: BlogsMainType = {
             id: new ObjectId(),
@@ -18,10 +17,9 @@ export const blogsServices = {
             isMembership: false
         }
 
-        const createdBlog= await blogsRepository.createBlog(new_blog)
-        return createdBlog
+        return  await blogsRepository.createBlog(new_blog)
     },
-    async updateBlog(id:string, data: BlogsCreateUpdate): Promise<BlogsMainType | null> {
+    async updateBlog(id:string, data: BlogsCreateUpdate): Promise<boolean> {
 
         return await blogsRepository.updateBlog(id, data)
     },

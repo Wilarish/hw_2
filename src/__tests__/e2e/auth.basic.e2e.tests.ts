@@ -2,9 +2,8 @@ import request from "supertest";
 import {app, RouterPath} from "../../settings";
 import {HTTP_STATUSES} from "../../data/HTTP_STATUSES";
 import {createBlogUtils} from "./utils/createBlog.utils";
-import {PostsCreateUpdate} from "../../types/posts/posts-create-update";
-import {BlogsMainType} from "../../types/blogs/blogs-main-type";
-import {PostsMainType} from "../../types/posts/posts-main-type";
+import {BlogsMainType} from "../../types/blogs-types";
+import {PostsCreateUpdate, PostsMainType} from "../../types/posts-types";
 describe('/authBasic', ()=>{
     let createdPost:PostsMainType
     let createdBlog: BlogsMainType

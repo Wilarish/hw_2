@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 import {jwtRepository} from "../repositories/jwt-rep";
 import {usersRepository} from "../repositories/users-rep";
-import {UsersMainType} from "../types/users/users-main-type";
+import {UsersMainType} from "../types/users-types";
 
 const secret = process.env.SECRET_JWT || "123"
 export const jwtServices = {

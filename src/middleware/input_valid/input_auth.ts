@@ -1,6 +1,6 @@
 import {body} from "express-validator";
 import {usersRepository} from "../../repositories/users-rep";
-import {UsersMainType} from "../../types/users/users-main-type";
+import {UsersMainType} from "../../types/users-types";
 
 export const paramsCheckingAuth = {
     code: body('code').isString().trim().isLength({min: 1}).withMessage('middleware error').custom(async (code) => {

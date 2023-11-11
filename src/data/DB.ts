@@ -1,10 +1,10 @@
 import {MongoClient} from "mongodb";
 import dotenv from 'dotenv'
-import {BlogsMainType} from "../types/blogs/blogs-main-type";
-import {PostsMainType} from "../types/posts/posts-main-type";
-import {UsersMainType} from "../types/users/users-main-type";
-import {CommentsMainType} from "../types/comments/comments-main-type";
-import {RefreshTokenDBType} from "../types/token/refresh-token-DB-type";
+import {BlogsMainType} from "../types/blogs-types";
+import {PostsMainType} from "../types/posts-types";
+import {UsersMainType} from "../types/users-types";
+import {CommentsMainType} from "../types/comments-types";
+import {RefreshTokenDBType} from "../types/refresh-token-DB-type";
 
 dotenv.config()
 
