@@ -4,7 +4,6 @@ import {
     SortDirectionEnum,
     UsersPaginationType
 } from "../types/pagination.type";
-import {BlogsMainType} from "../types/blogs-types";
 
 
 export const getDefaultPagination = (query: any): DefaultPaginationType => {
