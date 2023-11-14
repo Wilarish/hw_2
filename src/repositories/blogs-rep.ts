@@ -12,7 +12,7 @@ export const blogsRepository = {
 
     async createBlog(new_blog: BlogsMainType): Promise<string> {
 
-        await blogs_db.insertOne({...new_blog})
+        await blogs_db.insertOne(new_blog)
 
         return new_blog.id.toString()
     },

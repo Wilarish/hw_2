@@ -6,7 +6,7 @@ export const jwtRepository = {
     async addRefreshTokenToBlackList(token:string):Promise<RefreshTokenDBType> {
 
         const tokenObj: RefreshTokenDBType = {refreshToken:token}
-        await blackList_db.insertOne({...tokenObj})
+        await blackList_db.insertOne(tokenObj)
         return tokenObj
     },
     async findRefreshTokenInBlackList(token:string): Promise<boolean>{

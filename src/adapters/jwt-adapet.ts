@@ -4,7 +4,7 @@ import {usersRepository} from "../repositories/users-rep";
 import {UsersMainType} from "../types/users-types";
 
 const secret = process.env.SECRET_JWT || "123"
-export const jwtServices = {
+export const jwtAdapter = {
 
     async createAccessJwt (userId:string){
         return jwt.sign({userId},secret,{expiresIn:'10s'})
@@ -39,12 +39,5 @@ export const jwtServices = {
         await jwtRepository.addRefreshTokenToBlackList(token)
         return true
     },
-    async getInformationAboutMe(userId:string){
-        const user:UsersMainType|null = await usersRepository.findUserById(userId)
-        return{
-            email:user?.email,
-            login:user?.login,
-            userId:user?.id
-        }
-    }
+
 }

@@ -14,6 +14,7 @@ import {authBasic} from "../middleware/auth/auth_basic";
 import {reqIdValidation} from "../middleware/req_id/id_valid";
 import {queryPostsRepository} from "../repositories/query/query-posts-rep";
 import {queryCommentsRepository} from "../repositories/query/query-comments-rep";
+import {commentsServices} from "../domain/comments-services";
 
 
 export const PostsRouter = Router()
@@ -50,7 +51,7 @@ PostsRouter.post('/:id/comments', authBearer, reqIdValidation.id, InputValidatio
     const data: CommentsCreateUpdate = {content: req.body.content}
 
 
-    const newCommentId: string|null = await postsServices.createCommentForPost(req.userId, req.params.id, data)
+    const newCommentId: string|null = await commentsServices.createCommentForPost(req.userId, req.params.id, data)
 
     if (!newCommentId) return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
 

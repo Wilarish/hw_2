@@ -3,13 +3,22 @@ import {UsersCreate, UsersMainType} from "../types/users-types";
 import {usersRepository} from "../repositories/users-rep";
 import bcrypt from 'bcrypt';
 import {ObjectId} from "mongodb";
+import {HashAdapter} from "../adapters/hash-adapter";
 
 
 export const usersServices = {
+    async getInformationAboutMe(userId:string){
+        const user:UsersMainType|null = await usersRepository.findUserById(userId)
+        return{
+            email:user?.email,
+            login:user?.login,
+            userId:user?.id
+        }
+    },
     async createUser(data: UsersCreate): Promise<string> {
 
         const passwordSalt: string = await bcrypt.genSalt(10)
-        const passwordHash: string = await this.passwordHash(data.password, passwordSalt)
+        const passwordHash: string = await HashAdapter.passwordHash(data.password, passwordSalt)
 
 
         const new_user: UsersMainType = {
@@ -30,9 +39,6 @@ export const usersServices = {
 
         return await usersRepository.createUser(new_user)
 
-    },
-    async passwordHash(password: string, passwordSalt: string): Promise<string> {
-        return await bcrypt.hash(password, passwordSalt)
     },
     async deleteUser(id: string): Promise<boolean> {
 
