@@ -6,6 +6,7 @@ import {BlogsCreateUpdate, BlogsMainType} from "../../types/blogs-types";
 import {createBlogUtils} from "./utils/createBlog.utils";
 import {Paginated} from "../../types/pagination.type";
 import {postsRepository} from "../../repositories/posts-rep";
+import {queryPostsRepository} from "../../repositories/query/query-posts-rep";
 
 
 
@@ -144,7 +145,7 @@ describe('/posts', ()=>{
             .expect(HTTP_STATUSES.OK_200 )
 
 
-        let updateDataPostFromDb  = await postsRepository.findPostById(createdPost.id.toString())
+        let updateDataPostFromDb  = await queryPostsRepository.queryFindPostById(createdPost.id.toString())
 
         if (updateDataPostFromDb) createdPost = updateDataPostFromDb
 
