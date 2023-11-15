@@ -27,6 +27,7 @@ export const CheckJwtToken = {
         if (!userId) return res.sendStatus(HTTP_STATUSES.UNAUTHORIZED_401)
 
         const decode: any = await jwtAdapter.decodeRefreshToken(refreshToken)
+
         const device:DeviceMainType|null = await deviceRepository.findDeviceByUserAndDeviceId(decode.userId.toString(), decode.deviceId)
         if (!device) return res.sendStatus(HTTP_STATUSES.UNAUTHORIZED_401)
 

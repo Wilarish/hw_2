@@ -21,11 +21,12 @@ SecurityRouter.delete('/devices', CheckJwtToken.rT,async (req:Request, res:Respo
     return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
 })
 SecurityRouter.delete('/devices/:id', CheckJwtToken.rT, async (req:Request<{id:string}>, res:Response)=>{
-    const device:DeviceMainType|null = await deviceRepository.findDeviceById(req.params.id)
+    const deviceId = req.params.id
+    const device:DeviceMainType|null = await deviceRepository.findDeviceById(deviceId)
     if(!device) return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
     if(device.userId.toString() !== req.userId) return res.sendStatus(HTTP_STATUSES.FORBIDDEN_403)
 
-    const result:boolean = await deviceServices.deleteDeviceById(req.deviceId)
+    const result:boolean = await deviceServices.deleteDeviceById(deviceId)
     if(!result) return res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400)
     return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
 })
