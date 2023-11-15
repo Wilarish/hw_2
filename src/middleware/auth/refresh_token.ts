@@ -15,7 +15,7 @@ export const CheckJwtToken = {
         const device:DeviceMainType|null = await deviceRepository.findDeviceByUserAndDeviceId(decode.userId.toString(), decode.deviceId)
         if (!device) throw new Error('invalid userId or deviceId')
 
-        if(device.lastActiveDate.toString() !== decode.iat.toString()) throw new Error('invalid lastActiveDate')
+        if(device.lastActiveDate !== new Date(decode.iat *1000).toISOString()) throw new Error('invalid lastActiveDate')
 
         return true
 
