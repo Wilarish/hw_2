@@ -6,9 +6,11 @@ export const deviceServices = {
 
         return await deviceRepository.addNewDevice(device)
     },
-    async changeDevice(deviseId:string, lastActiveDate:string):Promise<boolean>{
+    async changeDevice(deviseId:string, lastActiveDate:number):Promise<boolean>{
 
-        return await deviceRepository.changeDevice(deviseId, lastActiveDate)
+         const changelastActiveDate  = new Date(lastActiveDate * 1000).toISOString()
+
+        return await deviceRepository.changeDevice(deviseId, changelastActiveDate)
     },
     async deleteDevice(deviseId:string):Promise<boolean>{
 

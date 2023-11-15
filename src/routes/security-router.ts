@@ -6,7 +6,7 @@ import {DeviceMainType, DeviceViewType} from "../types/devices-types";
 import {HTTP_STATUSES} from "../data/HTTP_STATUSES";
 import {deviceServices} from "../domain/device-services";
 import {deviceRepository} from "../repositories/devices-rep";
-import {de} from "date-fns/locale";
+
 
 export const SecurityRouter = Router({})
 

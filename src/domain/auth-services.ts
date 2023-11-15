@@ -94,7 +94,7 @@ export const authServices = {
         const addDevice:boolean = await deviceServices.addNewDevice({
             ip: ip,
             title: title,
-            lastActiveDate: decode!.iat?.toString(),
+            lastActiveDate: new Date(decode!.iat! * 1000).toISOString(),
             deviceId:decode!.deviceId?.toString(),
             userId:new ObjectId(userId)
         })
