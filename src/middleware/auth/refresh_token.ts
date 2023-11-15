@@ -6,7 +6,7 @@ import {NextFunction, Request, Response} from "express";
 import {HTTP_STATUSES} from "../../data/HTTP_STATUSES";
 
 export const CheckJwtToken = {
-    refreshToken: cookie('refreshToken').isString().trim().isLength({min: 3}).custom(async (token) => {
+    refreshToken: cookie('refreshToken').isJWT().custom(async (token) => {
 
         const userId: string | null = await jwtAdapter.findUserByToken(token)
         if (!userId) throw new Error('not valid token...user')
@@ -30,7 +30,7 @@ export const CheckJwtToken = {
         const device:DeviceMainType|null = await deviceRepository.findDeviceByUserAndDeviceId(decode.userId.toString(), decode.deviceId)
         if (!device) return res.sendStatus(HTTP_STATUSES.UNAUTHORIZED_401)
 
-        if(device.lastActiveDate !== decode.iat.toString()) return res.sendStatus(HTTP_STATUSES.UNAUTHORIZED_401)
+        if(device.lastActiveDate !== new Date(decode.iat *1000).toISOString()) return res.sendStatus(HTTP_STATUSES.UNAUTHORIZED_401)
 
         req.userId = userId
         req.deviceId = decode.deviceId
