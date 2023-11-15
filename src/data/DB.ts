@@ -5,6 +5,7 @@ import {PostsMainType} from "../types/posts-types";
 import {UsersMainType} from "../types/users-types";
 import {CommentsMainType} from "../types/comments-types";
 import {RefreshTokenDBType} from "../types/refresh-token-DB-type";
+import {DeviceMainType} from "../types/devices-types";
 
 dotenv.config()
 
@@ -21,6 +22,7 @@ export const posts_db = db.collection<PostsMainType>("posts")
 export const users_db = db.collection<UsersMainType>("users")
 export const comments_db = db.collection<CommentsMainType>("comments")
 export const blackList_db = db.collection<RefreshTokenDBType>("blackList")
+export const devices_db = db.collection<DeviceMainType>("devices")
 
 export async function RunDb() {
 

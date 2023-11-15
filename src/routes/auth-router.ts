@@ -30,18 +30,28 @@ AuthRouter.post('/login', InputValidationAuth.login, errorsCheckingForStatus400,
         return res.sendStatus(HTTP_STATUSES.UNAUTHORIZED_401)
     }
 
-    const accessToken: string = await jwtAdapter.createAccessJwt(user.id.toString())
-    const refreshToken: string = await jwtAdapter.createRefreshJwt(user.id.toString())
+    let userIp = req.headers['x-forwarded-for'] || [req.socket.remoteAddress]
+    console.log('ip headers '+userIp)
+    console.log('ip request '+req.ip)
+
+
+    const data:any| null =  await authServices.createTokensAndDevice(
+        user.id.toString(),
+        userIp.toString(),
+        req.headers['user-agent']!.toString())
 
     return res
-        .cookie('refreshToken', refreshToken, {httpOnly: true, secure: true})
+        .cookie('refreshToken', data.refreshToken, {httpOnly: true, secure: true})
         .status(HTTP_STATUSES.OK_200)
         .send({
-            accessToken: accessToken
+            accessToken: data.accessToken
         })
 })
 AuthRouter.post('/refresh-token', CheckJwtToken.refreshToken, errorsCheckingForStatus401, async (req: Request, res: Response) => {
+
     const result = await jwtAdapter.refreshToken(req.cookies.refreshToken)
+    if(!result) return res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400)
+
     return res
 
         .cookie('refreshToken', result.refreshToken, {httpOnly: true, secure: true})

@@ -33,6 +33,10 @@ app.use(RouterPath.comments, commentsRouter)
 
 app.get('/', (req:Request, res:Response) => {
     res.send('Hello World!)***(')
+    console.log(req.headers['user-agent'])
+    let userIp = req.headers['x-forwarded-for'] || [req.socket.remoteAddress]
+    console.log('ip headers '+userIp)
+    console.log('ip request '+req.ip)
 })
 app.delete('/testing/all-data',  async (req:Request, res:Response)=>{
     await postsRepository.deleteAllPosts()

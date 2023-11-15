@@ -5,6 +5,9 @@ import {usersRepository} from "../repositories/users-rep";
 import {randomUUID} from "crypto";
 import {add} from "date-fns";
 import {emailServices} from "./email-services";
+import {jwtAdapter} from "../adapters/jwt-adapet";
+import {deviceServices} from "./device-services";
+import jwt from "jsonwebtoken";
 
 export const authServices = {
     async createUser(data: UsersCreate): Promise<boolean> {
@@ -83,5 +86,33 @@ export const authServices = {
         return user
 
 
+    },
+    async createTokensAndDevice(userId:string, ip:string, title:string){
+        const accessToken: string = await jwtAdapter.createAccessJwt(userId)
+        const refreshToken: string = await jwtAdapter.createRefreshJwt(userId, randomUUID())
+        const decode:any = await jwtAdapter.decodeRefreshToken(refreshToken)
+
+        const addDevice:boolean = await deviceServices.addNewDevice({
+            ip: ip,
+            title: title,
+            lastActiveDate: decode!.iat?.toString(),
+            deviceId:decode!.deviceId?.toString(),
+            userId:new ObjectId(userId)
+        })
+        if(!addDevice) return null
+
+        return{
+            accessToken,
+            refreshToken
+        }
+    },
+
+    async createDeviceAndTokens(userId: string, deviceId?:string){
+        //deviceId
+        //accessToken-> jwtService
+        //refreshToken-> jwtService
+        //decodeRefreshToken -> jwtService
+        //createDevice -> deviceService / updateDevice -> deviceService
+        //return{refreshToken, accessToken}
     }
 }
