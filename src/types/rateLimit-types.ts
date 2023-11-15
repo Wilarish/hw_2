@@ -1,5 +1,5 @@
 export type RateLimitType = {
-    limit: [{IP: string,
-            URL: string,
-            date: Date}]
+    IP: string,
+    URL: string,
+    date: Date
 }

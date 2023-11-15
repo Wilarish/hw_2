@@ -3,7 +3,7 @@ import {HTTP_STATUSES} from "../../data/HTTP_STATUSES";
 import {jwtAdapter} from "../../adapters/jwt-adapet";
 
 export const authBearer = async (req: Request, res: Response, next: NextFunction)=>{
-    const authorization = req.headers.authorization //'Bearer fdgnodfgn.gfgsgfsdgfsdg.ggsdsdgsd     // it`s jwt
+    const authorization = req.headers.authorization
 
     if (!authorization) return res.sendStatus(HTTP_STATUSES.UNAUTHORIZED_401)
 

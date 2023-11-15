@@ -11,6 +11,7 @@ import {errorsCheckingForStatus400, errorsCheckingForStatus401} from "../middlew
 import {CheckJwtToken} from "../middleware/auth/refresh_token";
 import {authBearer} from "../middleware/auth/auth_bearer";
 import {usersServices} from "../domain/users-services";
+import {rateLimit} from "../middleware/rate_limit/rate-limit";
 
 
 export const AuthRouter = Router({})
@@ -20,7 +21,7 @@ AuthRouter.get('/me', authBearer, async (req: Request, res: Response) => {
     const result = await usersServices.getInformationAboutMe(req.userId)
     res.status(HTTP_STATUSES.OK_200).send(result)
 })
-AuthRouter.post('/login', InputValidationAuth.login, errorsCheckingForStatus400, async (req: Request<{}, {}, {
+AuthRouter.post('/login',rateLimit, InputValidationAuth.login, errorsCheckingForStatus400, async (req: Request<{}, {}, {
     loginOrEmail: string,
     password: string
 }>, res: Response) => {
@@ -67,7 +68,7 @@ AuthRouter.post('/logout', CheckJwtToken.refreshToken, errorsCheckingForStatus40
 
 })
 
-AuthRouter.post('/registration', InputValidationUsers.post, errorsCheckingForStatus400, async (req: Request<{}, {}, {
+AuthRouter.post('/registration', rateLimit, InputValidationUsers.post, errorsCheckingForStatus400, async (req: Request<{}, {}, {
     login: string,
     password: string,
     email: string
@@ -86,7 +87,7 @@ AuthRouter.post('/registration', InputValidationUsers.post, errorsCheckingForSta
 
 })
 
-AuthRouter.post('/registration-confirmation', InputValidationAuth.registrationConfirmation, errorsCheckingForStatus400, async (req: Request<{}, {}, {
+AuthRouter.post('/registration-confirmation',rateLimit, InputValidationAuth.registrationConfirmation, errorsCheckingForStatus400, async (req: Request<{}, {}, {
     code: string
 }>, res: Response) => {
 
@@ -98,7 +99,7 @@ AuthRouter.post('/registration-confirmation', InputValidationAuth.registrationCo
 
 })
 
-AuthRouter.post('/registration-email-resending', InputValidationAuth.registrationEmailResending, errorsCheckingForStatus400, async (req: Request<{}, {}, {
+AuthRouter.post('/registration-email-resending',rateLimit, InputValidationAuth.registrationEmailResending, errorsCheckingForStatus400, async (req: Request<{}, {}, {
     email: string
 }>, res: Response) => {
     const result: boolean = await authServices.resendCode(req.body.email)
