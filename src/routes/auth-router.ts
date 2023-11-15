@@ -31,9 +31,6 @@ AuthRouter.post('/login', InputValidationAuth.login, errorsCheckingForStatus400,
     }
 
     let userIp = req.headers['x-forwarded-for'] || [req.socket.remoteAddress]
-    console.log('ip headers '+userIp)
-    console.log('ip request '+req.ip)
-
 
     const data:any| null =  await authServices.createTokensAndDevice(
         user.id.toString(),
@@ -49,7 +46,7 @@ AuthRouter.post('/login', InputValidationAuth.login, errorsCheckingForStatus400,
 })
 AuthRouter.post('/refresh-token', CheckJwtToken.refreshToken, errorsCheckingForStatus401, async (req: Request, res: Response) => {
 
-    const result = await jwtAdapter.refreshToken(req.cookies.refreshToken)
+    const result = await authServices.refreshTokenAndChangeDevices(req.cookies.refreshToken)
     if(!result) return res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400)
 
     return res
@@ -61,7 +58,7 @@ AuthRouter.post('/refresh-token', CheckJwtToken.refreshToken, errorsCheckingForS
         })
 })
 AuthRouter.post('/logout', CheckJwtToken.refreshToken, errorsCheckingForStatus401, async (req: Request, res: Response) => {
-    const result: boolean = await jwtAdapter.revokeToken(req.cookies.refreshToken)
+    const result: boolean = await authServices.revokeTokenAndDeleteDevice(req.cookies.refreshToken)
 
     if (!result) return res.sendStatus(HTTP_STATUSES.SERVER_ERROR_500)
 

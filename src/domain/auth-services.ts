@@ -7,7 +7,6 @@ import {add} from "date-fns";
 import {emailServices} from "./email-services";
 import {jwtAdapter} from "../adapters/jwt-adapet";
 import {deviceServices} from "./device-services";
-import jwt from "jsonwebtoken";
 
 export const authServices = {
     async createUser(data: UsersCreate): Promise<boolean> {
@@ -107,12 +106,21 @@ export const authServices = {
         }
     },
 
-    async createDeviceAndTokens(userId: string, deviceId?:string){
-        //deviceId
-        //accessToken-> jwtService
-        //refreshToken-> jwtService
-        //decodeRefreshToken -> jwtService
-        //createDevice -> deviceService / updateDevice -> deviceService
-        //return{refreshToken, accessToken}
+    async refreshTokenAndChangeDevices(token:string){
+        const  result  = await jwtAdapter.refreshToken(token)
+        if(!result) return null
+
+        const  change:boolean = await deviceServices.changeDevice(result.refreshToken.deviceId, result.refreshToken.iat)
+        if(!change) return null
+        return {
+            refreshToken:result.refreshToken.token,
+            accessToken:result.accessToken
+        }
+    },
+    async revokeTokenAndDeleteDevice(token:string){
+
+        const decode:any = await jwtAdapter.decodeRefreshToken(token)
+        return await deviceServices.deleteDevice(decode.deviceId);
+
     }
 }

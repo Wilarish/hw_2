@@ -10,16 +10,16 @@ import {reqIdValidation} from "../middleware/req_id/id_valid";
 import {queryCommentsRepository} from "../repositories/query/query-comments-rep";
 
 
-export const commentsRouter = Router({})
+export const CommentsRouter = Router({})
 
 
-commentsRouter.get('/:id',reqIdValidation.id, errorsCheckingForStatus400 ,async (req:Request<{id:string}>, res:Response)=>{
+CommentsRouter.get('/:id',reqIdValidation.id, errorsCheckingForStatus400 ,async (req:Request<{id:string}>, res:Response)=>{
     const comment: CommentsViewType|null  = await queryCommentsRepository.findCommentById(req.params.id)
 
     if(!comment) return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
     return res.status(HTTP_STATUSES.OK_200).send(comment)
 })
-commentsRouter.put('/:id',  authBearer, InputValidationComments.put, errorsCheckingForStatus400, async (req:Request<{id:string}>, res:Response)=>{
+CommentsRouter.put('/:id',  authBearer, InputValidationComments.put, errorsCheckingForStatus400, async (req:Request<{id:string}>, res:Response)=>{
 
     const comment: CommentsMainType|null = await commentsRepository.findCommentById(req.params.id)
     if(!comment) return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
@@ -38,7 +38,7 @@ commentsRouter.put('/:id',  authBearer, InputValidationComments.put, errorsCheck
 
     return res.status(HTTP_STATUSES.NO_CONTENT_204).send(changeComment)
 })
-commentsRouter.delete('/:id',reqIdValidation.id, errorsCheckingForStatus400,  authBearer, async (req:Request<{id:string}>, res:Response)=>{
+CommentsRouter.delete('/:id',reqIdValidation.id, errorsCheckingForStatus400,  authBearer, async (req:Request<{id:string}>, res:Response)=>{
     const comment: CommentsMainType|null = await commentsRepository.findCommentById(req.params.id)
     if(!comment) return  res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
 

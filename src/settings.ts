@@ -7,8 +7,9 @@ import {blogsRepository} from "./repositories/blogs-rep";
 import {UsersRouter} from "./routes/users-router";
 import {AuthRouter} from "./routes/auth-router";
 import {usersRepository} from "./repositories/users-rep";
-import {commentsRouter} from "./routes/comments-router";
+import {CommentsRouter} from "./routes/comments-router";
 import cookieParser from "cookie-parser";
+import {SecurityRouter} from "./routes/security-router";
 
 
 export const app = express()
@@ -21,22 +22,20 @@ export const RouterPath = {
     posts:'/posts',
     users:'/users',
     auth:'/auth',
-    comments:'/comments'
+    comments:'/comments',
+    security:'/security'
 }
 app.use(RouterPath.blogs, BlogsRouter)
 app.use(RouterPath.posts, PostsRouter)
 app.use(RouterPath.users, UsersRouter)
 app.use(RouterPath.auth, AuthRouter)
-app.use(RouterPath.comments, commentsRouter)
+app.use(RouterPath.comments, CommentsRouter)
+app.use(RouterPath.security, SecurityRouter)
 
 
 
 app.get('/', (req:Request, res:Response) => {
     res.send('Hello World!)***(')
-    console.log(req.headers['user-agent'])
-    let userIp = req.headers['x-forwarded-for'] || [req.socket.remoteAddress]
-    console.log('ip headers '+userIp)
-    console.log('ip request '+req.ip)
 })
 app.delete('/testing/all-data',  async (req:Request, res:Response)=>{
     await postsRepository.deleteAllPosts()

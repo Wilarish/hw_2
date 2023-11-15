@@ -1,8 +1,5 @@
 import jwt from 'jsonwebtoken'
-import {jwtRepository} from "../repositories/jwt-rep";
-import {usersRepository} from "../repositories/users-rep";
-import {UsersMainType} from "../types/users-types";
-import {deviceServices} from "../domain/device-services";
+
 
 const secret = process.env.SECRET_JWT || "123"
 export const jwtAdapter = {
@@ -16,11 +13,11 @@ export const jwtAdapter = {
     async decodeRefreshToken(token:string){
         return jwt.decode(token)
     },
-    async findUserByToken(token:string){
+    async findUserByToken(token:string):Promise<string|null>{
         try {
             const result: any = jwt.verify(token, secret)
 
-            return result.userId
+            return result.userId.toString()
         }catch (error){
 
             return null
@@ -28,25 +25,30 @@ export const jwtAdapter = {
     },
     async refreshToken(token:string){
         const userId = await this.findUserByToken(token)
-        const decodeOldToken:any = jwt.decode(token)
+        const decodeOldToken:any = await this.decodeRefreshToken(token)
 
-        await jwtRepository.addRefreshTokenToBlackList(token)
+        if(!userId) return null
+
+        //await jwtRepository.addRefreshTokenToBlackList(token)
 
         const refreshToken = await this.createRefreshJwt(userId, decodeOldToken.deviceId)
         const accessToken = await this.createAccessJwt(userId)
 
-        const decodeNewToken:any = jwt.decode(refreshToken)
-        const  change:boolean = await deviceServices.changeDevice(decodeNewToken.deviceId, decodeNewToken.iat)
-        if(!change) return null
+        const decodeNewToken:any = await this.decodeRefreshToken(refreshToken)
+
 
         return {
-            refreshToken,
+            refreshToken:{
+                token:refreshToken,
+                deviceId:decodeNewToken.deviceId,
+                iat:decodeNewToken.iat
+            },
             accessToken
         }
     },
-    async revokeToken(token:string){
-        await jwtRepository.addRefreshTokenToBlackList(token)
-        return true
-    },
+    // async revokeToken(token:string){
+    //     await jwtRepository.addRefreshTokenToBlackList(token)
+    //     return true
+    // },
 
 }
