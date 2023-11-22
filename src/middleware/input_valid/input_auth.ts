@@ -19,5 +19,7 @@ export const paramsCheckingAuth = {
         return true
     }),
     loginOrEmail: body('loginOrEmail').isString().trim().isLength({min: 1, max: 50}),
-    password: body('password').isString().trim().isLength({min: 6, max: 20})
+    password: body('password').isString().trim().isLength({min: 6, max: 20}),
+    newPassword:body('newPassword').isString().trim().isLength({min: 6, max: 20}),
+    emailShort:body('email').isString().trim().isEmail().isLength({min: 1, max: 50})
 }

@@ -4,7 +4,6 @@ import {
     InputValidationAuth,
     InputValidationUsers
 } from "../middleware/arrays_of_input_validation";
-import {jwtAdapter} from "../adapters/jwt-adapet";
 import {UsersMainType} from "../types/users-types";
 import {authServices} from "../domain/auth-services";
 import {errorsCheckingForStatus400, errorsCheckingForStatus401} from "../middleware/errors_checking";

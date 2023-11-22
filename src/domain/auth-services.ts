@@ -130,6 +130,7 @@ export const authServices = {
 
         if(!user) return false
         const recoveryCode:string = await jwtAdapter.createRecoveryJwt(user.id.toString())
+        console.log(recoveryCode)
 
         await emailServices.SendEmailForRefreshPassword(email, recoveryCode)
 

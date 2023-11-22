@@ -27,6 +27,6 @@ export const InputValidationAuth = {
     registrationConfirmation: [paramsCheckingAuth.code],
     registrationEmailResending: [paramsCheckingAuth.email],
     login:[paramsCheckingAuth.loginOrEmail, paramsCheckingAuth.password],
-    password_recovery:[paramsCheckingAuth.email],
-    new_password:[paramsCheckingAuth.password]
+    password_recovery:[paramsCheckingAuth.emailShort],
+    new_password:[paramsCheckingAuth.newPassword]
 }
