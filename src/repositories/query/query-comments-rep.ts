@@ -16,7 +16,8 @@ export const queryCommentsRepository = {
 
         const [items, totalCount] = await Promise.all([
             CommentsModel
-                .find(filter, {projection: {_id: 0, postId: 0}})
+                .find(filter)
+                .select({ _id: 0, __v:0, postId: 0})
                 .sort({[pagination.sortBy]: pagination.sortDirection})
                 .skip(pagination.skip)
                 .limit(pagination.pageSize)
@@ -36,12 +37,7 @@ export const queryCommentsRepository = {
         }
     },
     async findCommentById(id: string):Promise<CommentsViewType|null> {
-        const comment: CommentsMainType | null = await CommentsModel.findOne({id: new ObjectId(id)}, {
-            projection: {
-                _id: 0,
-                postId: 0
-            }
-        })
+        const comment: CommentsMainType | null = await CommentsModel.findOne({id: new ObjectId(id)}).select({ _id: 0, __v:0, postId: 0}).lean()
         if (!comment) return null
 
         return {

@@ -1,6 +1,7 @@
 import {UsersMainType} from "../types/users-types";
 import {ObjectId} from "mongodb";
 import {UsersModel} from "../data/DB";
+import {usersServices} from "../domain/users-services";
 
 
 export const usersRepository = {
@@ -46,5 +47,9 @@ export const usersRepository = {
 
         return result.modifiedCount === 1
     },
+    async changeHashAndSalt(userId:string, hash:string, salt:string){
+        const result = await UsersModel.updateOne({id:new ObjectId(userId)}, {$set:{passwordHash:hash, passwordSalt:salt}})
+        return result.modifiedCount === 1
+    }
 
 }

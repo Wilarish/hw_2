@@ -4,7 +4,13 @@ import {HTTP_STATUSES} from "../../data/HTTP_STATUSES";
 import {createBlogUtils} from "./utils/createBlog.utils";
 import {BlogsMainType} from "../../types/blogs-types";
 import {PostsCreateUpdate, PostsMainType} from "../../types/posts-types";
+import {RunDb} from "../../data/DB";
 describe('/authBasic', ()=>{
+
+    beforeAll(async()=> {
+        await RunDb()
+    })
+
     let createdPost:PostsMainType
     let createdBlog: BlogsMainType
 

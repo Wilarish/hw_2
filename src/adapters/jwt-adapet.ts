@@ -13,6 +13,9 @@ export const jwtAdapter = {
     async decodeRefreshToken(token:string){
         return jwt.decode(token)
     },
+    async createRecoveryJwt (userId:string){
+        return jwt.sign({userId},secret,{expiresIn:'30s'})
+    },
     async findUserByToken(token:string):Promise<string|null>{
         try {
             const result: any = jwt.verify(token, secret)

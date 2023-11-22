@@ -11,7 +11,8 @@ export const queryUsersRepository = {
 
         const [items, totalCount] = await Promise.all([
             UsersModel
-                .find(filter, {projection: {_id: 0, passwordSalt: 0, passwordHash: 0, emailConfirmation:0}})
+                .find(filter)
+                .select({ _id: 0, __v:0,passwordSalt: 0, passwordHash: 0, emailConfirmation:0})
                 .sort({[pagination.sortBy]: pagination.sortDirection})
                 .skip(pagination.skip)
                 .limit(pagination.pageSize)
@@ -31,7 +32,7 @@ export const queryUsersRepository = {
         }
     },
     async queryFindUserById(id: string):Promise<UsersViewType|null> {
-        const userDb: UsersMainType | null = await UsersModel.findOne({id: new ObjectId(id)},{projection: {_id: 0, passwordSalt: 0, passwordHash: 0, emailConfirmation:0}})
+        const userDb: UsersMainType | null = await UsersModel.findOne({id: new ObjectId(id)}).select({ _id: 0, __v:0,passwordSalt: 0, passwordHash: 0, emailConfirmation:0}).lean()
 
         if(!userDb) return null
 

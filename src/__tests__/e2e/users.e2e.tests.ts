@@ -3,11 +3,16 @@ import {UsersCreate, UsersMainType} from "../../types/users-types";
 import {app, RouterPath} from "../../settings";
 import {HTTP_STATUSES} from "../../data/HTTP_STATUSES";
 import {Paginated} from "../../types/pagination.type";
+import {RunDb} from "../../data/DB";
 
 describe('/users', ()=>{
 
     let createdUser:UsersMainType;
     let createdUser_2:UsersMainType
+
+    beforeAll(async()=> {
+        await RunDb()
+    })
 
     beforeAll(async ()=>{
         await request(app)

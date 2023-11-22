@@ -8,7 +8,8 @@ export const queryPostsRepository ={
 
         const [items, totalCount] = await Promise.all([
             PostsModel
-                .find({}, {projection: {_id: 0}})
+                .find({})
+                .select({ _id: 0, __v:0})
                 .sort({[pagination.sortBy]: pagination.sortDirection})
                 .skip(pagination.skip)
                 .limit(pagination.pageSize)
@@ -31,7 +32,7 @@ export const queryPostsRepository ={
     async queryFindPostById(id: string): Promise<PostsViewType | null> {
 
 
-        const post: PostsMainType | null = await PostsModel.findOne({id: new ObjectId(id)}, {projection: {_id: 0}})
+        const post: PostsMainType | null = await PostsModel.findOne({id: new ObjectId(id)}).select({ _id: 0, __v:0}).lean()
         if (!post) return null
 
         return {

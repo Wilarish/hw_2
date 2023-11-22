@@ -3,11 +3,25 @@ import {app, RouterPath} from "../../settings";
 import {HTTP_STATUSES} from "../../data/HTTP_STATUSES";
 import {BlogsCreateUpdate, BlogsMainType} from "../../types/blogs-types";
 import {Paginated} from "../../types/pagination.type";
+import {RunDb} from "../../data/DB";
+//const app = initApp()
 
+describe('/blogs', ()=> {
 
-describe('/blogs', ()=>{
+    beforeAll(async()=> {
+        await RunDb()
+    })
 
-    beforeAll(async ()=>{
+    afterAll(async()=>{
+        //stopDB()
+    })
+
+    afterAll((done)=>{
+        done()
+    })
+
+    beforeAll(async ()=> {
+
         await request(app)
             .delete('/testing/all-data')
             .expect(HTTP_STATUSES.NO_CONTENT_204)
@@ -82,7 +96,7 @@ describe('/blogs', ()=>{
 
 
         expect(res.body).toEqual({...expectedRes, totalCount: 2})
-        expect(res.body.items).toEqual([ createdBlog_2, createdBlog])
+        expect(res.body.items).toEqual([createdBlog_2, createdBlog])
     });
     it('shouldn`t сreate blog with incorrect data', async () => {
 

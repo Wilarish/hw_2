@@ -36,7 +36,8 @@ export const queryBlogsRepository ={
 
         const [items, totalCount] = await Promise.all([
             BlogsModel
-                .find(filter, {projection: {_id: 0}})
+                .find(filter)
+                .select({ _id: 0, __v:0})
                 .sort({[pagination.sortBy]: pagination.sortDirection})
                 .skip(pagination.skip)
                 .limit(pagination.pageSize)
@@ -58,7 +59,7 @@ export const queryBlogsRepository ={
 
     async queryFindBlogById(id: string): Promise<BlogsViewType | null> {
 
-        const blogDb: BlogsMainType | null = await BlogsModel.findOne({id: new ObjectId(id)}, {projection: {_id: 0}})
+        const blogDb: BlogsMainType | null = await BlogsModel.findOne({id: new ObjectId(id)}).select({ _id: 0, __v:0}).lean()
 
         if(!blogDb) return null
 

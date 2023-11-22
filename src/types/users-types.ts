@@ -16,7 +16,7 @@ export type UsersMainType = {
     passwordSalt: string,
     passwordHash: string,
     createdAt: string,
-    emailConfirmation: ConfirmationEmailType
+    emailConfirmation: ConfirmationEmailType,
 }
 export type ConfirmationEmailType = {
     confirmationCode: string,

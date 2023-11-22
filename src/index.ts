@@ -1,7 +1,7 @@
 import { app } from './settings'
 import {RunDb} from "./data/DB";
 
-
+//const app = initApp()
 const port = process.env.PORT || 3005
 
 

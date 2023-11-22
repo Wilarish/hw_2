@@ -3,6 +3,7 @@ import {HTTP_STATUSES} from "../../data/HTTP_STATUSES";
 import request from "supertest";
 import {app, RouterPath} from "../../settings";
 import {usersRepository} from "../../repositories/users-rep";
+import {RunDb} from "../../data/DB";
 
 describe('/auth', () => {
     let createdUser: UsersMainType;
@@ -11,6 +12,9 @@ describe('/auth', () => {
     let token_User: string
     let password_User: string
 
+    beforeAll(async()=> {
+        await RunDb()
+    })
 
     beforeAll(async () => {
         await request(app)

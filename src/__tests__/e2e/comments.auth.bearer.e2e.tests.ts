@@ -6,14 +6,21 @@ import {createBlogUtils} from "./utils/createBlog.utils";
 import {BlogsMainType} from "../../types/blogs-types";
 import {PostsCreateUpdate, PostsMainType} from "../../types/posts-types";
 import {CommentsMainType} from "../../types/comments-types";
+import {RunDb} from "../../data/DB";
 
 describe('/authBearer', () => {
+
+
     let createdUser: UsersMainType;
     let token_User: string
     let password_User: string
-    let createdBlog:BlogsMainType
-    let createdPost:PostsMainType
-    let createdComment:CommentsMainType
+    let createdBlog: BlogsMainType
+    let createdPost: PostsMainType
+    let createdComment: CommentsMainType
+
+    beforeAll(async () => {
+        await RunDb()
+    })
 
     beforeAll(async () => {
         await request(app)
@@ -27,8 +34,8 @@ describe('/authBearer', () => {
 
         const data: UsersCreate = {
             login: 'login',
+            email: 'email@gmail.com',
             password: 'password',
-            email: 'email@gmail.com'
         }
         password_User = data.password
 
@@ -43,7 +50,7 @@ describe('/authBearer', () => {
         expect(response.body).toEqual({
             id: expect.any(String),
             login: 'login',
-            email: expect.any(String),
+            email: 'email@gmail.com',
             createdAt: expect.any(String)
 
         })
@@ -79,7 +86,7 @@ describe('/authBearer', () => {
         await request(app)                              //not String EmailOrLogin
             .post(`${RouterPath.auth}/login`)
             .send({
-                loginOrEmail: [1,2,3,4],
+                loginOrEmail: [1, 2, 3, 4],
                 password: password_User
             })
             .expect(HTTP_STATUSES.BAD_REQUEST_400)
@@ -88,7 +95,7 @@ describe('/authBearer', () => {
             .post(`${RouterPath.auth}/login`)
             .send({
                 loginOrEmail: createdUser.login,
-                password: [1,2,3,4]
+                password: [1, 2, 3, 4]
             })
             .expect(HTTP_STATUSES.BAD_REQUEST_400)
 
@@ -154,10 +161,10 @@ describe('/authBearer', () => {
         const response = await request(app)
             .post(`${RouterPath.posts}/${createdPost.id}/comments`)
             .set("Authorization", `Bearer ${token_User}`)
-            .send({content:'qwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiop'})
+            .send({content: 'qwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiop'})
             .expect(HTTP_STATUSES.CREATED_201)
 
-        createdComment =response.body
+        createdComment = response.body
 
 
     });
@@ -165,17 +172,17 @@ describe('/authBearer', () => {
         const response = await request(app)
             .post(`${RouterPath.posts}/yuibiyubu/comments`)
             .set("Authorization", `Bearer ${token_User}`)
-            .send({content:'qwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiop'})
+            .send({content: 'qwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiop'})
             .expect(HTTP_STATUSES.BAD_REQUEST_400)
 
         expect(response.body).toEqual(
-            { errorsMessages: [ { message: expect.any(String), field: 'id' } ] }
+            {errorsMessages: [{message: expect.any(String), field: 'id'}]}
         )
 
         await request(app)
             .post(`${RouterPath.posts}/111122223333444455556666/comments`)
             .set("Authorization", `Bearer ${token_User}`)
-            .send({content:'qwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiop'})
+            .send({content: 'qwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiop'})
             .expect(HTTP_STATUSES.NOT_FOUND_404)
 
 
@@ -197,48 +204,48 @@ describe('/authBearer', () => {
 
         const token = await request(app)
             .post(`${RouterPath.auth}/login`)
-            .send({loginOrEmail:'loginnnn',password:'passwordddd'})
+            .send({loginOrEmail: 'loginnnn', password: 'passwordddd'})
             .expect(HTTP_STATUSES.OK_200)
 
 
         const comment = await request(app)
             .post(`${RouterPath.posts}/${createdPost.id}/comments`)
             .set("Authorization", `Bearer ${token.body.accessToken}`)
-            .send({content:'qwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiop'})
+            .send({content: 'qwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiop'})
             .expect(HTTP_STATUSES.CREATED_201)
 
         await request(app)
             .put(`${RouterPath.comments}/${comment.body.id}`)
             .set("Authorization", `Bearer ${token_User}`)
-            .send({content:'qwertyuiopasdfghjkl;zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz'})
+            .send({content: 'qwertyuiopasdfghjkl;zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz'})
             .expect(HTTP_STATUSES.FORBIDDEN_403)
     });
     it('should update comment for post with using jwt', async () => {
         const response = await request(app)
             .put(`${RouterPath.comments}/${createdComment.id}`)
             .set("Authorization", `Bearer ${token_User}`)
-            .send({content:'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww'})
+            .send({content: 'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww'})
             .expect(HTTP_STATUSES.NO_CONTENT_204)
 
         await request(app)
             .get(`${RouterPath.comments}/${createdComment.id}`)
-            .expect( {...createdComment, content:'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww'})
+            .expect({...createdComment, content: 'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww'})
 
     });
     it('shouldn`t update comment for post with incorrect data by using jwt', async () => {
         const response = await request(app)
             .put(`${RouterPath.comments}/${createdComment.id}`)
             .set("Authorization", `Bearer ${token_User}`)
-            .send({content:123})
+            .send({content: 123})
             .expect(HTTP_STATUSES.BAD_REQUEST_400)
 
         expect(response.body).toEqual(
-            { errorsMessages: [ { message: expect.any(String), field: 'content' } ] }
+            {errorsMessages: [{message: expect.any(String), field: 'content'}]}
         )
 
         await request(app)
             .get(`${RouterPath.comments}/${createdComment.id}`)
-            .expect( {...createdComment, content:'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww'})
+            .expect({...createdComment, content: 'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww'})
 
     });
     it('shouldn`t delete unexpected comment or incorrect ObjectId ', async () => {
@@ -248,7 +255,7 @@ describe('/authBearer', () => {
             .expect(HTTP_STATUSES.BAD_REQUEST_400)
 
         expect(response.body).toEqual({
-            errorsMessages:[{message: expect.any(String), field:'id'}]
+            errorsMessages: [{message: expect.any(String), field: 'id'}]
         })
 
         await request(app)

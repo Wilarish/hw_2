@@ -108,3 +108,16 @@ AuthRouter.post('/registration-email-resending',rateLimit, InputValidationAuth.r
 
     return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
 })
+AuthRouter.post('/password-recovery',rateLimit, InputValidationAuth.password_recovery, errorsCheckingForStatus400, async (req:Request<{},{},{email:string}>, res:Response)=>{
+    const result:boolean = await authServices.refreshPassword(req.body.email)
+
+    if(!result) return res.sendStatus(HTTP_STATUSES.SERVER_ERROR_500)
+    return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
+})
+AuthRouter.post('/new-password',rateLimit, InputValidationAuth.new_password,errorsCheckingForStatus400, async (req:Request<{},{},{newPassword:string, recoveryCode:string}>, res:Response)=>{
+    const result:boolean = await authServices.newPassword(req.body.newPassword, req.body.recoveryCode)
+
+    if(!result) return res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400)
+    return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
+
+})

@@ -7,6 +7,8 @@ import {add} from "date-fns";
 import {emailServices} from "./email-services";
 import {jwtAdapter} from "../adapters/jwt-adapet";
 import {deviceServices} from "./device-services";
+import {usersServices} from "./users-services";
+import {HashAdapter} from "../adapters/hash-adapter";
 
 export const authServices = {
     async createUser(data: UsersCreate): Promise<boolean> {
@@ -117,10 +119,29 @@ export const authServices = {
             accessToken:result.accessToken
         }
     },
-    async revokeTokenAndDeleteDevice(token:string){
+    async revokeTokenAndDeleteDevice(token:string):Promise<boolean>{
 
         const decode:any = await jwtAdapter.decodeRefreshToken(token)
         return await deviceServices.deleteDevice(decode.deviceId);
 
+    },
+    async refreshPassword(email:string):Promise<boolean>{
+        const user:UsersMainType|null = await usersRepository.findUserByLoginOrEmail(email)
+
+        if(!user) return false
+        const recoveryCode:string = await jwtAdapter.createRecoveryJwt(user.id.toString())
+
+        await emailServices.SendEmailForRefreshPassword(email, recoveryCode)
+
+        return true
+    },
+    async newPassword(newPassword:string, recoveryCode:string):Promise<boolean>{
+        const userId:string|null = await jwtAdapter.findUserByToken(recoveryCode)
+        if(!userId) return false
+
+        const passwordSalt: string = await bcrypt.genSalt(10)
+        const passwordHash: string = await HashAdapter.passwordHash(newPassword, passwordSalt)
+
+        return usersRepository.changeHashAndSalt(userId,passwordHash,passwordSalt)
     }
 }

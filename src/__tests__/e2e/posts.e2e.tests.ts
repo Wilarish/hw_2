@@ -7,6 +7,7 @@ import {createBlogUtils} from "./utils/createBlog.utils";
 import {Paginated} from "../../types/pagination.type";
 import {postsRepository} from "../../repositories/posts-rep";
 import {queryPostsRepository} from "../../repositories/query/query-posts-rep";
+import {RunDb} from "../../data/DB";
 
 
 
@@ -17,6 +18,9 @@ describe('/posts', ()=>{
     let createdPost_2: PostsMainType;
     let createdBlog:BlogsMainType;
 
+    beforeAll(async()=> {
+        await RunDb()
+    })
 
     beforeAll(async ()=>{
         await request(app)
