@@ -1,5 +1,5 @@
 import {ObjectId} from "mongodb";
-
+import mongoose from 'mongoose'
 
 
 export type BlogsViewType ={
@@ -26,3 +26,11 @@ export type BlogsCreateUpdate = {
     description: string,
     websiteUrl: string
 }
+export const BlogsSchema = new mongoose.Schema<BlogsMainType>({
+    id: ObjectId,
+    name: String,
+    description: String,
+    websiteUrl: String,
+    createdAt: String,
+    isMembership: Boolean
+})

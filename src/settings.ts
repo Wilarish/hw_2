@@ -35,7 +35,7 @@ app.use(RouterPath.security, SecurityRouter)
 
 
 app.get('/', (req:Request, res:Response) => {
-    res.send('Hello World!)***(')
+    res.send('Hello World!')
 })
 app.delete('/testing/all-data',  async (req:Request, res:Response)=>{
     await postsRepository.deleteAllPosts()

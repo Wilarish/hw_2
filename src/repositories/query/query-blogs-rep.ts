@@ -1,23 +1,23 @@
 import {BlogsMainType, BlogsViewType} from "../../types/blogs-types";
-import {blogs_db, posts_db} from "../../data/DB";
-import {Filter, ObjectId} from "mongodb";
+import {BlogsModel, PostsModel,} from "../../data/DB";
+import {ObjectId} from "mongodb";
 import {BlogsPaginationType, DefaultPaginationType, Paginated} from "../../types/pagination.type";
-import {PostsMainType, PostsViewType} from "../../types/posts-types";
+import {PostsViewType} from "../../types/posts-types";
 
 export const queryBlogsRepository ={
 
     async queryFindPaginatedPostsForBlogsById(id: string, pagination: DefaultPaginationType): Promise<Paginated<PostsViewType>> {
-        const filter: Filter<PostsMainType> = {blogId: new ObjectId(id) }
+        const filter= {blogId: new ObjectId(id) }
 
         const [items, totalCount] = await Promise.all([
-            posts_db
+            PostsModel
                 .find(filter, {projection: {_id: 0}})
                 .sort({[pagination.sortBy]: pagination.sortDirection})
                 .skip(pagination.skip)
                 .limit(pagination.pageSize)
-                .toArray(),
+                .lean(),
 
-            posts_db.countDocuments(filter)
+            PostsModel.countDocuments(filter)
         ])
 
         const pagesCount = Math.ceil(totalCount / pagination.pageSize)
@@ -32,17 +32,17 @@ export const queryBlogsRepository ={
     },
 
     async queryFindPaginatedBlogs(pagination: BlogsPaginationType): Promise<Paginated<BlogsViewType>> {
-        const filter: Filter<BlogsMainType> = {name: {$regex: pagination.searchNameTerm, $options: 'i'}}
+        const filter = {name: {$regex: pagination.searchNameTerm, $options: 'i'}}
 
         const [items, totalCount] = await Promise.all([
-            blogs_db
+            BlogsModel
                 .find(filter, {projection: {_id: 0}})
                 .sort({[pagination.sortBy]: pagination.sortDirection})
                 .skip(pagination.skip)
                 .limit(pagination.pageSize)
-                .toArray(),
+                .lean(),
 
-            blogs_db.countDocuments(filter)
+            BlogsModel.countDocuments(filter)
         ])
 
         const pagesCount = Math.ceil(totalCount / pagination.pageSize)
@@ -58,7 +58,7 @@ export const queryBlogsRepository ={
 
     async queryFindBlogById(id: string): Promise<BlogsViewType | null> {
 
-        const blogDb: BlogsMainType | null = await blogs_db.findOne({id: new ObjectId(id)}, {projection: {_id: 0}})
+        const blogDb: BlogsMainType | null = await BlogsModel.findOne({id: new ObjectId(id)}, {projection: {_id: 0}})
 
         if(!blogDb) return null
 

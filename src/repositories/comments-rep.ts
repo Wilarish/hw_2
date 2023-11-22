@@ -1,14 +1,14 @@
 import {CommentsCreateUpdate, CommentsMainType} from "../types/comments-types";
-import {comments_db} from "../data/DB";
 import {ObjectId} from "mongodb";
+import {CommentsModel} from "../data/DB";
 
 export const commentsRepository = {
     async createComment(comment: CommentsMainType): Promise<string> {
-        await comments_db.insertOne(comment)
+        await CommentsModel.insertMany(comment)
         return comment.id.toString()
     },
     async findCommentById(id: string) {
-        const comment: CommentsMainType | null = await comments_db.findOne({id: new ObjectId(id)})
+        const comment: CommentsMainType | null = await CommentsModel.findOne({id: new ObjectId(id)})
         if (!comment) {
             return null
         } else {
@@ -18,7 +18,7 @@ export const commentsRepository = {
 
     async updateComment(data: CommentsCreateUpdate, id: string):Promise<string|null> {
 
-        const result = await comments_db.updateOne({id: new ObjectId(id)}, {
+        const result = await CommentsModel.updateOne({id: new ObjectId(id)}, {
             $set: {
                 content: data.content
             }
@@ -30,7 +30,7 @@ export const commentsRepository = {
             return null
     },
     async deleteComment(id: string): Promise<boolean> {
-        const result = await comments_db.deleteOne({id: new ObjectId(id)})
+        const result = await CommentsModel.deleteOne({id: new ObjectId(id)})
 
         return result.deletedCount === 1
     }

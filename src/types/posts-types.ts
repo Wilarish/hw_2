@@ -1,4 +1,5 @@
 import {ObjectId} from "mongodb";
+import mongoose from "mongoose";
 
 export type PostsViewType={
     id: ObjectId,
@@ -27,3 +28,13 @@ export type PostsCreateUpdate= {
     blogId: ObjectId,
 
 }
+
+export const PostsSchema = new mongoose.Schema<PostsMainType>({
+    id: ObjectId,
+    title: String,
+    shortDescription: String,
+    content: String,
+    blogId: ObjectId,
+    blogName: String,
+    createdAt:String
+})

@@ -1,4 +1,4 @@
-import {posts_db} from "../data/DB";
+import {PostsModel} from "../data/DB";
 import {PostsCreateUpdate, PostsMainType} from "../types/posts-types";
 import {blogsRepository} from "./blogs-rep";
 import {BlogsMainType} from "../types/blogs-types";
@@ -9,7 +9,7 @@ export const postsRepository = {
     async findPostById(id: string): Promise<PostsMainType | null> {
 
 
-        const post: PostsMainType | null = await posts_db.findOne({id: new ObjectId(id)})
+        const post: PostsMainType | null = await PostsModel.findOne({id: new ObjectId(id)})
         if (!post) return null
 
         return post
@@ -17,14 +17,14 @@ export const postsRepository = {
     },
     async createPost(post: PostsMainType): Promise<string> {
 
-        await posts_db.insertOne(post)
+        await PostsModel.insertMany(post)
         return post.id.toString()
     },
     async updatePost(id: string, data: PostsCreateUpdate): Promise<string | null> {
 
         const find_blog: BlogsMainType | null = await blogsRepository.findBlogById(data.blogId.toString())
 
-        const result = await posts_db.updateOne({id: new ObjectId(id)}, {
+        const result = await PostsModel.updateOne({id: new ObjectId(id)}, {
             $set: {
 
                 title: data.title,
@@ -43,14 +43,14 @@ export const postsRepository = {
     },
     async deletePost(id: string): Promise<boolean> {
 
-        const result = await posts_db.deleteOne({id: new ObjectId(id)})
+        const result = await PostsModel.deleteOne({id: new ObjectId(id)})
 
         return result.deletedCount === 1
 
 
     },
     async deleteAllPosts(): Promise<boolean> {
-        await posts_db.deleteMany({})
+        await PostsModel.deleteMany({})
         return true
     }
 

@@ -1,20 +1,20 @@
 import {PostsMainType, PostsViewType} from "../../types/posts-types";
-import {posts_db} from "../../data/DB";
 import {ObjectId} from "mongodb";
 import {DefaultPaginationType, Paginated} from "../../types/pagination.type";
+import {PostsModel} from "../../data/DB";
 
 export const queryPostsRepository ={
     async queryFindPaginatedPosts(pagination: DefaultPaginationType): Promise<Paginated<PostsViewType>> {
 
         const [items, totalCount] = await Promise.all([
-            posts_db
+            PostsModel
                 .find({}, {projection: {_id: 0}})
                 .sort({[pagination.sortBy]: pagination.sortDirection})
                 .skip(pagination.skip)
                 .limit(pagination.pageSize)
-                .toArray(),
+                .lean(),
 
-            posts_db.countDocuments()
+            PostsModel.countDocuments()
         ])
 
         const pagesCount = Math.ceil(totalCount / pagination.pageSize)
@@ -31,7 +31,7 @@ export const queryPostsRepository ={
     async queryFindPostById(id: string): Promise<PostsViewType | null> {
 
 
-        const post: PostsMainType | null = await posts_db.findOne({id: new ObjectId(id)}, {projection: {_id: 0}})
+        const post: PostsMainType | null = await PostsModel.findOne({id: new ObjectId(id)}, {projection: {_id: 0}})
         if (!post) return null
 
         return {

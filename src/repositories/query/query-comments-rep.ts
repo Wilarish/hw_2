@@ -2,8 +2,8 @@ import {DefaultPaginationType, Paginated} from "../../types/pagination.type";
 import {CommentsMainType, CommentsViewType} from "../../types/comments-types";
 import {PostsMainType} from "../../types/posts-types";
 import {postsRepository} from "../posts-rep";
-import {Filter, ObjectId} from "mongodb";
-import {comments_db} from "../../data/DB";
+import {ObjectId} from "mongodb";
+import {CommentsModel} from "../../data/DB";
 
 export const queryCommentsRepository = {
     async queryFindPaginatedComments(pagination: DefaultPaginationType, postId: string): Promise<Paginated<CommentsViewType> | null> {
@@ -12,17 +12,17 @@ export const queryCommentsRepository = {
 
         if (!post) return null
 
-        const filter: Filter<CommentsMainType> = {postId: postId}
+        const filter = {postId: postId}
 
         const [items, totalCount] = await Promise.all([
-            comments_db
+            CommentsModel
                 .find(filter, {projection: {_id: 0, postId: 0}})
                 .sort({[pagination.sortBy]: pagination.sortDirection})
                 .skip(pagination.skip)
                 .limit(pagination.pageSize)
-                .toArray(),
+                .lean(),
 
-            comments_db.countDocuments(filter)
+            CommentsModel.countDocuments(filter)
         ])
 
         const pagesCount = Math.ceil(totalCount / pagination.pageSize)
@@ -36,7 +36,7 @@ export const queryCommentsRepository = {
         }
     },
     async findCommentById(id: string):Promise<CommentsViewType|null> {
-        const comment: CommentsMainType | null = await comments_db.findOne({id: new ObjectId(id)}, {
+        const comment: CommentsMainType | null = await CommentsModel.findOne({id: new ObjectId(id)}, {
             projection: {
                 _id: 0,
                 postId: 0
