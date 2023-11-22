@@ -14,7 +14,7 @@ export const jwtAdapter = {
         return jwt.decode(token)
     },
     async createRecoveryJwt (userId:string){
-        return jwt.sign({userId},secret,{expiresIn:'30s'})
+        return jwt.sign({userId},secret,{expiresIn:'30m'})
     },
     async findUserByToken(token:string):Promise<string|null>{
         try {
