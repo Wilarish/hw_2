@@ -1,11 +1,16 @@
 import {UsersCreate, UsersMainType} from "../../types/users-types";
 import {HTTP_STATUSES} from "../../data/HTTP_STATUSES";
 import request from "supertest";
-import {app, RouterPath} from "../../settings";
-import {usersRepository} from "../../repositories/users-rep";
+import {InitApp, RouterPath} from "../../settings";
 import {RunDb} from "../../data/DB";
+import {UsersRepository} from "../../repositories/users-rep";
 
 describe('/auth', () => {
+
+    const app = InitApp()
+
+    const  usersRepository =new UsersRepository()
+
     let createdUser: UsersMainType;
     let createdRegUser: UsersMainType
     let regUserFromDb:UsersMainType|null
@@ -69,6 +74,8 @@ describe('/auth', () => {
             })
             .expect(HTTP_STATUSES.NO_CONTENT_204)
 
+
+
         regUserFromDb = await usersRepository.findUserByLoginOrEmail('login1234')
 
 
@@ -117,6 +124,8 @@ describe('/auth', () => {
             .post(`${RouterPath.auth}/registration-email-resending`)
             .send({email: regUserFromDb?.email})
             .expect(HTTP_STATUSES.NO_CONTENT_204)
+
+
 
         let updatedUser = await usersRepository.findUserByLoginOrEmail('login1234')
 

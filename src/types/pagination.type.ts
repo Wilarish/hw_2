@@ -4,13 +4,14 @@ export enum SortDirectionEnum {
     DESC = 'desc'
 }
 
-export type DefaultPaginationType = {
+export class DefaultPaginationType  {
 
-    sortBy: string,
-    sortDirection: SortDirectionEnum,
-    pageNumber: number,
-    pageSize: number,
-    skip: number
+    constructor(public sortBy: string,
+                public sortDirection: SortDirectionEnum,
+                public pageNumber: number,
+                public pageSize: number,
+                public skip: number) {
+    }
 }
 
 export type BlogsPaginationType = DefaultPaginationType & {

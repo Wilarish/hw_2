@@ -1,3 +1,4 @@
-export type RefreshTokenDBType = {
-    refreshToken: string
+export class RefreshTokenDBType {
+    constructor(public refreshToken: string) {
+    }
 }

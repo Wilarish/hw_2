@@ -1,49 +1,37 @@
 import {ObjectId} from "mongodb";
-import mongoose from "mongoose";
 
 
-export type UsersViewType = {
-    id: ObjectId,
-    login: string,
-    email: string,
-    createdAt: string,
-}
-
-export type UsersMainType = {
-    id: ObjectId,
-    login: string,
-    email: string,
-    passwordSalt: string,
-    passwordHash: string,
-    createdAt: string,
-    emailConfirmation: ConfirmationEmailType,
-}
-export type ConfirmationEmailType = {
-    confirmationCode: string,
-    expirationDate: Date | string,
-    isConfirmed: boolean
-}
-// export const confirmationFields = {
-//     confirmationCode: String,
-//     expirationDate: Date,
-//     isConfirmed: Boolean
-// };
-
-export type UsersCreate = {
-    login: string,
-    password: string,
-    email: string
-}
-export const UsersSchema = new mongoose.Schema<UsersMainType>({
-    id: ObjectId,
-    login: String,
-    email: String,
-    passwordSalt: String,
-    passwordHash: String,
-    createdAt: String,
-    emailConfirmation: {
-        confirmationCode: String,
-        expirationDate: String,
-        isConfirmed: Boolean
+export class UsersViewType  {
+    constructor(public id: ObjectId,
+                public login: string,
+                public email: string,
+                public createdAt: string) {
     }
-})
+
+}
+
+export class UsersMainType  {
+    constructor(public id: ObjectId,
+                public login: string,
+                public email: string,
+                public passwordSalt: string,
+                public passwordHash: string,
+                public createdAt: string,
+                public emailConfirmation: ConfirmationEmailType) {
+    }
+
+}
+
+export class ConfirmationEmailType  {
+    constructor(public confirmationCode: string,
+                public expirationDate: Date | string,
+                public isConfirmed: boolean) {
+    }
+}
+
+export class UsersCreate {
+    constructor(public login: string,
+                public password: string,
+                public email: string) {
+    }
+}

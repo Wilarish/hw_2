@@ -1,12 +1,13 @@
 
 import request from "supertest";
-import {app, RouterPath} from "../../../settings";
+import {InitApp, RouterPath} from "../../../settings";
 import {HTTP_STATUSES} from "../../../data/HTTP_STATUSES";
 import {blogs} from "../constants/blogsConstants";
 
 export const createBlogUtils = async() => {
 
     //const createdBlogs = []
+    const app = InitApp()
 
     const res = await request(app)
         .post(RouterPath.blogs)

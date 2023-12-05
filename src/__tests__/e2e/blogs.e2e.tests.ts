@@ -1,10 +1,11 @@
 import request from "supertest";
-import {app, RouterPath} from "../../settings";
+import {InitApp, RouterPath} from "../../settings";
 import {HTTP_STATUSES} from "../../data/HTTP_STATUSES";
 import {BlogsCreateUpdate, BlogsMainType} from "../../types/blogs-types";
 import {Paginated} from "../../types/pagination.type";
 import {RunDb} from "../../data/DB";
-//const app = initApp()
+
+const app = InitApp()
 
 describe('/blogs', ()=> {
 
@@ -21,6 +22,7 @@ describe('/blogs', ()=> {
     })
 
     beforeAll(async ()=> {
+
 
         await request(app)
             .delete('/testing/all-data')

@@ -5,15 +5,15 @@ const secret = process.env.SECRET_JWT || "123"
 export const jwtAdapter = {
 
     async createAccessJwt (userId:string){
-        return jwt.sign({userId},secret,{expiresIn:'10s'})
+        return jwt.sign({userId},secret,{expiresIn:'1000s'})
     },
     async createRefreshJwt (userId:string, deviceId:string){
-        return jwt.sign({userId,deviceId},secret,{expiresIn:'20s'})
+        return jwt.sign({userId,deviceId},secret,{expiresIn:'2000s'})
     },
     async decodeRefreshToken(token:string){
         return jwt.decode(token)
     },
-    async createRecoveryJwt (userId:string){
+    async createPasswordRecoveryJwt (userId:string){
         return jwt.sign({userId},secret,{expiresIn:'30m'})
     },
     async findUserByToken(token:string):Promise<string|null>{

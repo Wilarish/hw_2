@@ -1,11 +1,13 @@
 import request from "supertest";
-import {app, RouterPath} from "../../settings";
+import {InitApp, RouterPath} from "../../settings";
 import {HTTP_STATUSES} from "../../data/HTTP_STATUSES";
 import {Paginated} from "../../types/pagination.type";
 import {UsersCreate, UsersMainType} from "../../types/users-types";
 import {RunDb} from "../../data/DB";
 
 describe('/login',()=>{
+
+    const app = InitApp()
 
     beforeAll(async()=> {
         await RunDb()
@@ -115,6 +117,8 @@ describe('/login',()=>{
     it('should response 204 because all data is true', async () => {
         await request(app)
             .post(RouterPath.auth + '/login')
+            .set('x-forwarded-for', "12345")
+            .set('user-agent', '12345')
             .send({
                 loginOrEmail: 'login',
                 password: 'password'

@@ -1,6 +1,6 @@
 import {emailAdapter} from "../adapters/email-adapter";
 
-export const emailServices={
+export class EmailServices {
     async SendEmailForRegistration(email:string, confirmationCode:string){
 
         const subject: string = "Registration"
@@ -10,7 +10,7 @@ export const emailServices={
             <a href='https://somesite.com/confirm-email?code=${confirmationCode}'>complete registration</a>
         </p>`
         return emailAdapter.SendEmail(email, subject, message)
-    },
+    }
     async SendEmailForRefreshPassword(email:string, recoveryCode:string){
 
         const subject: string = "Refreshing password"

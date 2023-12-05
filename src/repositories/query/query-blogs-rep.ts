@@ -1,11 +1,10 @@
 import {BlogsMainType, BlogsViewType} from "../../types/blogs-types";
-import {BlogsModel, PostsModel,} from "../../data/DB";
 import {ObjectId} from "mongodb";
 import {BlogsPaginationType, DefaultPaginationType, Paginated} from "../../types/pagination.type";
 import {PostsViewType} from "../../types/posts-types";
+import {BlogsModel, PostsModel} from "../../domain/models/models";
 
-export const queryBlogsRepository ={
-
+export class QueryBlogsRepository {
     async queryFindPaginatedPostsForBlogsById(id: string, pagination: DefaultPaginationType): Promise<Paginated<PostsViewType>> {
         const filter= {blogId: new ObjectId(id) }
 
@@ -29,7 +28,7 @@ export const queryBlogsRepository ={
             totalCount,
             items
         }
-    },
+    }
 
     async queryFindPaginatedBlogs(pagination: BlogsPaginationType): Promise<Paginated<BlogsViewType>> {
         const filter = {name: {$regex: pagination.searchNameTerm, $options: 'i'}}
@@ -55,21 +54,11 @@ export const queryBlogsRepository ={
             totalCount,
             items
         }
-    },
+    }
 
     async queryFindBlogById(id: string): Promise<BlogsViewType | null> {
 
-        const blogDb: BlogsMainType | null = await BlogsModel.findOne({id: new ObjectId(id)}).select({ _id: 0, __v:0}).lean()
+        return BlogsModel.findOne({id: new ObjectId(id)}).select({_id: 0, __v:0}).lean()
 
-        if(!blogDb) return null
-
-        return {
-            id: blogDb?.id,
-            name: blogDb?.name,
-            description: blogDb?.description,
-            websiteUrl: blogDb?.websiteUrl,
-            createdAt: blogDb?.createdAt,
-            isMembership: blogDb?.isMembership
-        }
-    },
+    }
 }

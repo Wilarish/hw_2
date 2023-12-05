@@ -1,23 +1,22 @@
 import {ObjectId} from "mongodb";
 import mongoose from "mongoose";
 
-export type DeviceMainType = {
-    ip: string,
-    title: string,
-    lastActiveDate: string,
-    deviceId: string,
-    userId:ObjectId
+export class DeviceMainType  {
+    constructor(
+        public ip: string,
+        public title: string,
+        public lastActiveDate: string,
+        public deviceId: string,
+        public userId:ObjectId
+    ) {
+    }
 }
-export type DeviceViewType = {
-    ip: string,
-    title: string,
-    lastActiveDate: string,
-    deviceId: string
+export class DeviceViewType  {
+    constructor(
+        public ip: string,
+        public title: string,
+        public lastActiveDate: string,
+        public deviceId: string,
+    ) {
+    }
 }
-export const DevicesSchema = new mongoose.Schema<DeviceMainType>({
-    ip: String,
-    title: String,
-    lastActiveDate: String,
-    deviceId: String,
-    userId:ObjectId
-})

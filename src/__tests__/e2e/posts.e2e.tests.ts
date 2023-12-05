@@ -1,18 +1,19 @@
 import request from "supertest";
-import {app, RouterPath} from "../../settings";
+import {InitApp, RouterPath} from "../../settings";
 import {HTTP_STATUSES} from "../../data/HTTP_STATUSES";
 import {PostsCreateUpdate, PostsMainType} from "../../types/posts-types";
 import {BlogsCreateUpdate, BlogsMainType} from "../../types/blogs-types";
 import {createBlogUtils} from "./utils/createBlog.utils";
 import {Paginated} from "../../types/pagination.type";
-import {postsRepository} from "../../repositories/posts-rep";
-import {queryPostsRepository} from "../../repositories/query/query-posts-rep";
 import {RunDb} from "../../data/DB";
+import {QueryPostsRepository} from "../../repositories/query/query-posts-rep";
 
 
 
 describe('/posts', ()=>{
 
+    const app = InitApp()
+    const queryPostsRepository =  new QueryPostsRepository()
 
     let createdPost: PostsMainType;
     let createdPost_2: PostsMainType;

@@ -1,15 +1,17 @@
 import request from "supertest";
 import {UsersCreate, UsersMainType} from "../../types/users-types";
-import {app, RouterPath} from "../../settings";
+import {InitApp, RouterPath} from "../../settings";
 import {HTTP_STATUSES} from "../../data/HTTP_STATUSES";
 import {createBlogUtils} from "./utils/createBlog.utils";
 import {BlogsMainType} from "../../types/blogs-types";
 import {PostsCreateUpdate, PostsMainType} from "../../types/posts-types";
 import {CommentsMainType} from "../../types/comments-types";
 import {RunDb} from "../../data/DB";
+import mongoose from "mongoose";
 
 describe('/authBearer', () => {
 
+    const app = InitApp()
 
     let createdUser: UsersMainType;
     let token_User: string
@@ -20,14 +22,16 @@ describe('/authBearer', () => {
 
     beforeAll(async () => {
         await RunDb()
-    })
 
-    beforeAll(async () => {
         await request(app)
             .delete('/testing/all-data')
             .expect(HTTP_STATUSES.NO_CONTENT_204)
-
     })
+
+    afterAll(async () => {
+        await mongoose.disconnect()
+    })
+
 
     it('should create user with correct data', async () => {
 
@@ -104,26 +108,38 @@ describe('/authBearer', () => {
     it('should login with email correct', async () => {
         const response = await request(app)
             .post(`${RouterPath.auth}/login`)
+            .set('x-forwarded-for', "12345")
+            .set('user-agent', '12345')
             .send({
-                loginOrEmail: createdUser.email,
-                password: password_User
-            })
-            .expect(HTTP_STATUSES.OK_200)
-
-
-    });
-    it('should login with login correct', async () => {
-        const response = await request(app)
-            .post(`${RouterPath.auth}/login`)
-            .send({
-                loginOrEmail: createdUser.login,
+                loginOrEmail: 'email@gmail.com',
                 password: 'password'
             })
             .expect(HTTP_STATUSES.OK_200)
 
-        token_User = response.body.accessToken
+        console.log(response.body)
 
     });
+    it('should login with correct login', async () => {
+        const delay = new Promise<void>((resolve, reject) => {
+            setTimeout(() => {
+                resolve();
+            }, 10000);
+        });
+
+        await delay;
+
+        const response = await request(app)
+            .post(`${RouterPath.auth}/login`)
+            .set('x-forwarded-for', "12345")
+            .set('user-agent', '12345')
+            .send({
+                loginOrEmail: createdUser.login,
+                password: 'password'
+            })
+            .expect(HTTP_STATUSES.OK_200);
+
+        token_User = response.body.accessToken;
+    }, 30000);
     it('should create post with correct data', async () => {
 
 
@@ -204,6 +220,8 @@ describe('/authBearer', () => {
 
         const token = await request(app)
             .post(`${RouterPath.auth}/login`)
+            .set('x-forwarded-for', "12345")
+            .set('user-agent', '12345')
             .send({loginOrEmail: 'loginnnn', password: 'passwordddd'})
             .expect(HTTP_STATUSES.OK_200)
 

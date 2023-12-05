@@ -1,37 +1,39 @@
 import {ObjectId} from "mongodb";
 import e from "express";
 import mongoose from "mongoose";
+import {LikeInfoDb, LikeInfoView, likeStatuses} from "./likes-types";
 
-export type CommentsViewType = {
-    id: ObjectId,
-    content: string,
-    commentatorInfo: commentatorInfo,
-    createdAt: string,
+export class CommentsViewType  {
+    constructor(public id: ObjectId,
+                public content: string,
+                public commentatorInfo: commentatorInfo,
+                public createdAt: string,
+                public likeInfo:LikeInfoView){
+
+    }
 }
 
-export type CommentsMainType = {
-    id: ObjectId,
-    content: string,
-    commentatorInfo: commentatorInfo,
-    createdAt: string,
-    postId: string
-}
-export type commentatorInfo = {
-    userId: ObjectId,
-    userLogin: string
+export class CommentsMainType{
+    constructor(public id: ObjectId,
+                public content: string,
+                public commentatorInfo: commentatorInfo,
+                public createdAt: string,
+                public postId: string,
+                public likeInfo:LikeInfoDb) {
+    }
 }
 
-export type CommentsCreateUpdate = {
-    content: string
+
+
+
+class commentatorInfo {
+    constructor(public userId: ObjectId,
+                public userLogin: string) {
+    }
 }
 
-export const CommentsSchema = new mongoose.Schema<CommentsMainType>({
-    id: ObjectId,
-    content: String,
-    commentatorInfo: {
-        userId: ObjectId,
-        userLogin: String
-    },
-    createdAt: String,
-    postId: String
-})
+export class CommentsCreateUpdate  {
+    constructor(public content: string) {
+    }
+}
+

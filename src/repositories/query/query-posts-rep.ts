@@ -1,9 +1,9 @@
-import {PostsMainType, PostsViewType} from "../../types/posts-types";
+import {PostsViewType} from "../../types/posts-types";
 import {ObjectId} from "mongodb";
 import {DefaultPaginationType, Paginated} from "../../types/pagination.type";
-import {PostsModel} from "../../data/DB";
+import {PostsModel} from "../../domain/models/models";
 
-export const queryPostsRepository ={
+export class QueryPostsRepository {
     async queryFindPaginatedPosts(pagination: DefaultPaginationType): Promise<Paginated<PostsViewType>> {
 
         const [items, totalCount] = await Promise.all([
@@ -27,23 +27,11 @@ export const queryPostsRepository ={
             totalCount,
             items
         }
-    },
+    }
 
     async queryFindPostById(id: string): Promise<PostsViewType | null> {
 
+        return  PostsModel.findOne({id: new ObjectId(id)}).select({ _id: 0, __v:0}).lean()
 
-        const post: PostsMainType | null = await PostsModel.findOne({id: new ObjectId(id)}).select({ _id: 0, __v:0}).lean()
-        if (!post) return null
-
-        return {
-            id: post.id,
-            title: post.title,
-            shortDescription: post.shortDescription,
-            content: post.content,
-            blogId: post.blogId,
-            blogName: post.blogName,
-            createdAt:post.createdAt
-        }
-
-    },
+    }
 }

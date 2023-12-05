@@ -1,11 +1,12 @@
 import {body} from "express-validator";
-import {usersRepository} from "../../repositories/users-rep";
 import {UsersMainType} from "../../types/users-types";
 import {jwtAdapter} from "../../adapters/jwt-adapet";
-import {tr} from "date-fns/locale";
+import {UsersRepository} from "../../repositories/users-rep";
 
 export const paramsCheckingAuth = {
     code: body('code').isString().trim().isLength({min: 1}).withMessage('middleware error').custom(async (code) => {
+
+        const usersRepository = new UsersRepository()
 
         const user: UsersMainType | null = await usersRepository.findUserByConfirmationCode(code)
         if (!user) throw new Error("this code is not exist")
@@ -14,6 +15,8 @@ export const paramsCheckingAuth = {
         return true
     }),
     email: body('email').isString().trim().isEmail().isLength({min: 1, max: 50}).custom(async (email) => {
+
+        const usersRepository = new UsersRepository()
 
         const user: UsersMainType | null = await usersRepository.findUserByLoginOrEmail(email);
         if (!user) throw new Error("User with this email does not exist");

@@ -18,3 +18,20 @@ export const authBearer = async (req: Request, res: Response, next: NextFunction
     return next()
 
 }
+
+export const authBearerWithout401 = async (req: Request, res: Response, next: NextFunction)=>{
+    const authorization = req.headers.authorization
+
+    if (!authorization) return next()
+
+    const token = authorization.split(' ')[1]
+    if( authorization.split(' ')[0] !== "Bearer") return next()
+    const userId = await jwtAdapter.findUserByToken(token)
+    if(!userId){
+        return next()
+    }
+    req.userId = userId
+
+    return next()
+
+}

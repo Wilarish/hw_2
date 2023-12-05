@@ -1,5 +1,6 @@
-export type RegistrationMainType={
-    login: string,
-    password: string,
-    email: string
+export class RegistrationMainType{
+    constructor(public login: string,
+                public password: string,
+                public email: string) {
+    }
 }

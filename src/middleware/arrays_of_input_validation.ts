@@ -21,7 +21,8 @@ export const InputValidationUsers = {
 
 export const InputValidationComments = {
     post: [paramsCheckingCommentsBody.content],
-    put:[paramsCheckingCommentsBody.content, reqIdValidation.id]
+    put:[paramsCheckingCommentsBody.content, reqIdValidation.id],
+    putRateComment:[paramsCheckingCommentsBody.likeStatus, reqIdValidation.id]
 }
 export const InputValidationAuth = {
     registrationConfirmation: [paramsCheckingAuth.code],

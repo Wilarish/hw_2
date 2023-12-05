@@ -1,12 +1,14 @@
 import {cookie} from "express-validator";
 import {jwtAdapter} from "../../adapters/jwt-adapet";
-import {deviceRepository} from "../../repositories/devices-rep";
 import {DeviceMainType} from "../../types/devices-types";
 import {NextFunction, Request, Response} from "express";
 import {HTTP_STATUSES} from "../../data/HTTP_STATUSES";
+import {DevicesRepository} from "../../repositories/devices-rep";
 
 export const CheckJwtToken = {
     refreshToken: cookie('refreshToken').isJWT().custom(async (token) => {
+
+        const deviceRepository = new DevicesRepository()
 
         const userId: string | null = await jwtAdapter.findUserByToken(token)
         if (!userId) throw new Error('not valid token...user')
@@ -21,6 +23,9 @@ export const CheckJwtToken = {
 
     }),
     async rT(req: Request, res: Response, next: NextFunction){
+
+        const deviceRepository = new DevicesRepository()
+
         const refreshToken = req.cookies.refreshToken
 
         const userId: string | null = await jwtAdapter.findUserByToken(refreshToken)

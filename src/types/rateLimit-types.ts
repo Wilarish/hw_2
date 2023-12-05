@@ -1,13 +1,10 @@
-import mongoose from "mongoose";
 
-export type RateLimitType = {
-    IP: string,
-    URL: string,
-    date: Date
+export class RateLimitType  {
+    constructor(public IP: string,
+                public URL: string,
+                public date: Date) {
+
+    }
+
 }
 
-export const RateLimitSchema = new mongoose.Schema<RateLimitType>({
-    IP: String,
-    URL: String,
-    date: Date
-})
