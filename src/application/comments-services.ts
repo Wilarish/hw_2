@@ -59,11 +59,11 @@ export class CommentsServices {
         const comment: CommentsMainType | null = await this.commentsRepository.findCommentById(commentId)
         if (!comment) return false
 
-        const userLikeInfo = comment.likeInfo.likesList.find((elem) => userId === elem.userId.toString())
+        const userLikeInfo = comment.likesInfo.likesList.find((elem) => userId === elem.userId.toString())
 
 
         if (!userLikeInfo) {
-            comment.likeInfo.likesList.push(new LikesListDb(new ObjectId(userId), new Date().toISOString(), likeStatus))
+            comment.likesInfo.likesList.push(new LikesListDb(new ObjectId(userId), new Date().toISOString(), likeStatus))
 
             await this.UpdateLikesDislikes(comment)
 
@@ -88,8 +88,8 @@ export class CommentsServices {
     }
 
     async UpdateLikesDislikes(comment: CommentsMainType) {
-        comment.likeInfo.likesCount = comment.likeInfo.likesList.filter((value) => value.rate === likeStatuses[likeStatuses.Like]).length
-        comment.likeInfo.dislikesCount = comment.likeInfo.likesList.filter((value) => value.rate === likeStatuses[likeStatuses.Dislike]).length
+        comment.likesInfo.likesCount = comment.likesInfo.likesList.filter((value) => value.rate === likeStatuses[likeStatuses.Like]).length
+        comment.likesInfo.dislikesCount = comment.likesInfo.likesList.filter((value) => value.rate === likeStatuses[likeStatuses.Dislike]).length
 
         return this.commentsRepository.updateCommentLikes(comment)
     }

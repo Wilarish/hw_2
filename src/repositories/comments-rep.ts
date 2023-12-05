@@ -1,7 +1,6 @@
 import {CommentsCreateUpdate, CommentsMainType} from "../types/comments-types";
 import {ObjectId} from "mongodb";
 import {CommentsModel} from "../domain/models/models";
-import {LikeInfoDb} from "../types/likes-types";
 
 export class CommentsRepository {
     async createComment(comment: CommentsMainType): Promise<string> {
@@ -16,9 +15,6 @@ export class CommentsRepository {
             return comment
         }
     }
-    async findLikeInfoForQuery(commentId: string, userId:string){
-
-    }
 
     async updateComment(data: CommentsCreateUpdate, id: string): Promise<string | null> {
 
@@ -30,7 +26,7 @@ export class CommentsRepository {
             return null
     }
     async updateCommentLikes(comment:CommentsMainType){
-        const result =await CommentsModel.updateOne({id:comment.id}, {likeInfo:comment.likeInfo})
+        const result =await CommentsModel.updateOne({id:comment.id}, {likeInfo:comment.likesInfo})
 
         return result.modifiedCount === 1
     }
