@@ -59,15 +59,18 @@ export class CommentsServices {
         const comment: CommentsMainType | null = await this.commentsRepository.findCommentById(commentId)
         if (!comment) return false
 
-        const userLikeInfo = comment.likesInfo.likesList.find((elem) => userId === elem.userId.toString())
+        const userLikeInfo:LikesListDb|undefined = comment.likesInfo.likesList.find((elem) => userId === elem.userId.toString())
 
 
         if (!userLikeInfo) {
             comment.likesInfo.likesList.push(new LikesListDb(new ObjectId(userId), new Date().toISOString(), likeStatus))
 
+            console.log(comment.likesInfo.likesList)
             await this.UpdateLikesDislikes(comment)
 
+            console.log(comment.likesInfo.likesCount)
             return this.commentsRepository.updateCommentLikes(comment)
+
         }
 
         if (userLikeInfo.rate === likeStatus) {

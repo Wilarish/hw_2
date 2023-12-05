@@ -3,7 +3,7 @@ import {likeStatuses} from "../../types/likes-types";
 
 export const paramsCheckingCommentsBody ={
     content: body('content').isString().trim().isLength({min:20,max:300}),
-    likeStatus:body('likeStatus').isString().trim().isLength({min:4,max:4}).custom((status)=>{
+    likeStatus:body('likeStatus').isString().trim().isLength({min:4,max:10}).custom((status)=>{
         if(!(status in likeStatuses)) {
              throw new Error('not a like status')
         }
