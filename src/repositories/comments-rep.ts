@@ -25,8 +25,8 @@ export class CommentsRepository {
         else
             return null
     }
-    async updateCommentLikes(comment:CommentsMainType){
-        const result =await CommentsModel.updateOne({id:comment.id}, {likeInfo:comment.likesInfo})
+    async updateCommentLikes(comment:CommentsMainType): Promise<boolean>{
+        const result =await CommentsModel.updateOne({id:comment.id}, {likesInfo:comment.likesInfo})
 
         return result.modifiedCount === 1
     }
