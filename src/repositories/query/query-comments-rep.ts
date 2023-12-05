@@ -5,11 +5,15 @@ import {ObjectId} from "mongodb";
 import {CommentsModel} from "../../domain/models/models";
 import {LikeInfoView, likeStatuses} from "../../types/likes-types";
 import {PostsRepository} from "../posts-rep";
+import {CommentsServices} from "../../application/comments-services";
+import {th} from "date-fns/locale";
 
 export class QueryCommentsRepository {
     private postsRepository: PostsRepository;
+    private commentsServices: CommentsServices
     constructor() {
         this.postsRepository = new PostsRepository()
+        this.commentsServices = new CommentsServices()
     }
     async queryFindPaginatedComments(pagination: DefaultPaginationType, postId: string, userId:string): Promise<Paginated<CommentsViewType> | null> {
 
@@ -64,8 +68,12 @@ export class QueryCommentsRepository {
     }
     async findCommentById(id: string, userId:string|undefined):Promise<CommentsViewType|null> {
 
-        const commentDb = await CommentsModel.findOne({id: new ObjectId(id)}).select({ _id: 0, __v:0, postId: 0}).lean()
+        const commentDbUpdate = await CommentsModel.findOne({id: new ObjectId(id)}).select({ _id: 0, __v:0, postId: 0}).lean()
+        if (!commentDbUpdate) return null
 
+        await this.commentsServices.UpdateLikesDislikes(commentDbUpdate)
+
+        const commentDb = await CommentsModel.findOne({id: new ObjectId(id)}).select({ _id: 0, __v:0, postId: 0}).lean()
         if (!commentDb) return null
 
         let likeStatus:string;
