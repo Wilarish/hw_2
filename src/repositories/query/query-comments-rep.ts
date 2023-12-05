@@ -11,7 +11,7 @@ export class QueryCommentsRepository {
     constructor() {
         this.postsRepository = new PostsRepository()
     }
-    async queryFindPaginatedComments(pagination: DefaultPaginationType, postId: string): Promise<Paginated<CommentsViewType> | null> {
+    async queryFindPaginatedComments(pagination: DefaultPaginationType, postId: string, userId:string): Promise<Paginated<CommentsViewType> | null> {
 
         const post: PostsMainType | null = await this.postsRepository.findPostById(postId)
 
@@ -34,11 +34,23 @@ export class QueryCommentsRepository {
         const pagesCount = Math.ceil(totalCount / pagination.pageSize)
 
         const  itemsQuery:CommentsViewType[] = itemsDb.map((item)=>{
+
+
+            let likeStatus:string
+
+            if(!userId){likeStatus = 'None'}
+
+            const rateIsDefined = item.likeInfo.likesList.filter((rate)=>{return rate.userId.toString() === userId})
+
+            if(!rateIsDefined){likeStatus = 'None'}
+            else {likeStatus = rateIsDefined[0].rate}
+
+
             return new CommentsViewType(item.id,
                 item.content,
                 item.commentatorInfo,
                 item.createdAt,
-                new LikeInfoView(item.likeInfo.likesCount, item.likeInfo.dislikesCount, likeStatuses.Like))
+                new LikeInfoView(item.likeInfo.likesCount, item.likeInfo.dislikesCount, likeStatuses[likeStatus as keyof typeof likeStatuses]))
         })
 
 
@@ -56,13 +68,19 @@ export class QueryCommentsRepository {
 
         if (!commentDb) return null
 
-        let likeStatus:string
-        if(!userId){likeStatus = 'None'}
-        const rateIsDefined = commentDb.likeInfo.likesList.filter((rate)=>{rate.userId.toString() === userId})
-        if(!rateIsDefined){likeStatus = 'None'}
-        else {likeStatus = rateIsDefined[0].rate}
+        let likeStatus:string;
 
-        const likeInfo = new LikeInfoView(commentDb.likeInfo.likesCount, commentDb.likeInfo.dislikesCount, likeStatuses[likeStatus])
+        if(!userId){likeStatus = 'None'}
+
+        const rateIsDefined = commentDb.likeInfo.likesList.filter((rate)=>{return rate.userId.toString() === userId})
+
+        if(rateIsDefined.length === 0){likeStatus = 'None'}
+        else {
+
+            likeStatus = rateIsDefined[0]?.rate
+        }
+
+        const likeInfo = new LikeInfoView(commentDb.likeInfo.likesCount, commentDb.likeInfo.dislikesCount, likeStatuses[likeStatus as keyof typeof likeStatuses])
         return new CommentsViewType(
             commentDb.id,
             commentDb.content,

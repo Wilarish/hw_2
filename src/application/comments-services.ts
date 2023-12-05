@@ -61,12 +61,12 @@ export class CommentsServices {
 
         const userLikeInfo = comment.likeInfo.likesList.find((elem) => userId === elem.userId.toString())
 
+
         if (!userLikeInfo) {
             comment.likeInfo.likesList.push(new LikesListDb(new ObjectId(userId), new Date().toISOString(), likeStatus))
 
             await this.UpdateLikesDislikes(comment)
 
-            console.log("likeInfo  " + comment.likeInfo)
             return this.commentsRepository.updateCommentLikes(comment)
         }
 
@@ -79,6 +79,8 @@ export class CommentsServices {
 
 
         userLikeInfo!.rate = likeStatus
+
+        console.log(userLikeInfo)
 
         await this.UpdateLikesDislikes(comment)
         return this.commentsRepository.updateCommentLikes(comment)

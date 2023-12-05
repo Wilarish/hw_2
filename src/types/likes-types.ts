@@ -1,9 +1,9 @@
 import {ObjectId} from "mongodb";
 
 export enum likeStatuses {
-    "None",
-    "Like",
-    "Dislike"
+    Like = "Like",
+    Dislike = "Dislike",
+    None = "None"
 }
 
 export class LikeInfoView{

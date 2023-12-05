@@ -8,7 +8,7 @@ import {PostsServices} from "../application/posts-services";
 import {CommentsCreateUpdate, CommentsViewType} from "../types/comments-types";
 import {ObjectId} from "mongodb";
 import {errorsCheckingForStatus400} from "../middleware/errors_checking";
-import {authBearer} from "../middleware/auth/auth_bearer";
+import {authBearer, authBearerWithout401} from "../middleware/auth/auth_bearer";
 import {authBasic} from "../middleware/auth/auth_basic";
 import {reqIdValidation} from "../middleware/req_id/id_valid";
 import {QueryPostsRepository } from "../repositories/query/query-posts-rep";
@@ -52,7 +52,7 @@ class PostsControllerInstance {
     async getCommentsForPost(req: Request<{ id: string }>, res: Response) {
 
         const pagination: DefaultPaginationType = getDefaultPagination(req.query)
-        const comments: Paginated<CommentsViewType> | null = await this.queryCommentsRepository.queryFindPaginatedComments(pagination, req.params.id)
+        const comments: Paginated<CommentsViewType> | null = await this.queryCommentsRepository.queryFindPaginatedComments(pagination, req.params.id, req.userId)
 
         if (!comments) return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
         return res.status(HTTP_STATUSES.OK_200).send(comments)
@@ -69,7 +69,7 @@ class PostsControllerInstance {
 
         if (!newCommentId) return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
 
-        const comment: CommentsViewType | null = await this.queryCommentsRepository.findCommentById(newCommentId)
+        const comment: CommentsViewType | null = await this.queryCommentsRepository.findCommentById(newCommentId, req.userId)
 
         if (!newCommentId) return res.sendStatus(HTTP_STATUSES.SERVER_ERROR_500)
 
@@ -149,7 +149,7 @@ const postsController = new PostsControllerInstance()
 
 PostsRouter.get('/', postsController.getPosts.bind(postsController))
 PostsRouter.get('/:id', reqIdValidation.id, errorsCheckingForStatus400, postsController.getPostById.bind(postsController))
-PostsRouter.get('/:id/comments', postsController.getCommentsForPost.bind(postsController))
+PostsRouter.get('/:id/comments',authBearerWithout401, postsController.getCommentsForPost.bind(postsController))
 PostsRouter.post('/:id/comments', authBearer, reqIdValidation.id, InputValidationComments.post, errorsCheckingForStatus400, postsController.createCommentForPost.bind(postsController))
 PostsRouter.post('/', authBasic, InputValidPosts.post, errorsCheckingForStatus400, postsController.createPost.bind(postsController))
 PostsRouter.put('/:id', authBasic, InputValidPosts.put, errorsCheckingForStatus400, postsController.changePost.bind(postsController))
