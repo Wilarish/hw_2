@@ -9,6 +9,7 @@ export const commentsId = async (req: Request<{ id: string }>, res: Response, ne
     const comment = await commentRep.findCommentById(req.params.id)
 
     if (!comment) return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+
     return next()
 
 }
