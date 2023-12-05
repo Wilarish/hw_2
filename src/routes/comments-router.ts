@@ -80,6 +80,6 @@ const commentsController = new CommentsControllerInstance()
 
 
 CommentsRouter.get('/:id', authBearerWithout401, reqIdValidation.id, errorsCheckingForStatus400,  commentsController.getCommentById.bind(commentsController))
-CommentsRouter.put('/:id/like-status', CheckJwtToken.rT,InputValidationComments.putRateComment, commentsController.rateComment.bind(commentsController))
+CommentsRouter.put('/:id/like-status', CheckJwtToken.rT,InputValidationComments.putRateComment,errorsCheckingForStatus400, commentsController.rateComment.bind(commentsController))
 CommentsRouter.put('/:id', authBearer, InputValidationComments.put, errorsCheckingForStatus400, commentsController.changeComment.bind(commentsController))
 CommentsRouter.delete('/:id', reqIdValidation.id, errorsCheckingForStatus400, authBearer, commentsController.deleteComment.bind(commentsController))
