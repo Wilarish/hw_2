@@ -42,7 +42,7 @@ export class QueryCommentsRepository {
 
             const rateIsDefined = item.likesInfo.likesList.filter((rate)=>{return rate.userId.toString() === userId})
 
-            if(!rateIsDefined){likeStatus = 'None'}
+            if(rateIsDefined.length === 0){likeStatus = 'None'}
             else {likeStatus = rateIsDefined[0].rate}
 
 
