@@ -66,7 +66,6 @@ export class CommentsServices {
             comment.likesInfo.likesList.push(new LikesListDb(new ObjectId(userId), new Date().toISOString(), likeStatus))
 
             await this.UpdateLikesDislikes(comment)
-
             return this.commentsRepository.updateCommentLikes(comment)
 
         }

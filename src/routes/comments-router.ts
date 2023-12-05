@@ -15,11 +15,13 @@ class CommentsControllerInstance {
     private commentsRepository: CommentsRepository;
     private queryCommentsRepository: QueryCommentsRepository;
     private commentsServices: CommentsServices;
+
     constructor() {
         this.commentsRepository = new CommentsRepository()
         this.queryCommentsRepository = new QueryCommentsRepository()
         this.commentsServices = new CommentsServices()
     }
+
     async getCommentById(req: Request<{ id: string }>, res: Response) {
         const comment: CommentsViewType | null = await this.queryCommentsRepository.findCommentById(req.params.id, req.userId)
 
@@ -80,7 +82,7 @@ export const CommentsRouter = Router({})
 const commentsController = new CommentsControllerInstance()
 
 
-CommentsRouter.get('/:id', authBearerWithout401, reqIdValidation.id, errorsCheckingForStatus400,  commentsController.getCommentById.bind(commentsController))
-CommentsRouter.put('/:id/like-status', authBearer,commentsId, InputValidationComments.putRateComment,errorsCheckingForStatus400, commentsController.rateComment.bind(commentsController))
+CommentsRouter.get('/:id', authBearerWithout401, reqIdValidation.id, errorsCheckingForStatus400, commentsController.getCommentById.bind(commentsController))
+CommentsRouter.put('/:id/like-status', authBearer, commentsId, InputValidationComments.putRateComment, errorsCheckingForStatus400, commentsController.rateComment.bind(commentsController))
 CommentsRouter.put('/:id', authBearer, InputValidationComments.put, errorsCheckingForStatus400, commentsController.changeComment.bind(commentsController))
 CommentsRouter.delete('/:id', reqIdValidation.id, errorsCheckingForStatus400, authBearer, commentsController.deleteComment.bind(commentsController))
