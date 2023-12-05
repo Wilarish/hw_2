@@ -8,7 +8,7 @@ export class CommentsViewType  {
                 public content: string,
                 public commentatorInfo: commentatorInfo,
                 public createdAt: string,
-                public likeInfo:LikeInfoView){
+                public likesInfo:LikeInfoView){
 
     }
 }
@@ -19,7 +19,7 @@ export class CommentsMainType{
                 public commentatorInfo: commentatorInfo,
                 public createdAt: string,
                 public postId: string,
-                public likeInfo:LikeInfoDb) {
+                public likesInfo:LikeInfoDb) {
     }
 }
 

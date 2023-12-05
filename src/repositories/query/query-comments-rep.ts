@@ -40,7 +40,7 @@ export class QueryCommentsRepository {
 
             if(!userId){likeStatus = 'None'}
 
-            const rateIsDefined = item.likeInfo.likesList.filter((rate)=>{return rate.userId.toString() === userId})
+            const rateIsDefined = item.likesInfo.likesList.filter((rate)=>{return rate.userId.toString() === userId})
 
             if(!rateIsDefined){likeStatus = 'None'}
             else {likeStatus = rateIsDefined[0].rate}
@@ -50,7 +50,7 @@ export class QueryCommentsRepository {
                 item.content,
                 item.commentatorInfo,
                 item.createdAt,
-                new LikeInfoView(item.likeInfo.likesCount, item.likeInfo.dislikesCount, likeStatuses[likeStatus as keyof typeof likeStatuses]))
+                new LikeInfoView(item.likesInfo.likesCount, item.likesInfo.dislikesCount, likeStatuses[likeStatus as keyof typeof likeStatuses]))
         })
 
 
@@ -72,7 +72,7 @@ export class QueryCommentsRepository {
 
         if(!userId){likeStatus = 'None'}
 
-        const rateIsDefined = commentDb.likeInfo.likesList.filter((rate)=>{return rate.userId.toString() === userId})
+        const rateIsDefined = commentDb.likesInfo.likesList.filter((rate)=>{return rate.userId.toString() === userId})
 
         if(rateIsDefined.length === 0){likeStatus = 'None'}
         else {
@@ -80,13 +80,14 @@ export class QueryCommentsRepository {
             likeStatus = rateIsDefined[0]?.rate
         }
 
-        const likeInfo = new LikeInfoView(commentDb.likeInfo.likesCount, commentDb.likeInfo.dislikesCount, likeStatuses[likeStatus as keyof typeof likeStatuses])
+        const likesInfo = new LikeInfoView(commentDb.likesInfo.likesCount, commentDb.likesInfo.dislikesCount, likeStatuses[likeStatus as keyof typeof likeStatuses])
+
         return new CommentsViewType(
             commentDb.id,
             commentDb.content,
             commentDb.commentatorInfo,
             commentDb.createdAt,
-            likeInfo
+            likesInfo
         )
     }
 }
