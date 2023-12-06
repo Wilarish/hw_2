@@ -169,7 +169,7 @@ describe('/likes', () => {
         await request(app)
             .put(`${RouterPath.comments}/${createdComment.id}/like-status`)
             .set("Authorization", `Bearer ${token_User}`)
-            .send({likeStatus:"Dislike"})
+            .send({likeStatus:"Like"})
             .expect(HTTP_STATUSES.NO_CONTENT_204)
 
         await request(app)
@@ -181,7 +181,7 @@ describe('/likes', () => {
         await request(app)
             .put(`${RouterPath.comments}/${createdComment.id}/like-status`)
             .set("Authorization", `Bearer ${token_User3}`)
-            .send({likeStatus:"None"})
+            .send({likeStatus:"Like"})
             .expect(HTTP_STATUSES.NO_CONTENT_204)
 
         // const  delay = new Promise<void>((resolve)=>{setTimeout(()=>{resolve()},5000)})
@@ -191,9 +191,44 @@ describe('/likes', () => {
             .get(`${RouterPath.comments}/${createdComment.id}`)
             .set("Authorization", `Bearer ${token_User}`)
 
-        expect(res.body.likesInfo.likesCount).toEqual(1)
+        expect(res.body.likesInfo.likesCount).toEqual(3)
 
-        console.log(res.body.likesInfo)
+
     },15000);
+    it('should change likes to dislikes', async () => {
+        await request(app)
+            .put(`${RouterPath.comments}/${createdComment.id}/like-status`)
+            .set("Authorization", `Bearer ${token_User}`)
+            .send({likeStatus:"Dislike"})
+            .expect(HTTP_STATUSES.NO_CONTENT_204)
+
+        await request(app)
+            .put(`${RouterPath.comments}/${createdComment.id}/like-status`)
+            .set("Authorization", `Bearer ${token_User2}`)
+            .send({likeStatus:"Dislike"})
+            .expect(HTTP_STATUSES.NO_CONTENT_204)
+
+        await request(app)
+            .put(`${RouterPath.comments}/${createdComment.id}/like-status`)
+            .set("Authorization", `Bearer ${token_User3}`)
+            .send({likeStatus:"Dislike"})
+            .expect(HTTP_STATUSES.NO_CONTENT_204)
+
+        // const  delay = new Promise<void>((resolve)=>{setTimeout(()=>{resolve()},10000)})
+        // await delay
+
+        const res = await request(app)
+            .get(`${RouterPath.comments}/${createdComment.id}`)
+            .set("Authorization", `Bearer ${token_User}`)
+
+        expect(res.body.likesInfo.dislikesCount).toEqual(3)
+
+
+        const response = await request(app)
+            .get(`${RouterPath.posts}/${createdPost.id}/comments`)
+            .set("Authorization", `Bearer ${token_User}`)
+
+        console.log(response.body.items)
+    },20000);
 
 })

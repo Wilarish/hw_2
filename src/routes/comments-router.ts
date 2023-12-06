@@ -5,21 +5,23 @@ import {InputValidationComments} from "../middleware/arrays_of_input_validation"
 import {authBearer, authBearerWithout401} from "../middleware/auth/auth_bearer";
 import {errorsCheckingForStatus400} from "../middleware/errors_checking";
 import {reqIdValidation} from "../middleware/req_id/id_valid";
-import {CheckJwtToken} from "../middleware/auth/refresh_token";
 import {CommentsRepository} from "../repositories/comments-rep";
 import {QueryCommentsRepository} from "../repositories/query/query-comments-rep";
 import {CommentsServices} from "../application/comments-services";
 import {commentsId} from "../middleware/404/comments-id";
+import {LikesServices} from "../application/likes-services";
 
 class CommentsControllerInstance {
     private commentsRepository: CommentsRepository;
     private queryCommentsRepository: QueryCommentsRepository;
     private commentsServices: CommentsServices;
+    private likesServices: LikesServices;
 
     constructor() {
         this.commentsRepository = new CommentsRepository()
         this.queryCommentsRepository = new QueryCommentsRepository()
         this.commentsServices = new CommentsServices()
+        this.likesServices = new LikesServices()
     }
 
     async getCommentById(req: Request<{ id: string }>, res: Response) {
@@ -32,7 +34,7 @@ class CommentsControllerInstance {
     async rateComment(req: Request<{ id: string }, {}, {
         likeStatus: string
     }>, res: Response) {
-        const result = this.commentsServices.rateComment(req.params.id, req.body.likeStatus, req.userId.toString())
+        const result:boolean = await this.likesServices.rateComment(req.params.id, req.body.likeStatus, req.userId.toString())
 
         if (!result) return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
 

@@ -12,15 +12,12 @@ export class LikeInfoView{
                 public myStatus: likeStatuses) {
     }
 }
-export class LikeInfoDb{
-    constructor(public likesList: LikesListDb[],
-                public likesCount: number,
-                public dislikesCount: number ){
-    }
-}
-export class LikesListDb{
-    constructor(public userId: ObjectId,
-                //public createdAt: string,
-                public rate: string ){
+export class LikesMainType{
+    constructor(
+        public commentOrPostId: ObjectId,
+        public userId: ObjectId,
+        public createdAt: string,
+        public rate: string
+    ) {
     }
 }
