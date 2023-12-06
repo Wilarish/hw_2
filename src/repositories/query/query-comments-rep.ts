@@ -7,6 +7,7 @@ import {LikeInfoView, LikesMainType, likeStatuses} from "../../types/likes-types
 import {PostsRepository} from "../posts-rep";
 import {CommentsServices} from "../../application/comments-services";
 import {LikesRepository} from "../likes-rep";
+import {RateHelp, RateHelpArr} from "../../helpers/rates-helper";
 
 export class QueryCommentsRepository {
     private postsRepository: PostsRepository;
@@ -40,38 +41,9 @@ export class QueryCommentsRepository {
         ])
 
         const pagesCount = Math.ceil(totalCount / pagination.pageSize)
+        const items = await RateHelpArr(itemsDb,userId)
 
-        let rates: LikesMainType[] = await this.likesRepository.getAllRates()
-
-        let likeStatus = ''
-        if (!userId) likeStatus = 'None'
-
-        const items = itemsDb.map((comment)=>{
-
-            let likesCount: number = 0
-            let dislikesCount: number = 0
-
-            rates.map((value:LikesMainType) => {
-                if(value.commentOrPostId.toString() === comment.id.toString()){
-                    if(value.rate === "Like") likesCount++
-                    if(value.rate === "Dislike") dislikesCount++
-                    if(userId && value.userId.toString() === userId) likeStatus = value.rate
-                }
-            })
-
-
-            const likesInfo = new LikeInfoView(likesCount, dislikesCount, likeStatuses[likeStatus as keyof typeof likeStatuses])
-
-            return new CommentsViewType(
-                comment.id,
-                comment.content,
-                comment.commentatorInfo,
-                comment.createdAt,
-                likesInfo
-            )
-
-        })
-
+        console.log(items)
         return {
             pagesCount,
             page: pagination.pageNumber,
@@ -86,23 +58,7 @@ export class QueryCommentsRepository {
         const commentDb = await CommentsModel.findOne({id: new ObjectId(id)}).select({_id: 0, __v: 0, postId: 0}).lean()
         if (!commentDb) return null
 
-        const rates: LikesMainType[] = await this.likesRepository.getRates(id)
-
-        let likeStatus = 'None'
-        //if (!userId) likeStatus = 'None'
-
-        let likesCount: number = 0
-        let dislikesCount: number = 0
-
-        rates.map((value:LikesMainType) => {
-            if(value.rate === "Like") likesCount++
-            if(value.rate === "Dislike") dislikesCount++
-            if(userId && value.userId.toString() === userId) likeStatus = value.rate
-        })
-
-        console.log(likeStatus)
-
-        const likesInfo = new LikeInfoView(likesCount, dislikesCount, likeStatuses[likeStatus as keyof typeof likeStatuses])
+        const likesInfo:LikeInfoView = await RateHelp(id,userId)
 
         return new CommentsViewType(
             commentDb.id,
