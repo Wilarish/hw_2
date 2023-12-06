@@ -68,11 +68,6 @@ export class QueryCommentsRepository {
     }
     async findCommentById(id: string, userId:string|undefined):Promise<CommentsViewType|null> {
 
-        const commentDbUpdate = await CommentsModel.findOne({id: new ObjectId(id)}).select({ _id: 0, __v:0, postId: 0}).lean()
-        if (!commentDbUpdate) return null
-
-        await this.commentsServices.UpdateLikesDislikes(commentDbUpdate)
-
         const commentDb = await CommentsModel.findOne({id: new ObjectId(id)}).select({ _id: 0, __v:0, postId: 0}).lean()
         if (!commentDb) return null
 

@@ -65,7 +65,7 @@ export class CommentsServices {
         if (!userLikeInfo) {
             comment.likesInfo.likesList.push(new LikesListDb(new ObjectId(userId), new Date().toISOString(), likeStatus))
 
-            //await this.UpdateLikesDislikes(comment)
+            await this.UpdateLikesDislikes(comment)
             return this.commentsRepository.updateCommentLikes(comment)
 
         }
@@ -73,7 +73,7 @@ export class CommentsServices {
         if (userLikeInfo.rate === likeStatus) {
             userLikeInfo!.rate = likeStatuses.None.toString()
 
-            //await this.UpdateLikesDislikes(comment)
+            await this.UpdateLikesDislikes(comment)
             return this.commentsRepository.updateCommentLikes(comment)
         }
 
@@ -82,7 +82,7 @@ export class CommentsServices {
 
         console.log(userLikeInfo)
 
-        //await this.UpdateLikesDislikes(comment)
+        await this.UpdateLikesDislikes(comment)
         return this.commentsRepository.updateCommentLikes(comment)
 
     }
