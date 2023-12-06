@@ -41,6 +41,7 @@ export class QueryCommentsRepository {
 
         const itemsQuery: CommentsViewType[] = itemsDb.map((item) => {
 
+            const ratesCount = this.commentsServices.UpdateLikesDislikes(item)
 
             let likeStatus: string
 
@@ -48,7 +49,7 @@ export class QueryCommentsRepository {
                 likeStatus = 'None'
             }
 
-            const rateIsDefined = item.likesInfo.likesList.filter((rate) => {
+            const rateIsDefined = item.likesInfo.filter((rate) => {
                 return rate.userId.toString() === userId
             })
 
@@ -63,7 +64,7 @@ export class QueryCommentsRepository {
                 item.content,
                 item.commentatorInfo,
                 item.createdAt,
-                new LikeInfoView(item.likesInfo.likesCount, item.likesInfo.dislikesCount, likeStatuses[likeStatus as keyof typeof likeStatuses]))
+                new LikeInfoView(ratesCount.likesCount, ratesCount.dislikesCount, likeStatuses[likeStatus as keyof typeof likeStatuses]))
         })
 
 
@@ -81,7 +82,7 @@ export class QueryCommentsRepository {
         const commentDb = await CommentsModel.findOne({id: new ObjectId(id)}).select({_id: 0, __v: 0, postId: 0}).lean()
         if (!commentDb) return null
 
-        console.log(commentDb.likesInfo.likesList)
+        console.log(commentDb.likesInfo)
 
         const ratesCount = this.commentsServices.UpdateLikesDislikes(commentDb)
 
@@ -92,7 +93,7 @@ export class QueryCommentsRepository {
             likeStatus = 'None'
         }
 
-        const rateIsDefined = commentDb.likesInfo.likesList.filter((rate) => {
+        const rateIsDefined = commentDb.likesInfo.filter((rate) => {
             return rate.userId.toString() === userId
         })
 

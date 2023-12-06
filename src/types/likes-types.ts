@@ -20,7 +20,7 @@ export class LikeInfoDb{
 }
 export class LikesListDb{
     constructor(public userId: ObjectId,
-                public createdAt: string,
+                //public createdAt: string,
                 public rate: string ){
     }
 }

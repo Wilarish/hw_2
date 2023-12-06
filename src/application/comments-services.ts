@@ -2,7 +2,7 @@ import {CommentsCreateUpdate, CommentsMainType} from "../types/comments-types";
 import {UsersMainType} from "../types/users-types";
 import {PostsMainType} from "../types/posts-types";
 import {ObjectId} from "mongodb";
-import {LikeInfoDb, LikesListDb, likeStatuses} from "../types/likes-types";
+import {LikesListDb, likeStatuses} from "../types/likes-types";
 import {CommentsRepository} from "../repositories/comments-rep";
 import {UsersRepository} from "../repositories/users-rep";
 import {PostsRepository} from "../repositories/posts-rep";
@@ -35,7 +35,7 @@ export class CommentsServices {
                 },
                 new Date().toISOString(),
                 postId,
-                new LikeInfoDb([], 0, 0)
+                []
             )
 
 
@@ -59,13 +59,11 @@ export class CommentsServices {
         const comment: CommentsMainType | null = await this.commentsRepository.findCommentById(commentId)
         if (!comment) return false
 
-        const userLikeInfo:LikesListDb|undefined = comment.likesInfo.likesList.find((elem) => userId === elem.userId.toString())
-
+        const userLikeInfo:LikesListDb|undefined = comment.likesInfo.find((elem) => userId === elem.userId.toString())
 
         if (!userLikeInfo) {
-            comment.likesInfo.likesList.push(new LikesListDb(new ObjectId(userId), new Date().toISOString(), likeStatus))
+            comment.likesInfo.push(new LikesListDb(new ObjectId(userId), likeStatus))
 
-            //await this.UpdateLikesDislikes(comment)
             return this.commentsRepository.updateCommentLikes(comment)
 
         }
@@ -82,14 +80,13 @@ export class CommentsServices {
 
         console.log(userLikeInfo)
 
-        //await this.UpdateLikesDislikes(comment)
         return this.commentsRepository.updateCommentLikes(comment)
 
     }
 
     UpdateLikesDislikes(comment: CommentsMainType) {
 
-        const {likesCount, dislikesCount} = comment.likesInfo.likesList.reduce((ac, el)=> {
+        const {likesCount, dislikesCount} = comment.likesInfo.reduce((ac, el)=> {
             if(el.rate === likeStatuses[likeStatuses.Like]){
                 ac.likesCount++
             }

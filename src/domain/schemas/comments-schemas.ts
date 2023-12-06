@@ -5,7 +5,6 @@ import {LikesListDb, likeStatuses} from "../../types/likes-types";
 
 export const LikesSchema = new mongoose.Schema<LikesListDb>({
     userId: {type: mongoose.Schema.Types.ObjectId, required: true},
-    createdAt: {type: String, required: true},
     rate: {type: String, enum: likeStatuses, required: true},
 })
 export const CommentsSchema = new mongoose.Schema<CommentsMainType>({
@@ -17,11 +16,9 @@ export const CommentsSchema = new mongoose.Schema<CommentsMainType>({
     },
     createdAt: {required: true, type: String, minlength: 1, maxlength: 50},
     postId: {required: true, type: String, minlength: 24, maxlength: 24},
-    likesInfo: {
-        likesList: {type: [LikesSchema], required:true},
-        likesCount: {type: Number, required: true},
-        dislikesCount: {type: Number, required: true}
-    }
+    likesInfo: {type: [LikesSchema], required:true},
+
+
 })
 
 

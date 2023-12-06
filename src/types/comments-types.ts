@@ -1,7 +1,7 @@
 import {ObjectId} from "mongodb";
 import e from "express";
 import mongoose from "mongoose";
-import {LikeInfoDb, LikeInfoView, likeStatuses} from "./likes-types";
+import {LikeInfoDb, LikeInfoView, LikesListDb, likeStatuses} from "./likes-types";
 
 export class CommentsViewType  {
     constructor(public id: ObjectId,
@@ -19,7 +19,7 @@ export class CommentsMainType{
                 public commentatorInfo: commentatorInfo,
                 public createdAt: string,
                 public postId: string,
-                public likesInfo:LikeInfoDb) {
+                public likesInfo:LikesListDb[]) {
     }
 }
 

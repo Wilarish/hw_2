@@ -169,7 +169,7 @@ describe('/likes', () => {
         await request(app)
             .put(`${RouterPath.comments}/${createdComment.id}/like-status`)
             .set("Authorization", `Bearer ${token_User}`)
-            .send({likeStatus:"Like"})
+            .send({likeStatus:"Dislike"})
             .expect(HTTP_STATUSES.NO_CONTENT_204)
 
         await request(app)
@@ -181,19 +181,19 @@ describe('/likes', () => {
         await request(app)
             .put(`${RouterPath.comments}/${createdComment.id}/like-status`)
             .set("Authorization", `Bearer ${token_User3}`)
-            .send({likeStatus:"Like"})
+            .send({likeStatus:"None"})
             .expect(HTTP_STATUSES.NO_CONTENT_204)
 
-        const  delay = new Promise<void>((resolve)=>{setTimeout(()=>{resolve()},3000)})
-        await delay
+        // const  delay = new Promise<void>((resolve)=>{setTimeout(()=>{resolve()},5000)})
+        // await delay
 
         const res = await request(app)
             .get(`${RouterPath.comments}/${createdComment.id}`)
             .set("Authorization", `Bearer ${token_User}`)
 
-        expect(res.body.likesInfo.likesCount).toEqual(3)
+        expect(res.body.likesInfo.likesCount).toEqual(1)
 
         console.log(res.body.likesInfo)
-    });
+    },15000);
 
 })
