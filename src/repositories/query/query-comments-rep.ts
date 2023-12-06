@@ -11,11 +11,13 @@ import {th} from "date-fns/locale";
 export class QueryCommentsRepository {
     private postsRepository: PostsRepository;
     private commentsServices: CommentsServices
+
     constructor() {
         this.postsRepository = new PostsRepository()
         this.commentsServices = new CommentsServices()
     }
-    async queryFindPaginatedComments(pagination: DefaultPaginationType, postId: string, userId:string): Promise<Paginated<CommentsViewType> | null> {
+
+    async queryFindPaginatedComments(pagination: DefaultPaginationType, postId: string, userId: string): Promise<Paginated<CommentsViewType> | null> {
 
         const post: PostsMainType | null = await this.postsRepository.findPostById(postId)
 
@@ -26,7 +28,7 @@ export class QueryCommentsRepository {
         const [itemsDb, totalCount] = await Promise.all([
             CommentsModel
                 .find(filter)
-                .select({ _id: 0, __v:0, postId: 0})
+                .select({_id: 0, __v: 0, postId: 0})
                 .sort({[pagination.sortBy]: pagination.sortDirection})
                 .skip(pagination.skip)
                 .limit(pagination.pageSize)
@@ -37,17 +39,24 @@ export class QueryCommentsRepository {
 
         const pagesCount = Math.ceil(totalCount / pagination.pageSize)
 
-        const  itemsQuery:CommentsViewType[] = itemsDb.map((item)=>{
+        const itemsQuery: CommentsViewType[] = itemsDb.map((item) => {
 
 
-            let likeStatus:string
+            let likeStatus: string
 
-            if(!userId){likeStatus = 'None'}
+            if (!userId) {
+                likeStatus = 'None'
+            }
 
-            const rateIsDefined = item.likesInfo.likesList.filter((rate)=>{return rate.userId.toString() === userId})
+            const rateIsDefined = item.likesInfo.likesList.filter((rate) => {
+                return rate.userId.toString() === userId
+            })
 
-            if(rateIsDefined.length === 0){likeStatus = 'None'}
-            else {likeStatus = rateIsDefined[0].rate}
+            if (rateIsDefined.length === 0) {
+                likeStatus = 'None'
+            } else {
+                likeStatus = rateIsDefined[0].rate
+            }
 
 
             return new CommentsViewType(item.id,
@@ -63,27 +72,38 @@ export class QueryCommentsRepository {
             page: pagination.pageNumber,
             pageSize: pagination.pageSize,
             totalCount,
-            items:itemsQuery
+            items: itemsQuery
         }
     }
-    async findCommentById(id: string, userId:string|undefined):Promise<CommentsViewType|null> {
 
-        const commentDb = await CommentsModel.findOne({id: new ObjectId(id)}).select({ _id: 0, __v:0, postId: 0}).lean()
+    async findCommentById(id: string, userId: string | undefined): Promise<CommentsViewType | null> {
+
+        const commentDb = await CommentsModel.findOne({id: new ObjectId(id)}).select({_id: 0, __v: 0, postId: 0}).lean()
         if (!commentDb) return null
 
-        let likeStatus:string;
+        console.log(commentDb.likesInfo.likesList)
 
-        if(!userId){likeStatus = 'None'}
+        const ratesCount = this.commentsServices.UpdateLikesDislikes(commentDb)
 
-        const rateIsDefined = commentDb.likesInfo.likesList.filter((rate)=>{return rate.userId.toString() === userId})
 
-        if(rateIsDefined.length === 0){likeStatus = 'None'}
-        else {
+        let likeStatus: string;
+
+        if (!userId) {
+            likeStatus = 'None'
+        }
+
+        const rateIsDefined = commentDb.likesInfo.likesList.filter((rate) => {
+            return rate.userId.toString() === userId
+        })
+
+        if (rateIsDefined.length === 0) {
+            likeStatus = 'None'
+        } else {
 
             likeStatus = rateIsDefined[0]?.rate
         }
 
-        const likesInfo = new LikeInfoView(commentDb.likesInfo.likesCount, commentDb.likesInfo.dislikesCount, likeStatuses[likeStatus as keyof typeof likeStatuses])
+        const likesInfo = new LikeInfoView(ratesCount.likesCount, ratesCount.dislikesCount, likeStatuses[likeStatus as keyof typeof likeStatuses])
 
         return new CommentsViewType(
             commentDb.id,

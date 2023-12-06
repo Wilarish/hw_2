@@ -65,33 +65,52 @@ export class CommentsServices {
         if (!userLikeInfo) {
             comment.likesInfo.likesList.push(new LikesListDb(new ObjectId(userId), new Date().toISOString(), likeStatus))
 
-            await this.UpdateLikesDislikes(comment)
+            //await this.UpdateLikesDislikes(comment)
             return this.commentsRepository.updateCommentLikes(comment)
 
         }
 
-        if (userLikeInfo.rate === likeStatus) {
-            userLikeInfo!.rate = likeStatuses.None.toString()
-
-            await this.UpdateLikesDislikes(comment)
-            return this.commentsRepository.updateCommentLikes(comment)
-        }
+        // if (userLikeInfo.rate === likeStatus) {
+        //     userLikeInfo!.rate = likeStatuses.None.toString()
+        //
+        //     await this.UpdateLikesDislikes(comment)
+        //     return this.commentsRepository.updateCommentLikes(comment)
+        // }
 
 
         userLikeInfo!.rate = likeStatus
 
         console.log(userLikeInfo)
 
-        await this.UpdateLikesDislikes(comment)
+        //await this.UpdateLikesDislikes(comment)
         return this.commentsRepository.updateCommentLikes(comment)
 
     }
 
-    async UpdateLikesDislikes(comment: CommentsMainType) {
-        comment.likesInfo.likesCount = comment.likesInfo.likesList.filter((value) => value.rate === likeStatuses[likeStatuses.Like]).length
-        comment.likesInfo.dislikesCount = comment.likesInfo.likesList.filter((value) => value.rate === likeStatuses[likeStatuses.Dislike]).length
+    UpdateLikesDislikes(comment: CommentsMainType) {
 
-        return this.commentsRepository.updateCommentLikes(comment)
+        const {likesCount, dislikesCount} = comment.likesInfo.likesList.reduce((ac, el)=> {
+            if(el.rate === likeStatuses[likeStatuses.Like]){
+                ac.likesCount++
+            }
+            if(el.rate === likeStatuses[likeStatuses.Dislike]){
+                ac.dislikesCount++
+            }
+            return ac;
+        }, {likesCount: 0, dislikesCount: 0})
+
+        return{
+            likesCount,
+            dislikesCount
+        }
+
+        // comment.likesInfo.likesCount = comment.likesInfo.likesList.filter((value) => value.rate === likeStatuses[likeStatuses.Like]).length
+        // comment.likesInfo.dislikesCount = comment.likesInfo.likesList.filter((value) => value.rate === likeStatuses[likeStatuses.Dislike]).length
+
+        // comment.likesInfo.likesCount = likesCount;
+        // comment.likesInfo.dislikesCount = dislikesCount;
+
+        //return this.commentsRepository.updateCommentLikes(comment)
     }
 }
 

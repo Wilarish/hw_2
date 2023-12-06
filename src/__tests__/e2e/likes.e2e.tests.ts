@@ -184,11 +184,16 @@ describe('/likes', () => {
             .send({likeStatus:"Like"})
             .expect(HTTP_STATUSES.NO_CONTENT_204)
 
+        const  delay = new Promise<void>((resolve)=>{setTimeout(()=>{resolve()},3000)})
+        await delay
+
         const res = await request(app)
             .get(`${RouterPath.comments}/${createdComment.id}`)
             .set("Authorization", `Bearer ${token_User}`)
 
-        console.log(res.body)
+        expect(res.body.likesInfo.likesCount).toEqual(3)
+
+        console.log(res.body.likesInfo)
     });
 
 })
