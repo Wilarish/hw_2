@@ -4,12 +4,11 @@ import {
     LikeInfoView,
     LikesMainType,
     likeStatuses,
-    likeTypes,
     NewestPostLikes
 } from "../types/likes-types";
 import {CommentsViewType} from "../types/comments-types";
-import {el} from "date-fns/locale";
 import {PostsViewType} from "../types/posts-types";
+
 
 const likesRepository = new LikesRepository()
 
