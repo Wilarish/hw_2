@@ -263,20 +263,32 @@ describe('/likes', () => {
             .send({likeStatus: "Like"})
             .expect(HTTP_STATUSES.NO_CONTENT_204)
 
-        await request(app)
-            .put(`${RouterPath.posts}/${createdPost.id}/like-status`)
-            .set("Authorization", `Bearer ${token_User2}`)
-            .send({likeStatus: "Dislike"})
-            .expect(HTTP_STATUSES.NO_CONTENT_204)
-
-        const resp = await request(app)
+        const res1 = await request(app)
             .get(`${RouterPath.posts}/${createdPost.id}`)
             .set("Authorization", `Bearer ${token_User}`)
 
-        console.log(resp.body.extendedLikesInfo.newestLikes)
+        expect(res1.body.extendedLikesInfo.newestLikes.length).toEqual(1)
+        expect(res1.body.extendedLikesInfo.newestLikes[0].login).toEqual('login')
 
-        expect(resp.body.extendedLikesInfo.newestLikes.length).toEqual(1)
+        //--------------------------------------------------
 
+        await request(app)
+            .put(`${RouterPath.posts}/${createdPost.id}/like-status`)
+            .set("Authorization", `Bearer ${token_User2}`)
+            .send({likeStatus: "Like"})
+            .expect(HTTP_STATUSES.NO_CONTENT_204)
+
+        const res2 = await request(app)
+            .get(`${RouterPath.posts}/${createdPost.id}`)
+            .set("Authorization", `Bearer ${token_User}`)
+
+        console.log(res2.body.extendedLikesInfo.newestLikes)
+
+        expect(res2.body.extendedLikesInfo.newestLikes.length).toEqual(2)
+        expect(res2.body.extendedLikesInfo.newestLikes[0].login).toEqual('login')
+        expect(res2.body.extendedLikesInfo.newestLikes[1].login).toEqual('login2')
+
+        //--------------------------------------------------
 
         await request(app)
             .put(`${RouterPath.posts}/${createdPost.id}/like-status`)
@@ -284,23 +296,32 @@ describe('/likes', () => {
             .send({likeStatus: "Like"})
             .expect(HTTP_STATUSES.NO_CONTENT_204)
 
+        const res3 = await request(app)
+            .get(`${RouterPath.posts}/${createdPost.id}`)
+            .set("Authorization", `Bearer ${token_User}`)
+
+        expect(res3.body.extendedLikesInfo.newestLikes.length).toEqual(3)
+        expect(res3.body.extendedLikesInfo.newestLikes[0].login).toEqual('login')
+        expect(res3.body.extendedLikesInfo.newestLikes[1].login).toEqual('login2')
+        expect(res3.body.extendedLikesInfo.newestLikes[2].login).toEqual('login3')
+
+        //--------------------------------------------------
+
         await request(app)
             .put(`${RouterPath.posts}/${createdPost.id}/like-status`)
             .set("Authorization", `Bearer ${token_User4}`)
-            .send({likeStatus: "Dislike"})
+            .send({likeStatus: "Like"})
             .expect(HTTP_STATUSES.NO_CONTENT_204)
 
-        // const  delay = new Promise<void>((resolve)=>{setTimeout(()=>{resolve()},5000)})
-        // await delay
 
         const res = await request(app)
             .get(`${RouterPath.posts}/${createdPost.id}`)
             .set("Authorization", `Bearer ${token_User}`)
 
-        expect(res.body.extendedLikesInfo.likesCount).toEqual(2)
+        expect(res.body.extendedLikesInfo.likesCount).toEqual(4)
         expect(res.body.extendedLikesInfo.newestLikes[0].login).toEqual('login')
-        expect(res.body.extendedLikesInfo.newestLikes[1].login).toEqual('login3')
-        //expect(res.body.extendedLikesInfo.newestLikes[2].login).toEqual('login3')
+        expect(res.body.extendedLikesInfo.newestLikes[1].login).toEqual('login2')
+        expect(res.body.extendedLikesInfo.newestLikes[2].login).toEqual('login3')
 
         //console.log(res.body.extendedLikesInfo)
 
@@ -309,7 +330,7 @@ describe('/likes', () => {
     it('should saving last 3 rates', async () => {
         await request(app)
             .put(`${RouterPath.posts}/${createdPost.id}/like-status`)
-            .set("Authorization", `Bearer ${token_User4}`)
+            .set("Authorization", `Bearer ${token_User2}`)
             .send({likeStatus: "Dislike"})
             .expect(HTTP_STATUSES.NO_CONTENT_204)
 
@@ -317,10 +338,10 @@ describe('/likes', () => {
             .get(`${RouterPath.posts}/${createdPost.id}`)
             .set("Authorization", `Bearer ${token_User}`)
 
-        expect(res.body.extendedLikesInfo.dislikesCount).toEqual(2)
+        expect(res.body.extendedLikesInfo.dislikesCount).toEqual(1)
         expect(res.body.extendedLikesInfo.newestLikes[0].login).toEqual('login')
         expect(res.body.extendedLikesInfo.newestLikes[1].login).toEqual('login3')
-        //expect(res.body.extendedLikesInfo.newestLikes[2].login).toEqual('login3')
+        expect(res.body.extendedLikesInfo.newestLikes[2].login).toEqual('login4')
 
         console.log(res.body.extendedLikesInfo)
 
