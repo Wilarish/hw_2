@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import {BlogsSchema, DevicesSchema, PostsSchema, RateLimitSchema, UsersSchema} from "../schemas/scemas";
-import {CommentsSchema, LikesSchema} from "../schemas/comments-schemas";
+import {BlogsSchema, DevicesSchema, RateLimitSchema, UsersSchema} from "../schemas/scemas";
+import {CommentsSchema, LikesSchema, PostsSchema} from "../schemas/comments-schemas";
 
 
 export const BlogsModel = mongoose.model('blogs', BlogsSchema)

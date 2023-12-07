@@ -15,6 +15,9 @@ import {QueryPostsRepository } from "../repositories/query/query-posts-rep";
 import {QueryCommentsRepository } from "../repositories/query/query-comments-rep";
 import {CommentsServices } from "../application/comments-services";
 import {PostsRepository} from "../repositories/posts-rep";
+import {LikesServices} from "../application/likes-services";
+import {likeTypes} from "../types/likes-types";
+import {userInfo} from "os";
 
 class PostsControllerInstance {
     private postsRepository: PostsRepository;
@@ -22,17 +25,19 @@ class PostsControllerInstance {
     private queryPostsRepository: QueryPostsRepository;
     private queryCommentsRepository: QueryCommentsRepository;
     private commentsServices: CommentsServices;
+    private likesServices: LikesServices;
     constructor() {
         this.postsRepository = new PostsRepository()
         this.postsServices = new PostsServices()
         this.queryPostsRepository = new QueryPostsRepository()
         this.queryCommentsRepository = new QueryCommentsRepository()
         this.commentsServices = new CommentsServices()
+        this.likesServices = new LikesServices()
 
     }
     async getPosts(req: Request, res: Response) {
         const pagination: DefaultPaginationType = getDefaultPagination(req.query)
-        const posts: Paginated<PostsViewType> = await this.queryPostsRepository.queryFindPaginatedPosts(pagination)
+        const posts: Paginated<PostsViewType> = await this.queryPostsRepository.queryFindPaginatedPosts(pagination, req.userId)
 
         return res.send(posts)
     }
@@ -41,7 +46,7 @@ class PostsControllerInstance {
         id: string
     }>, res: Response) {
 
-        const post: PostsViewType | null = await this.queryPostsRepository.queryFindPostById(req.params.id)
+        const post: PostsViewType | null = await this.queryPostsRepository.queryFindPostById(req.params.id, req.userId)
 
         if (!post) return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
 
@@ -94,7 +99,7 @@ class PostsControllerInstance {
         })
         if (!new_postId) return res.sendStatus(HTTP_STATUSES.SERVER_ERROR_500)
 
-        const newPost: PostsViewType | null = await this.queryPostsRepository.queryFindPostById(new_postId)
+        const newPost: PostsViewType | null = await this.queryPostsRepository.queryFindPostById(new_postId, undefined)
 
         return res.status(HTTP_STATUSES.CREATED_201).send(newPost)
     }
@@ -122,11 +127,20 @@ class PostsControllerInstance {
         })
         if (!resultId) return res.sendStatus(HTTP_STATUSES.SERVER_ERROR_500)
 
-        const post: PostsViewType | null = await this.queryPostsRepository.queryFindPostById(resultId)
+        const post: PostsViewType | null = await this.queryPostsRepository.queryFindPostById(resultId, undefined)
 
         return res.status(HTTP_STATUSES.NO_CONTENT_204).send(post)
 
 
+    }
+    async ratePost(req:Request<{ id: string }, {}, {
+        likeStatus: string
+    }>, res:Response){
+        const result:boolean = await this.likesServices.rateCommentOrPost(req.params.id, req.body.likeStatus, req.userId.toString(),likeTypes[likeTypes.Post])
+
+        if (!result) return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+
+        return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
     }
 
     async deletePost(req: Request<{
@@ -147,10 +161,11 @@ class PostsControllerInstance {
 export const PostsRouter = Router()
 const postsController = new PostsControllerInstance()
 
-PostsRouter.get('/', postsController.getPosts.bind(postsController))
-PostsRouter.get('/:id', reqIdValidation.id, errorsCheckingForStatus400, postsController.getPostById.bind(postsController))
+PostsRouter.get('/',authBearerWithout401, postsController.getPosts.bind(postsController))
+PostsRouter.get('/:id',authBearerWithout401, reqIdValidation.id, errorsCheckingForStatus400, postsController.getPostById.bind(postsController))
 PostsRouter.get('/:id/comments',authBearerWithout401, postsController.getCommentsForPost.bind(postsController))
 PostsRouter.post('/:id/comments', authBearer, reqIdValidation.id, InputValidationComments.post, errorsCheckingForStatus400, postsController.createCommentForPost.bind(postsController))
 PostsRouter.post('/', authBasic, InputValidPosts.post, errorsCheckingForStatus400, postsController.createPost.bind(postsController))
+PostsRouter.put('/:id/like-status', authBearer, InputValidationComments.putRateCommentOrPost, errorsCheckingForStatus400, postsController.ratePost.bind(postsController))
 PostsRouter.put('/:id', authBasic, InputValidPosts.put, errorsCheckingForStatus400, postsController.changePost.bind(postsController))
 PostsRouter.delete('/:id', authBasic, reqIdValidation.id, errorsCheckingForStatus400, postsController.deletePost.bind(postsController))

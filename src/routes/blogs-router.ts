@@ -15,6 +15,7 @@ import {QueryBlogsRepository} from "../repositories/query/query-blogs-rep";
 import {BlogsServices} from "../application/blogs-services";
 import {PostsServices} from "../application/posts-services";
 import {QueryPostsRepository} from "../repositories/query/query-posts-rep";
+import {authBearerWithout401} from "../middleware/auth/auth_bearer";
 
 
 class BlogsControllerInstance {
@@ -56,7 +57,7 @@ class BlogsControllerInstance {
 
 
         const pagination = getDefaultPagination(req.query)
-        const posts: Paginated<PostsViewType> = await this.queryBlogsRepository.queryFindPaginatedPostsForBlogsById(req.params.id, pagination)
+        const posts: Paginated<PostsViewType> = await this.queryBlogsRepository.queryFindPaginatedPostsForBlogsById(req.params.id, pagination, req.userId)
         return res.status(HTTP_STATUSES.OK_200).send(posts)
 
     }
@@ -98,7 +99,7 @@ class BlogsControllerInstance {
         })
         if (!new_postId) return res.sendStatus(HTTP_STATUSES.SERVER_ERROR_500)
 
-        const newPost: PostsViewType | null = await this.queryPostsRepository.queryFindPostById(new_postId)
+        const newPost: PostsViewType | null = await this.queryPostsRepository.queryFindPostById(new_postId,req.userId)
 
         return res.status(HTTP_STATUSES.CREATED_201).send(newPost)
     }
@@ -138,9 +139,9 @@ const blogsController = new BlogsControllerInstance()
 
 BlogsRouter.get('/', blogsController.getBlogs.bind(blogsController))
 BlogsRouter.get('/:id', reqIdValidation.id, errorsCheckingForStatus400, errorsCheckingForStatus400, blogsController.getBlogById.bind(blogsController))
-BlogsRouter.get('/:id/posts', reqIdValidation.id, errorsCheckingForStatus400, uriBlogIdPostsChecking, errorsCheckingForStatus400, blogsController.getPostsForBlog.bind(blogsController))
+BlogsRouter.get('/:id/posts',authBearerWithout401, reqIdValidation.id, errorsCheckingForStatus400, uriBlogIdPostsChecking, errorsCheckingForStatus400, blogsController.getPostsForBlog.bind(blogsController))
 BlogsRouter.post('/', authBasic, InputValidBlogs.post, errorsCheckingForStatus400, blogsController.createBlog.bind(blogsController))
-BlogsRouter.post('/:id/posts', authBasic, reqIdValidation.id, errorsCheckingForStatus400, InputValidPosts.postWithUriBlogId, errorsCheckingForStatus400, blogsController.createPostForBlog.bind(blogsController))
+BlogsRouter.post('/:id/posts',authBearerWithout401, authBasic, reqIdValidation.id, errorsCheckingForStatus400, InputValidPosts.postWithUriBlogId, errorsCheckingForStatus400, blogsController.createPostForBlog.bind(blogsController))
 BlogsRouter.put('/:id', authBasic, InputValidBlogs.put, errorsCheckingForStatus400, blogsController.changeBlog.bind(blogsController))
 BlogsRouter.delete('/:id', reqIdValidation.id, errorsCheckingForStatus400, authBasic, blogsController.deleteBlog.bind(blogsController))
 

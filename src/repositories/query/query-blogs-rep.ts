@@ -3,12 +3,13 @@ import {ObjectId} from "mongodb";
 import {BlogsPaginationType, DefaultPaginationType, Paginated} from "../../types/pagination.type";
 import {PostsViewType} from "../../types/posts-types";
 import {BlogsModel, PostsModel} from "../../domain/models/models";
+import {RateHelpPostsArr} from "../../helpers/rates-helper";
 
 export class QueryBlogsRepository {
-    async queryFindPaginatedPostsForBlogsById(id: string, pagination: DefaultPaginationType): Promise<Paginated<PostsViewType>> {
+    async queryFindPaginatedPostsForBlogsById(id: string, pagination: DefaultPaginationType, userId:string|undefined): Promise<Paginated<PostsViewType>> {
         const filter= {blogId: new ObjectId(id) }
 
-        const [items, totalCount] = await Promise.all([
+        const [itemsDb, totalCount] = await Promise.all([
             PostsModel
                 .find(filter, {projection: {_id: 0}})
                 .sort({[pagination.sortBy]: pagination.sortDirection})
@@ -20,6 +21,8 @@ export class QueryBlogsRepository {
         ])
 
         const pagesCount = Math.ceil(totalCount / pagination.pageSize)
+
+        const items:PostsViewType[] = await RateHelpPostsArr(itemsDb,userId)
 
         return {
             pagesCount,

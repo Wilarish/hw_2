@@ -16,10 +16,11 @@ describe('/likes', () => {
     let createdPost: PostsMainType;
     let createdComment: CommentsMainType;
     let password_User: string;
-    let createdUser:UsersRepository;
-    let token_User:string;
-    let token_User2:string;
-    let token_User3:string;
+    let createdUser: UsersRepository;
+    let token_User: string;
+    let token_User2: string;
+    let token_User3: string;
+    let token_User4: string;
 
 
     const app = InitApp()
@@ -53,7 +54,18 @@ describe('/likes', () => {
             email: 'email3@gmail.com',
             password: 'password',
         }
+        const data4: UsersCreate = {
+            login: 'login4',
+            email: 'email4@gmail.com',
+            password: 'password',
+        }
         password_User = data.password
+
+        await request(app)
+            .post(RouterPath.users)
+            .set("Authorization", "Basic YWRtaW46cXdlcnR5")
+            .send(data4)
+            .expect(HTTP_STATUSES.CREATED_201)
 
         await request(app)
             .post(RouterPath.users)
@@ -115,9 +127,20 @@ describe('/likes', () => {
             })
             .expect(HTTP_STATUSES.OK_200)
 
+        const response4 = await request(app)
+            .post(`${RouterPath.auth}/login`)
+            .set('x-forwarded-for', "12345")
+            .set('user-agent', '12345')
+            .send({
+                loginOrEmail: 'email4@gmail.com',
+                password: 'password'
+            })
+            .expect(HTTP_STATUSES.OK_200)
+
         token_User = response.body.accessToken
         token_User2 = response2.body.accessToken
         token_User3 = response3.body.accessToken
+        token_User4 = response4.body.accessToken
 
     });
 
@@ -144,7 +167,8 @@ describe('/likes', () => {
             id: expect.any(String),
             ...data,
             blogName: createdBlog.name,
-            createdAt: expect.any(String)
+            createdAt: expect.any(String),
+            extendedLikesInfo: expect.any(Object)
         })
 
         createdPost = response.body;
@@ -169,19 +193,19 @@ describe('/likes', () => {
         await request(app)
             .put(`${RouterPath.comments}/${createdComment.id}/like-status`)
             .set("Authorization", `Bearer ${token_User}`)
-            .send({likeStatus:"Like"})
+            .send({likeStatus: "Like"})
             .expect(HTTP_STATUSES.NO_CONTENT_204)
 
         await request(app)
             .put(`${RouterPath.comments}/${createdComment.id}/like-status`)
             .set("Authorization", `Bearer ${token_User2}`)
-            .send({likeStatus:"Like"})
+            .send({likeStatus: "Like"})
             .expect(HTTP_STATUSES.NO_CONTENT_204)
 
         await request(app)
             .put(`${RouterPath.comments}/${createdComment.id}/like-status`)
             .set("Authorization", `Bearer ${token_User3}`)
-            .send({likeStatus:"Like"})
+            .send({likeStatus: "Like"})
             .expect(HTTP_STATUSES.NO_CONTENT_204)
 
         // const  delay = new Promise<void>((resolve)=>{setTimeout(()=>{resolve()},5000)})
@@ -194,24 +218,24 @@ describe('/likes', () => {
         expect(res.body.likesInfo.likesCount).toEqual(3)
 
 
-    },15000);
+    }, 15000);
     it('should change likes to dislikes', async () => {
         await request(app)
             .put(`${RouterPath.comments}/${createdComment.id}/like-status`)
             .set("Authorization", `Bearer ${token_User}`)
-            .send({likeStatus:"Dislike"})
+            .send({likeStatus: "Dislike"})
             .expect(HTTP_STATUSES.NO_CONTENT_204)
 
         await request(app)
             .put(`${RouterPath.comments}/${createdComment.id}/like-status`)
             .set("Authorization", `Bearer ${token_User2}`)
-            .send({likeStatus:"Dislike"})
+            .send({likeStatus: "Dislike"})
             .expect(HTTP_STATUSES.NO_CONTENT_204)
 
         await request(app)
             .put(`${RouterPath.comments}/${createdComment.id}/like-status`)
             .set("Authorization", `Bearer ${token_User3}`)
-            .send({likeStatus:"Dislike"})
+            .send({likeStatus: "Dislike"})
             .expect(HTTP_STATUSES.NO_CONTENT_204)
 
         // const  delay = new Promise<void>((resolve)=>{setTimeout(()=>{resolve()},10000)})
@@ -229,6 +253,67 @@ describe('/likes', () => {
             .set("Authorization", `Bearer ${token_User}`)
 
         console.log(response.body.items)
-    },20000);
+    }, 20000);
 
+    it('should like post', async () => {
+
+        await request(app)
+            .put(`${RouterPath.posts}/${createdPost.id}/like-status`)
+            .set("Authorization", `Bearer ${token_User}`)
+            .send({likeStatus: "Like"})
+            .expect(HTTP_STATUSES.NO_CONTENT_204)
+
+        await request(app)
+            .put(`${RouterPath.posts}/${createdPost.id}/like-status`)
+            .set("Authorization", `Bearer ${token_User2}`)
+            .send({likeStatus: "Like"})
+            .expect(HTTP_STATUSES.NO_CONTENT_204)
+
+        await request(app)
+            .put(`${RouterPath.posts}/${createdPost.id}/like-status`)
+            .set("Authorization", `Bearer ${token_User3}`)
+            .send({likeStatus: "Like"})
+            .expect(HTTP_STATUSES.NO_CONTENT_204)
+
+        await request(app)
+            .put(`${RouterPath.posts}/${createdPost.id}/like-status`)
+            .set("Authorization", `Bearer ${token_User4}`)
+            .send({likeStatus: "Dislike"})
+            .expect(HTTP_STATUSES.NO_CONTENT_204)
+
+        // const  delay = new Promise<void>((resolve)=>{setTimeout(()=>{resolve()},5000)})
+        // await delay
+
+        const res = await request(app)
+            .get(`${RouterPath.posts}/${createdPost.id}`)
+            .set("Authorization", `Bearer ${token_User}`)
+
+        expect(res.body.extendedLikesInfo.likesCount).toEqual(3)
+        expect(res.body.extendedLikesInfo.newestLikes[0].login).toEqual('login')
+        expect(res.body.extendedLikesInfo.newestLikes[1].login).toEqual('login2')
+        expect(res.body.extendedLikesInfo.newestLikes[2].login).toEqual('login3')
+
+        console.log(res.body.extendedLikesInfo)
+
+
+    }, 15000);
+    it('should saving last 3 rates', async () => {
+        await request(app)
+            .put(`${RouterPath.posts}/${createdPost.id}/like-status`)
+            .set("Authorization", `Bearer ${token_User4}`)
+            .send({likeStatus: "Dislike"})
+            .expect(HTTP_STATUSES.NO_CONTENT_204)
+
+        const res = await request(app)
+            .get(`${RouterPath.posts}/${createdPost.id}`)
+            .set("Authorization", `Bearer ${token_User}`)
+
+        expect(res.body.extendedLikesInfo.dislikesCount).toEqual(1)
+        expect(res.body.extendedLikesInfo.newestLikes[0].login).toEqual('login')
+        expect(res.body.extendedLikesInfo.newestLikes[1].login).toEqual('login2')
+        expect(res.body.extendedLikesInfo.newestLikes[2].login).toEqual('login3')
+
+        console.log(res.body.extendedLikesInfo)
+
+    });
 })

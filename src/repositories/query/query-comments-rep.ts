@@ -1,11 +1,11 @@
 import {DefaultPaginationType, Paginated} from "../../types/pagination.type";
-import {CommentsViewType} from "../../types/comments-types";
+import {CommentsMainType, CommentsViewType} from "../../types/comments-types";
 import {PostsMainType} from "../../types/posts-types";
 import {ObjectId} from "mongodb";
 import {CommentsModel} from "../../domain/models/models";
 import {LikeInfoView} from "../../types/likes-types";
 import {PostsRepository} from "../posts-rep";
-import {RateHelp, RateHelpArr} from "../../helpers/rates-helper";
+import {RateHelpComments, RateHelpCommentsArr} from "../../helpers/rates-helper";
 
 export class QueryCommentsRepository {
     private postsRepository: PostsRepository;
@@ -35,7 +35,7 @@ export class QueryCommentsRepository {
         ])
 
         const pagesCount = Math.ceil(totalCount / pagination.pageSize)
-        const items = await RateHelpArr(itemsDb,userId)
+        const items:CommentsViewType[] = await RateHelpCommentsArr(itemsDb,userId)
 
         console.log(items)
         return {
@@ -49,10 +49,10 @@ export class QueryCommentsRepository {
 
     async findCommentById(id: string, userId: string | undefined): Promise<CommentsViewType | null> {
 
-        const commentDb = await CommentsModel.findOne({id: new ObjectId(id)}).select({_id: 0, __v: 0, postId: 0}).lean()
+        const commentDb:CommentsMainType|null = await CommentsModel.findOne({id: new ObjectId(id)}).select({_id: 0, __v: 0, postId: 0}).lean()
         if (!commentDb) return null
 
-        const likesInfo:LikeInfoView = await RateHelp(id,userId)
+        const likesInfo:LikeInfoView = await RateHelpComments(id,userId)
 
         return new CommentsViewType(
             commentDb.id,

@@ -23,15 +23,6 @@ export const DevicesSchema = new mongoose.Schema<DeviceMainType>({
     userId: {type: mongoose.Schema.Types.ObjectId, required: true}
 })
 
-export const PostsSchema = new mongoose.Schema<PostsMainType>({
-    id: {type: mongoose.Schema.Types.ObjectId, required: true},
-    title: {required: true, type: String, minlength: 1, maxlength: 100},
-    shortDescription: {required: true, type: String, minlength: 1, maxlength: 200},
-    content: {required: true, type: String, minlength: 1, maxlength: 500},
-    blogId: {type: mongoose.Schema.Types.ObjectId, required: true},
-    blogName: {required: true, type: String, minlength: 1, maxlength: 100},
-    createdAt: {required: true, type: String, minlength: 1, maxlength: 50}
-})
 
 export const RateLimitSchema = new mongoose.Schema<RateLimitType>({
     IP: {required: true, type: String, minlength: 1, maxlength: 100},

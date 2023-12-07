@@ -34,7 +34,7 @@ class CommentsControllerInstance {
     async rateComment(req: Request<{ id: string }, {}, {
         likeStatus: string
     }>, res: Response) {
-        const result:boolean = await this.likesServices.rateComment(req.params.id, req.body.likeStatus, req.userId.toString())
+        const result:boolean = await this.likesServices.rateCommentOrPost(req.params.id, req.body.likeStatus, req.userId.toString(),'Comment')
 
         if (!result) return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
 
@@ -85,6 +85,6 @@ const commentsController = new CommentsControllerInstance()
 
 
 CommentsRouter.get('/:id', authBearerWithout401, reqIdValidation.id, errorsCheckingForStatus400, commentsController.getCommentById.bind(commentsController))
-CommentsRouter.put('/:id/like-status', authBearer, commentsId, InputValidationComments.putRateComment, errorsCheckingForStatus400, commentsController.rateComment.bind(commentsController))
+CommentsRouter.put('/:id/like-status', authBearer, commentsId, InputValidationComments.putRateCommentOrPost, errorsCheckingForStatus400, commentsController.rateComment.bind(commentsController))
 CommentsRouter.put('/:id', authBearer, InputValidationComments.put, errorsCheckingForStatus400, commentsController.changeComment.bind(commentsController))
 CommentsRouter.delete('/:id', reqIdValidation.id, errorsCheckingForStatus400, authBearer, commentsController.deleteComment.bind(commentsController))

@@ -27,4 +27,10 @@ export class LikesRepository{
     async getAllRates():Promise<LikesMainType[]>{
         return LikesModel.find({})
     }
+    async getAllCommentsRates():Promise<LikesMainType[]>{
+        return LikesModel.find({likeType:"Comment"})
+    }
+    async  getAllPostsRates():Promise<LikesMainType[]>{
+        return LikesModel.find({likeType:"Post"})
+    }
 }

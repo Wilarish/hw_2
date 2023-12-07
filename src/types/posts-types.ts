@@ -1,5 +1,6 @@
 import {ObjectId} from "mongodb";
 import mongoose from "mongoose";
+import {ExtendedLikesPostsView} from "./likes-types";
 
 export class PostsViewType{
     constructor(public id: ObjectId,
@@ -8,7 +9,8 @@ export class PostsViewType{
                 public content: string,
                 public blogId: ObjectId,
                 public blogName: string,
-                public createdAt:string) {
+                public createdAt:string,
+                public extendedLikesInfo:ExtendedLikesPostsView) {
     }
 }
 
