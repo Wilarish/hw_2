@@ -33,4 +33,8 @@ export class LikesRepository{
     async  getAllPostsRates():Promise<LikesMainType[]>{
         return LikesModel.find({likeType:"Post"})
     }
+
+    async deleteAllRates() {
+        await LikesModel.deleteMany({})
+    }
 }

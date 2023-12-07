@@ -10,6 +10,7 @@ import {SecurityRouter} from "./routes/security-router";
 import {PostsRepository} from "./repositories/posts-rep";
 import {BlogsRepository} from "./repositories/blogs-rep";
 import {UsersRepository} from "./repositories/users-rep";
+import {LikesRepository} from "./repositories/likes-rep";
 
 
 
@@ -45,10 +46,12 @@ export function InitApp() {
         const postsRepository =new PostsRepository()
         const blogsRepository =new BlogsRepository()
         const usersRepository =new UsersRepository()
+        const likesRepository = new LikesRepository()
 
         await postsRepository.deleteAllPosts()
         await blogsRepository.deleteAllBlogs()
         await usersRepository.deleteAllUsers()
+        await likesRepository.deleteAllRates()
         res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
     })
 

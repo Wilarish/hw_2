@@ -3,9 +3,15 @@ import {ObjectId} from "mongodb";
 import {DefaultPaginationType, Paginated} from "../../types/pagination.type";
 import {PostsModel} from "../../domain/models/models";
 import {RateHelpPosts, RateHelpPostsArr} from "../../helpers/rates-helper";
-import {ExtendedLikesPostsView} from "../../types/likes-types";
+import {ExtendedLikesPostsView, LikesMainType} from "../../types/likes-types";
+import {th} from "date-fns/locale";
+import {LikesRepository} from "../likes-rep";
 
 export class QueryPostsRepository {
+    private likesRepository: LikesRepository;
+    constructor() {
+        this.likesRepository =new LikesRepository()
+    }
     async queryFindPaginatedPosts(pagination: DefaultPaginationType, userId:string|undefined): Promise<Paginated<PostsViewType>> {
 
         const [itemsDb, totalCount] = await Promise.all([
@@ -35,10 +41,13 @@ export class QueryPostsRepository {
 
     async queryFindPostById(id: string, userId:string|undefined): Promise<PostsViewType | null> {
 
+        const date:Date = new Date()
         const post: PostsMainType|null = await PostsModel.findOne({id: new ObjectId(id)}).select({ _id: 0, __v:0}).lean()
         if(!post) return null
 
-        const extendedLikesInfo:ExtendedLikesPostsView = await RateHelpPosts(id,userId)
+
+        let rates: LikesMainType[]= await this.likesRepository.getAllPostsRates()
+        const extendedLikesInfo:ExtendedLikesPostsView = RateHelpPosts(rates,id,userId, date)
 
         return new PostsViewType(
             post.id,

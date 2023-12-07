@@ -269,6 +269,15 @@ describe('/likes', () => {
             .send({likeStatus: "Like"})
             .expect(HTTP_STATUSES.NO_CONTENT_204)
 
+        const resp = await request(app)
+            .get(`${RouterPath.posts}/${createdPost.id}`)
+            .set("Authorization", `Bearer ${token_User}`)
+
+        console.log(resp.body.extendedLikesInfo.newestLikes)
+
+        expect(resp.body.extendedLikesInfo.newestLikes.length).toEqual(2)
+
+
         await request(app)
             .put(`${RouterPath.posts}/${createdPost.id}/like-status`)
             .set("Authorization", `Bearer ${token_User3}`)
@@ -293,7 +302,7 @@ describe('/likes', () => {
         expect(res.body.extendedLikesInfo.newestLikes[1].login).toEqual('login2')
         expect(res.body.extendedLikesInfo.newestLikes[2].login).toEqual('login3')
 
-        console.log(res.body.extendedLikesInfo)
+        //console.log(res.body.extendedLikesInfo)
 
 
     }, 15000);

@@ -67,9 +67,9 @@ export const RateHelpCommentsArr = async (itemsDb:any[], userId:string|undefined
 
     return items
 }
-export const RateHelpPosts = async (id:string, userId:string|undefined):Promise<ExtendedLikesPostsView> => {
+export const RateHelpPosts = (rates:LikesMainType[], id:string, userId:string|undefined, date:Date):ExtendedLikesPostsView => {
 
-    let rates: LikesMainType[]= await likesRepository.getAllPostsRates()
+    //let rates: LikesMainType[]= await likesRepository.getAllPostsRates()
 
     let likeStatus = 'None'
 
@@ -78,9 +78,14 @@ export const RateHelpPosts = async (id:string, userId:string|undefined):Promise<
     let likesCount: number = 0
     let dislikesCount: number = 0
 
+    // date < new Date(value.createdAt) &&
+
     rates.map((value:LikesMainType) => {
 
-        if(value.rate === "Like" && lastRates.length < 3) lastRates.push(new NewestPostLikes(value.createdAt, value.userId, value.login))
+        if(value.rate === "Like" &&  lastRates.length < 3){
+
+            lastRates.push(new NewestPostLikes(value.createdAt, value.userId, value.login))
+        }
 
         if(value.commentOrPostId.toString()===id){
             if(value.rate === "Like") likesCount++
