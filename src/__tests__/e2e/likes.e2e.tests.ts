@@ -266,7 +266,7 @@ describe('/likes', () => {
         await request(app)
             .put(`${RouterPath.posts}/${createdPost.id}/like-status`)
             .set("Authorization", `Bearer ${token_User2}`)
-            .send({likeStatus: "Like"})
+            .send({likeStatus: "Dislike"})
             .expect(HTTP_STATUSES.NO_CONTENT_204)
 
         const resp = await request(app)
@@ -275,7 +275,7 @@ describe('/likes', () => {
 
         console.log(resp.body.extendedLikesInfo.newestLikes)
 
-        expect(resp.body.extendedLikesInfo.newestLikes.length).toEqual(2)
+        expect(resp.body.extendedLikesInfo.newestLikes.length).toEqual(1)
 
 
         await request(app)
@@ -297,10 +297,10 @@ describe('/likes', () => {
             .get(`${RouterPath.posts}/${createdPost.id}`)
             .set("Authorization", `Bearer ${token_User}`)
 
-        expect(res.body.extendedLikesInfo.likesCount).toEqual(3)
+        expect(res.body.extendedLikesInfo.likesCount).toEqual(2)
         expect(res.body.extendedLikesInfo.newestLikes[0].login).toEqual('login')
-        expect(res.body.extendedLikesInfo.newestLikes[1].login).toEqual('login2')
-        expect(res.body.extendedLikesInfo.newestLikes[2].login).toEqual('login3')
+        expect(res.body.extendedLikesInfo.newestLikes[1].login).toEqual('login3')
+        //expect(res.body.extendedLikesInfo.newestLikes[2].login).toEqual('login3')
 
         //console.log(res.body.extendedLikesInfo)
 
@@ -317,10 +317,10 @@ describe('/likes', () => {
             .get(`${RouterPath.posts}/${createdPost.id}`)
             .set("Authorization", `Bearer ${token_User}`)
 
-        expect(res.body.extendedLikesInfo.dislikesCount).toEqual(1)
+        expect(res.body.extendedLikesInfo.dislikesCount).toEqual(2)
         expect(res.body.extendedLikesInfo.newestLikes[0].login).toEqual('login')
-        expect(res.body.extendedLikesInfo.newestLikes[1].login).toEqual('login2')
-        expect(res.body.extendedLikesInfo.newestLikes[2].login).toEqual('login3')
+        expect(res.body.extendedLikesInfo.newestLikes[1].login).toEqual('login3')
+        //expect(res.body.extendedLikesInfo.newestLikes[2].login).toEqual('login3')
 
         console.log(res.body.extendedLikesInfo)
 

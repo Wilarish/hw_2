@@ -78,12 +78,9 @@ export const RateHelpPosts = (rates:LikesMainType[], id:string, userId:string|un
     let likesCount: number = 0
     let dislikesCount: number = 0
 
-    // date < new Date(value.createdAt) &&
-
     rates.map((value:LikesMainType) => {
 
         if(value.rate === "Like" &&  lastRates.length < 3){
-
             lastRates.push(new NewestPostLikes(value.createdAt, value.userId, value.login))
         }
 
