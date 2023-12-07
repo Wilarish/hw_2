@@ -11,6 +11,8 @@ import {PostsRepository} from "./repositories/posts-rep";
 import {BlogsRepository} from "./repositories/blogs-rep";
 import {UsersRepository} from "./repositories/users-rep";
 import {LikesRepository} from "./repositories/likes-rep";
+import {CommentsRepository} from "./repositories/comments-rep";
+import {DevicesRepository} from "./repositories/devices-rep";
 
 
 
@@ -47,11 +49,16 @@ export function InitApp() {
         const blogsRepository =new BlogsRepository()
         const usersRepository =new UsersRepository()
         const likesRepository = new LikesRepository()
+        const commentsRepository = new CommentsRepository()
+        const devicesRepository = new DevicesRepository()
+
 
         await postsRepository.deleteAllPosts()
         await blogsRepository.deleteAllBlogs()
         await usersRepository.deleteAllUsers()
         await likesRepository.deleteAllRates()
+        await commentsRepository.deleteAllComments()
+        await devicesRepository.deleteAllDevices()
         res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
     })
 

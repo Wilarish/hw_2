@@ -31,4 +31,7 @@ export class CommentsRepository {
         return result.deletedCount === 1
     }
 
+    async deleteAllComments() {
+        await  CommentsModel.deleteMany({})
+    }
 }
