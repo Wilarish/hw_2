@@ -81,7 +81,7 @@ export const RateHelpPosts = async (id:string, userId:string|undefined):Promise<
 
     rates.map((value:LikesMainType) => {
 
-        if(lastRates.length < 3) lastRates.push(new NewestPostLikes(value.createdAt, value.userId, value.login))
+        if(value.rate === "Like" && lastRates.length < 3) lastRates.push(new NewestPostLikes(value.createdAt, value.userId, value.login))
 
         if(value.commentOrPostId.toString()===id){
             if(value.rate === "Like") likesCount++
@@ -106,7 +106,7 @@ export const RateHelpPostsArr = async (itemsDb:any[], userId:string|undefined):P
 
         rates.map((value:LikesMainType) => {
 
-            if(lastRates.length < 3) lastRates.push(new NewestPostLikes(value.createdAt, value.userId, value.login))
+            if(value.rate === "Like" && lastRates.length < 3) lastRates.push(new NewestPostLikes(value.createdAt, value.userId, value.login))
 
             if(value.commentOrPostId.toString()===post.id.toString()){
                 if(value.rate === "Like") likesCount++

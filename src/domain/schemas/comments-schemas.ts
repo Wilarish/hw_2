@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import {CommentsMainType} from "../../types/comments-types";
 import {LikesMainType, likeStatuses, likeTypes} from "../../types/likes-types";
-import {tr} from "date-fns/locale";
 import {PostsMainType} from "../../types/posts-types";
 
 

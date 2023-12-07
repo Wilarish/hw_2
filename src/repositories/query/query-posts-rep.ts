@@ -3,7 +3,7 @@ import {ObjectId} from "mongodb";
 import {DefaultPaginationType, Paginated} from "../../types/pagination.type";
 import {PostsModel} from "../../domain/models/models";
 import {RateHelpPosts, RateHelpPostsArr} from "../../helpers/rates-helper";
-import {ExtendedLikesPostsView, LikeInfoView} from "../../types/likes-types";
+import {ExtendedLikesPostsView} from "../../types/likes-types";
 
 export class QueryPostsRepository {
     async queryFindPaginatedPosts(pagination: DefaultPaginationType, userId:string|undefined): Promise<Paginated<PostsViewType>> {

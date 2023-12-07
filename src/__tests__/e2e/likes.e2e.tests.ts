@@ -316,4 +316,13 @@ describe('/likes', () => {
         console.log(res.body.extendedLikesInfo)
 
     });
+    it('should return post for blog', async () => {
+        const res = await request(app)
+            .get(`${RouterPath.blogs}/${createdBlog.id}/posts`)
+            .set("Authorization", `Bearer ${token_User4}`)
+
+
+        console.log(res.body.items[0].extendedLikesInfo)
+
+    });
 })
