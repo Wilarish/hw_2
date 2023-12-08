@@ -47,7 +47,7 @@ export class QueryPostsRepository {
 
 
         let rates: LikesMainType[]= await this.likesRepository.getAllPostsRates(id)
-        const extendedLikesInfo:ExtendedLikesPostsView = RateHelpPosts(rates,id,userId, date)
+        const extendedLikesInfo:ExtendedLikesPostsView = RateHelpPosts(rates,userId)
 
         return new PostsViewType(
             post.id,
