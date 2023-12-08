@@ -102,6 +102,8 @@ export const RateHelpPostsArr = async (itemsDb:any[], userId:string|undefined):P
 
         rates = await likesRepository.getAllPostsRates(post.id.toString())
 
+        const sortedRates:LikesMainType[] = [...rates].sort((a,b) => new Date(b.createdAt).getTime()- new Date(a.createdAt).getTime() )
+
         let likeStatus = 'None'
 
         let lastRates:NewestPostLikes[] = []
@@ -109,7 +111,7 @@ export const RateHelpPostsArr = async (itemsDb:any[], userId:string|undefined):P
         let likesCount: number = 0
         let dislikesCount: number = 0
 
-        rates.map((value:LikesMainType) => {
+        sortedRates.map((value:LikesMainType) => {
 
             if(value.rate === "Like" && lastRates.length < 3) lastRates.push(new NewestPostLikes(value.createdAt, value.userId, value.login))
 
