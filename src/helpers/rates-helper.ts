@@ -96,9 +96,11 @@ export const RateHelpPosts = (rates:LikesMainType[], id:string, userId:string|un
 }
 export const RateHelpPostsArr = async (itemsDb:any[], userId:string|undefined):Promise<PostsViewType[]> => {
 
-    const rates: LikesMainType[] = await likesRepository.getAllPostsRates()
+    let rates: LikesMainType[];
 
-    const items:PostsViewType[] =itemsDb.map( (post)=>{
+    const items:Promise<PostsViewType[]> =Promise.all( itemsDb.map( async (post)=>{
+
+        rates = await likesRepository.getAllPostsRates(post.id.toString())
 
         let likeStatus = 'None'
 
@@ -130,7 +132,7 @@ export const RateHelpPostsArr = async (itemsDb:any[], userId:string|undefined):P
             extendedLikesInfo
         )
 
-    })
+    }))
 
     return items
 }

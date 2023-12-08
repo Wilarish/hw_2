@@ -30,8 +30,8 @@ export class LikesRepository{
     async getAllCommentsRates():Promise<LikesMainType[]>{
         return LikesModel.find({likeType:"Comment"})
     }
-    async  getAllPostsRates():Promise<LikesMainType[]>{
-        return LikesModel.find({likeType:"Post"})//.sort({createdAt:1})
+    async  getAllPostsRates(id:string):Promise<LikesMainType[]>{
+        return LikesModel.find({likeType:"Post", commentOrPostId:new ObjectId(id)})
     }
 
     async deleteAllRates() {
