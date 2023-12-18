@@ -1,9 +1,8 @@
 import { DevicesRepository} from "../repositories/devices-rep";
 import {DeviceMainType} from "../types/devices-types";
 export class DeviceServices {
-    private deviceRepository: DevicesRepository;
-    constructor() {
-        this.deviceRepository =new DevicesRepository()
+
+    constructor(protected deviceRepository: DevicesRepository) {
     }
     async addNewDevice (device:DeviceMainType):Promise<boolean>{
 

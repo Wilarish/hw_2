@@ -4,8 +4,6 @@ import {LikesMainType} from "../types/likes-types";
 
 export class LikesRepository{
 
-    constructor() {
-    }
     async tryFindAndUpdateRate(commentId: string, userId: string, likeStatus: string):Promise<boolean> {
         let result;
         try{
@@ -21,17 +19,11 @@ export class LikesRepository{
         await LikesModel.create(rate)
         return true
     }
-    async getRates(id:string):Promise<LikesMainType[]>{
-        return LikesModel.find({commentOrPostId:new ObjectId(id)})
-    }
-    async getAllRates():Promise<LikesMainType[]>{
-        return LikesModel.find({})
-    }
     async getAllCommentsRates():Promise<LikesMainType[]>{
         return LikesModel.find({likeType:"Comment"})
     }
-    async  getAllPostsRates(id:string):Promise<LikesMainType[]>{
-        return LikesModel.find({likeType:"Post", commentOrPostId:new ObjectId(id)})
+    async  getAllRatesForPostById(id:string):Promise<LikesMainType[]>{
+        return LikesModel.find({likeType:"Post", commentOrPostId:new ObjectId(id)}).sort({createdAt:-1})
     }
 
     async deleteAllRates() {

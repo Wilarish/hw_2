@@ -76,9 +76,7 @@ export const RateHelpPosts = (rates: LikesMainType[], userId: string | undefined
     let likesCount: number = 0
     let dislikesCount: number = 0
 
-    const sortedRates: LikesMainType[] = [...rates].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-
-    sortedRates.map((value: LikesMainType) => {
+    rates.map((value: LikesMainType) => {
 
         if (value.rate === "Like" && lastRates.length < 3) {lastRates.push(new NewestPostLikes(value.createdAt, value.userId, value.login))}
         if (value.rate === "Like") likesCount++
@@ -94,26 +92,7 @@ export const RateHelpPostsArr = async (itemsDb: any[], userId: string | undefine
 
     const items: Promise<PostsViewType[]> = Promise.all(itemsDb.map(async (post) => {
 
-        rates = await likesRepository.getAllPostsRates(post.id.toString())
-
-        // const sortedRates: LikesMainType[] = [...rates].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-        //
-        // let likeStatus = 'None'
-        //
-        // let lastRates: NewestPostLikes[] = []
-        //
-        // let likesCount: number = 0
-        // let dislikesCount: number = 0
-        //
-        // sortedRates.map((value: LikesMainType) => {
-        //
-        //     if (value.rate === "Like" && lastRates.length < 3) lastRates.push(new NewestPostLikes(value.createdAt, value.userId, value.login))
-        //     if (value.rate === "Like") likesCount++
-        //     if (value.rate === "Dislike") dislikesCount++
-        //     if (userId && value.userId.toString() === userId) likeStatus = value.rate
-        //
-        // })
-        // const extendedLikesInfo = new ExtendedLikesPostsView(likesCount, dislikesCount, likeStatuses[likeStatus as keyof typeof likeStatuses], lastRates)
+        rates = await likesRepository.getAllRatesForPostById(post.id.toString())
 
         const extendedLikesInfo:ExtendedLikesPostsView = RateHelpPosts(rates,userId)
 

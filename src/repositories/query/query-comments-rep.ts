@@ -8,10 +8,7 @@ import {PostsRepository} from "../posts-rep";
 import {RateHelpComments, RateHelpCommentsArr} from "../../helpers/rates-helper";
 
 export class QueryCommentsRepository {
-    private postsRepository: PostsRepository;
-
-    constructor() {
-        this.postsRepository = new PostsRepository()
+    constructor(protected postsRepository: PostsRepository ) {
     }
 
     async queryFindPaginatedComments(pagination: DefaultPaginationType, postId: string, userId: string|undefined): Promise<Paginated<CommentsViewType> | null> {

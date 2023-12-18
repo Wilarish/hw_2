@@ -5,9 +5,7 @@ import {PostsModel} from "../domain/models/models";
 import {BlogsRepository} from "./blogs-rep";
 
 export class PostsRepository {
-    private blogsRepository:BlogsRepository
-    constructor() {
-        this.blogsRepository = new BlogsRepository()
+    constructor(private blogsRepository:BlogsRepository  ) {
     }
     async findPostById(id: string): Promise<PostsMainType | null> {
         return PostsModel.findOne({id: new ObjectId(id)})

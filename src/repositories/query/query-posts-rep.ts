@@ -4,13 +4,10 @@ import {DefaultPaginationType, Paginated} from "../../types/pagination.type";
 import {PostsModel} from "../../domain/models/models";
 import {RateHelpPosts, RateHelpPostsArr} from "../../helpers/rates-helper";
 import {ExtendedLikesPostsView, LikesMainType} from "../../types/likes-types";
-import {th} from "date-fns/locale";
 import {LikesRepository} from "../likes-rep";
 
 export class QueryPostsRepository {
-    private likesRepository: LikesRepository;
-    constructor() {
-        this.likesRepository =new LikesRepository()
+    constructor(protected likesRepository: LikesRepository) {
     }
     async queryFindPaginatedPosts(pagination: DefaultPaginationType, userId:string|undefined): Promise<Paginated<PostsViewType>> {
 
@@ -46,7 +43,7 @@ export class QueryPostsRepository {
         if(!post) return null
 
 
-        let rates: LikesMainType[]= await this.likesRepository.getAllPostsRates(id)
+        let rates: LikesMainType[]= await this.likesRepository.getAllRatesForPostById(id)
         const extendedLikesInfo:ExtendedLikesPostsView = RateHelpPosts(rates,userId)
 
         return new PostsViewType(

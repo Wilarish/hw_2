@@ -163,7 +163,8 @@ describe('/authBearer', () => {
             id: expect.any(String),
             ...data,
             blogName: createdBlog.name,
-            createdAt: expect.any(String)
+            createdAt: expect.any(String),
+            extendedLikesInfo: expect.any(Object)
         })
 
         createdPost = response.body;

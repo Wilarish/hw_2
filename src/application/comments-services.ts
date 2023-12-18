@@ -7,14 +7,11 @@ import {UsersRepository} from "../repositories/users-rep";
 import {PostsRepository} from "../repositories/posts-rep";
 
 export class CommentsServices {
-    private commentsRepository: CommentsRepository;
-    private usersRepository: UsersRepository;
-    private postsRepository: PostsRepository;
 
-    constructor() {
-        this.commentsRepository = new CommentsRepository()
-        this.usersRepository = new UsersRepository()
-        this.postsRepository = new PostsRepository()
+
+    constructor(protected commentsRepository: CommentsRepository,
+                protected usersRepository: UsersRepository,
+                protected postsRepository: PostsRepository) {
     }
 
     async createCommentForPost(userId: string, postId: string, data: CommentsCreateUpdate): Promise<string | null> {

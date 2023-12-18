@@ -11,14 +11,11 @@ import {EmailServices} from "./email-services";
 import {DeviceServices} from "./device-services";
 
 export class AuthServices {
-    private usersRepository: UsersRepository
-    private emailServices: EmailServices;
-    private deviceServices: DeviceServices;
 
-    constructor() {
-        this.usersRepository = new UsersRepository()
-        this.emailServices = new EmailServices()
-        this.deviceServices = new DeviceServices()
+    constructor(protected usersRepository: UsersRepository,
+                protected emailServices: EmailServices,
+                protected deviceServices: DeviceServices) {
+
     }
 
     async createUser(data: UsersCreate): Promise<boolean> {

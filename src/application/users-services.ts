@@ -5,9 +5,8 @@ import {ObjectId} from "mongodb";
 import {HashAdapter} from "../adapters/hash-adapter";
 
 export class UsersServices {
-    private usersRepository:UsersRepository
-    constructor() {
-        this.usersRepository = new UsersRepository()
+
+    constructor(protected usersRepository:UsersRepository) {
     }
     async getInformationAboutMe(userId: string) {
         const user: UsersMainType | null = await this.usersRepository.findUserById(userId)

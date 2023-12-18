@@ -5,12 +5,9 @@ import {PostsRepository} from "../repositories/posts-rep";
 import {ObjectId} from "mongodb";
 
 export class PostsServices {
-    private blogsRepository: BlogsRepository
-    private postsRepository: PostsRepository
 
-    constructor() {
-        this.blogsRepository = new BlogsRepository()
-        this.postsRepository = new PostsRepository()
+    constructor(protected blogsRepository: BlogsRepository,
+                protected postsRepository: PostsRepository) {
     }
 
     async createPost(data: PostsCreateUpdate): Promise<string> {

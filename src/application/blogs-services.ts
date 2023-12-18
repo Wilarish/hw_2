@@ -3,9 +3,8 @@ import {ObjectId} from "mongodb";
 import {BlogsRepository} from "../repositories/blogs-rep";
 
 export class BlogsServices {
-    private blogsRepository: BlogsRepository;
-    constructor() {
-        this.blogsRepository = new BlogsRepository()
+
+    constructor(protected blogsRepository: BlogsRepository) {
     }
     async createBlog(data: BlogsCreateUpdate): Promise<string> {
 

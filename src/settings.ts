@@ -7,12 +7,12 @@ import {AuthRouter} from "./routes/auth-router";
 import {CommentsRouter} from "./routes/comments-router";
 import cookieParser from "cookie-parser";
 import {SecurityRouter} from "./routes/security-router";
-import {PostsRepository} from "./repositories/posts-rep";
 import {BlogsRepository} from "./repositories/blogs-rep";
 import {UsersRepository} from "./repositories/users-rep";
 import {LikesRepository} from "./repositories/likes-rep";
 import {CommentsRepository} from "./repositories/comments-rep";
 import {DevicesRepository} from "./repositories/devices-rep";
+import {postsRepository} from "./composition-root";
 
 
 
@@ -45,7 +45,6 @@ export function InitApp() {
         res.send('Hello World!')
     })
     app.delete('/testing/all-data',  async (req:Request, res:Response)=>{
-        const postsRepository =new PostsRepository()
         const blogsRepository =new BlogsRepository()
         const usersRepository =new UsersRepository()
         const likesRepository = new LikesRepository()

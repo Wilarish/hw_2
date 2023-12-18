@@ -7,23 +7,23 @@ import {createBlogUtils} from "./utils/createBlog.utils";
 import {Paginated} from "../../types/pagination.type";
 import {RunDb} from "../../data/DB";
 import {QueryPostsRepository} from "../../repositories/query/query-posts-rep";
+import {queryPostsRepository} from "../../composition-root";
 
 
-
-describe('/posts', ()=>{
+describe('/posts', () => {
 
     const app = InitApp()
-    const queryPostsRepository =  new QueryPostsRepository()
+    //const queryPostsRepository =  new QueryPostsRepository()
 
     let createdPost: PostsMainType;
     let createdPost_2: PostsMainType;
-    let createdBlog:BlogsMainType;
+    let createdBlog: BlogsMainType;
 
-    beforeAll(async()=> {
+    beforeAll(async () => {
         await RunDb()
     })
 
-    beforeAll(async ()=>{
+    beforeAll(async () => {
         await request(app)
             .delete('/testing/all-data')
             .expect(HTTP_STATUSES.NO_CONTENT_204)
@@ -44,7 +44,7 @@ describe('/posts', ()=>{
             .get(RouterPath.posts)
             .expect(HTTP_STATUSES.OK_200)
         expect(res.body).toEqual(expectedRes)
-            
+
     })
 
 
@@ -71,7 +71,9 @@ describe('/posts', ()=>{
             id: expect.any(String),
             ...data,
             blogName: createdBlog.name,
-            createdAt: expect.any(String)
+            createdAt: expect.any(String),
+            extendedLikesInfo: expect.any(Object)
+
         })
 
         createdPost = response.body;
@@ -102,13 +104,14 @@ describe('/posts', ()=>{
             id: expect.any(String),
             ...data,
             blogName: createdBlog.name,
-            createdAt: expect.any(String)
+            createdAt: expect.any(String),
+            extendedLikesInfo: expect.any(Object)
         })
 
         createdPost_2 = response.body;
 
 
-        const  res = await request(app)
+        const res = await request(app)
             .get(RouterPath.posts)
             .expect(HTTP_STATUSES.OK_200)
 
@@ -128,12 +131,12 @@ describe('/posts', ()=>{
         await request(app)
             .post(RouterPath.posts)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
-            .send({...data, title:123})
+            .send({...data, title: 123})
             .expect(HTTP_STATUSES.BAD_REQUEST_400)
     });
     it('should update "blogName" when field "name" in blog has been updated', async () => {
 
-        const data:BlogsCreateUpdate = {
+        const data: BlogsCreateUpdate = {
             name: 'change',
             description: 'change',
             websiteUrl: 'https://www.change.com'
@@ -145,25 +148,34 @@ describe('/posts', ()=>{
             .expect(HTTP_STATUSES.NO_CONTENT_204)
 
 
-        const result =  await request(app)
+        const result = await request(app)
             .get(`${RouterPath.blogs}/${createdBlog.id}`)
-            .expect(HTTP_STATUSES.OK_200 )
+            .expect(HTTP_STATUSES.OK_200)
 
 
-        let updateDataPostFromDb  = await queryPostsRepository.queryFindPostById(createdPost.id.toString(),undefined)
+        let updateDataPostFromDb = await queryPostsRepository.queryFindPostById(createdPost.id.toString(), undefined)
 
         if (updateDataPostFromDb) createdPost = updateDataPostFromDb
 
 
         await request(app)
             .get(`${RouterPath.posts}/${createdPost.id}`)
-            .expect(HTTP_STATUSES.OK_200, {...createdPost, id:createdPost.id.toString() , blogId:createdPost.blogId.toString()})
-
+            .expect(HTTP_STATUSES.OK_200, {
+                ...createdPost,
+                id: createdPost.id.toString(),
+                blogId: createdPost.blogId.toString(),
+                extendedLikesInfo: {
+                    likesCount: 0,
+                    dislikesCount: 0,
+                    myStatus: 'None',
+                    newestLikes: []
+                }
+            })
 
 
         await request(app)
             .get(`${RouterPath.posts}/${createdPost_2.id}`)
-            .expect(HTTP_STATUSES.OK_200, {...createdPost_2, blogName:"change"})
+            .expect(HTTP_STATUSES.OK_200, {...createdPost_2, blogName: "change"})
 
     });
     it('shouldn`t update post ', async () => {
@@ -179,7 +191,7 @@ describe('/posts', ()=>{
             .put(`${RouterPath.posts}/${createdPost.id}`)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send({...data, title: 123})
-            .expect(HTTP_STATUSES.BAD_REQUEST_400 )
+            .expect(HTTP_STATUSES.BAD_REQUEST_400)
 
         expect(notStringTitle.body).toEqual({
             errorsMessages: [
@@ -194,7 +206,7 @@ describe('/posts', ()=>{
             .put(`${RouterPath.posts}/${createdPost.id}`)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send({...data, shortDescription: ''})
-            .expect(HTTP_STATUSES.BAD_REQUEST_400 )
+            .expect(HTTP_STATUSES.BAD_REQUEST_400)
 
         expect(northingInDescription.body).toEqual({
             errorsMessages: [
@@ -208,7 +220,7 @@ describe('/posts', ()=>{
             .put(`${RouterPath.posts}/${createdPost.id}`)
             .set("Authorization", "Basic YWRtaW46cXdlcnR5")
             .send({...data, content: 123})
-            .expect(HTTP_STATUSES.BAD_REQUEST_400 )
+            .expect(HTTP_STATUSES.BAD_REQUEST_400)
 
         expect(notStringContent.body).toEqual({
             errorsMessages: [
@@ -221,7 +233,17 @@ describe('/posts', ()=>{
 
         await request(app)
             .get(`${RouterPath.posts}/${createdPost.id}`)
-            .expect(HTTP_STATUSES.OK_200, {...createdPost, id:createdPost.id.toString(),blogId:createdPost.blogId.toString()})
+            .expect(HTTP_STATUSES.OK_200, {
+                ...createdPost,
+                id: createdPost.id.toString(),
+                blogId: createdPost.blogId.toString(),
+                extendedLikesInfo: {
+                    likesCount: 0,
+                    dislikesCount: 0,
+                    myStatus: 'None',
+                    newestLikes: []
+                }
+            })
     });
     it('shouldn`t update unexpected post ', async () => {
 
@@ -254,14 +276,14 @@ describe('/posts', ()=>{
             .expect(HTTP_STATUSES.NO_CONTENT_204)
 
 
-        const result =  await request(app)
+        const result = await request(app)
             .get(`${RouterPath.posts}/${createdPost.id}`)
-            .expect(HTTP_STATUSES.OK_200 )
+            .expect(HTTP_STATUSES.OK_200)
 
         expect(result.body).toEqual({
             ...createdPost,
             ...data,
-            id:createdPost.id.toString(),blogId:createdPost.blogId.toString()
+            id: createdPost.id.toString(), blogId: createdPost.blogId.toString()
         })
     });
     it('should delete post', async () => {

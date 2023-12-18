@@ -9,16 +9,12 @@ import {UsersRepository} from "../repositories/users-rep";
 import {UsersMainType} from "../types/users-types";
 
 export class LikesServices {
-    private likesRepository: LikesRepository;
-    private commentsRepository: CommentsRepository;
-    private postsRepository: PostsRepository;
-    private usersRepository: UsersRepository;
 
-    constructor() {
-        this.likesRepository = new LikesRepository()
-        this.commentsRepository = new CommentsRepository()
-        this.postsRepository = new PostsRepository()
-        this.usersRepository =new UsersRepository()
+
+    constructor(protected likesRepository: LikesRepository,
+                protected commentsRepository: CommentsRepository,
+                protected postsRepository: PostsRepository,
+                protected usersRepository: UsersRepository) {
     }
 
     async rateCommentOrPost(id: string, likeStatus: string, userId: string, likeType: string): Promise<boolean> {
@@ -31,8 +27,8 @@ export class LikesServices {
             const post: PostsMainType | null = await this.postsRepository.findPostById(id)
             if (!post) return false
         }
-        const user:UsersMainType|null = await this.usersRepository.findUserById(userId)
-        if(!user) return false
+        const user: UsersMainType | null = await this.usersRepository.findUserById(userId)
+        if (!user) return false
 
         const rate: boolean = await this.likesRepository.tryFindAndUpdateRate(id, userId, likeStatus)
 
