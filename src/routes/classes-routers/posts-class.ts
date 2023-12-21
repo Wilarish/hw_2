@@ -12,7 +12,9 @@ import {HTTP_STATUSES} from "../../data/HTTP_STATUSES";
 import {CommentsCreateUpdate, CommentsViewType} from "../../types/comments-types";
 import {ObjectId} from "mongodb";
 import {likeTypes} from "../../types/likes-types";
-
+import "reflect-metadata"
+import {injectable} from "inversify";
+@injectable()
 export class PostsControllerInstance {
 
     constructor(protected postsRepository: PostsRepository,

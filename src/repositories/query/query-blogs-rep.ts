@@ -4,7 +4,9 @@ import {BlogsPaginationType, DefaultPaginationType, Paginated} from "../../types
 import {PostsViewType} from "../../types/posts-types";
 import {BlogsModel, PostsModel} from "../../domain/models/models";
 import {RateHelpPostsArr} from "../../helpers/rates-helper";
-
+import "reflect-metadata"
+import {injectable} from "inversify";
+@injectable()
 export class QueryBlogsRepository {
     async queryFindPaginatedPostsForBlogsById(id: string, pagination: DefaultPaginationType, userId:string|undefined): Promise<Paginated<PostsViewType>> {
         const filter= {blogId: new ObjectId(id) }

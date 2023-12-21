@@ -1,5 +1,7 @@
 import {emailAdapter} from "../adapters/email-adapter";
-
+import "reflect-metadata"
+import {injectable} from "inversify";
+@injectable()
 export class EmailServices {
     async SendEmailForRegistration(email:string, confirmationCode:string){
 

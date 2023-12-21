@@ -4,9 +4,10 @@ import {authBearer, authBearerWithout401} from "../middleware/auth/auth_bearer";
 import {errorsCheckingForStatus400} from "../middleware/errors_checking";
 import {reqIdValidation} from "../middleware/req_id/id_valid";
 import {commentsId} from "../middleware/404/comments-id";
-import {commentsController} from "../composition-root";
+import {container} from "../composition-root";
+import {CommentsControllerInstance} from "./classes-routers/comments-class";
 
-
+const commentsController = container.resolve(CommentsControllerInstance)
 export const CommentsRouter = Router({})
 
 

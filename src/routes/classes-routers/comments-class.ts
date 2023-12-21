@@ -5,7 +5,9 @@ import {LikesServices} from "../../application/likes-services";
 import {Request, Response} from "express";
 import {CommentsCreateUpdate, CommentsMainType, CommentsViewType} from "../../types/comments-types";
 import {HTTP_STATUSES} from "../../data/HTTP_STATUSES";
-
+import "reflect-metadata"
+import {injectable} from "inversify";
+@injectable()
 export class CommentsControllerInstance {
 
     constructor(protected commentsRepository: CommentsRepository,

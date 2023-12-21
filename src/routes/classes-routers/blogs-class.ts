@@ -10,7 +10,9 @@ import {BlogsMainType, BlogsViewType} from "../../types/blogs-types";
 import {HTTP_STATUSES} from "../../data/HTTP_STATUSES";
 import {PostsViewType} from "../../types/posts-types";
 import {ObjectId} from "mongodb";
-
+import "reflect-metadata"
+import {injectable} from "inversify";
+@injectable()
 export class BlogsControllerInstance {
 
     constructor(protected blogsRepository: BlogsRepository,

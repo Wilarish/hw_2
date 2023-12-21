@@ -1,3 +1,4 @@
+import "reflect-metadata"
 import {BlogsRepository} from "./repositories/blogs-rep";
 import {CommentsRepository} from "./repositories/comments-rep";
 import {DevicesRepository} from "./repositories/devices-rep";
@@ -18,42 +19,48 @@ import {LikesServices} from "./application/likes-services";
 import {PostsServices} from "./application/posts-services";
 import {UsersServices} from "./application/users-services";
 import {AuthControllerInstance} from "./routes/classes-routers/auth-class";
-import {BlogsControllerInstance} from "./routes/classes-routers/blogs-class";
 import {CommentsControllerInstance} from "./routes/classes-routers/comments-class";
 import {PostsControllerInstance} from "./routes/classes-routers/posts-class";
 import {SecurityControllerInstance} from "./routes/classes-routers/security-class";
 import {UsersControllerInstance} from "./routes/classes-routers/users-class";
+import {Container} from "inversify";
+
+export const container = new Container()
+
+// controllers
+container.bind(AuthControllerInstance).to(AuthControllerInstance)
+container.bind(CommentsControllerInstance).to(CommentsControllerInstance)
+container.bind(PostsControllerInstance).to(PostsControllerInstance)
+container.bind(SecurityControllerInstance).to(SecurityControllerInstance)
+container.bind(UsersControllerInstance).to(UsersControllerInstance)
 
 
-const blogsRepository: BlogsRepository = new BlogsRepository()
-const commentsRepository: CommentsRepository = new CommentsRepository()
-export const devicesRepository: DevicesRepository = new DevicesRepository()
-const likesRepository: LikesRepository = new LikesRepository()
-const usersRepository: UsersRepository = new UsersRepository()
-export const postsRepository: PostsRepository = new PostsRepository(blogsRepository)
-
-const queryBlogsRepository: QueryBlogsRepository = new QueryBlogsRepository()
-const queryCommentsRepository: QueryCommentsRepository = new QueryCommentsRepository(postsRepository)
-const queryDevicesRepository: QueryDevicesRepository = new QueryDevicesRepository()
-export const queryPostsRepository: QueryPostsRepository = new QueryPostsRepository(likesRepository)
-const queryUsersRepository: QueryUsersRepository = new QueryUsersRepository()
+//services
+container.bind(AuthServices).to(AuthServices)
+container.bind(UsersServices).to(UsersServices)
+container.bind(DeviceServices).to(DeviceServices)
+container.bind(EmailServices).to(EmailServices)
+container.bind(BlogsServices).to(BlogsServices)
+container.bind(CommentsServices).to(CommentsServices)
+container.bind(LikesServices).to(LikesServices)
+container.bind(PostsServices).to(PostsServices)
 
 
-const emailServices: EmailServices = new EmailServices()
-const deviceServices: DeviceServices = new DeviceServices(devicesRepository)
-const authServices: AuthServices = new AuthServices(usersRepository, emailServices, deviceServices)
-const blogsServices: BlogsServices = new BlogsServices(blogsRepository)
-const commentsServices: CommentsServices = new CommentsServices(commentsRepository, usersRepository, postsRepository)
-const likesServices: LikesServices = new LikesServices(likesRepository, commentsRepository, postsRepository, usersRepository)
-const postsServices: PostsServices = new PostsServices(blogsRepository, postsRepository)
-const usersServices: UsersServices = new UsersServices(usersRepository)
+//repositories
+container.bind(UsersRepository).to(UsersRepository)
+container.bind(DevicesRepository).to(DevicesRepository)
+container.bind(BlogsRepository).to(BlogsRepository)
+container.bind(CommentsRepository).to(CommentsRepository)
+container.bind(LikesRepository).to(LikesRepository)
+container.bind(PostsRepository).to(PostsRepository)
+
+//query repositories
+container.bind(QueryBlogsRepository).to(QueryBlogsRepository)
+container.bind(QueryCommentsRepository).to(QueryCommentsRepository)
+container.bind(QueryDevicesRepository).to(QueryDevicesRepository)
+container.bind(QueryPostsRepository).to(QueryPostsRepository)
+container.bind(QueryUsersRepository).to(QueryUsersRepository)
 
 
-export const authController: AuthControllerInstance = new AuthControllerInstance(authServices, usersServices)
-export const blogsController: BlogsControllerInstance = new BlogsControllerInstance(blogsRepository, queryBlogsRepository, blogsServices, queryPostsRepository, postsServices)
-export const commentsController:CommentsControllerInstance = new CommentsControllerInstance(commentsRepository, queryCommentsRepository,commentsServices,likesServices)
-export const postsController: PostsControllerInstance = new PostsControllerInstance(postsRepository,postsServices,queryPostsRepository,queryCommentsRepository,commentsServices,likesServices)
-export const securityController: SecurityControllerInstance = new SecurityControllerInstance(devicesRepository, queryDevicesRepository, deviceServices)
-export const usersController: UsersControllerInstance = new UsersControllerInstance(usersRepository, usersServices, queryUsersRepository)
 
 

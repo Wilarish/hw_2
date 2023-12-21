@@ -6,7 +6,9 @@ import {HTTP_STATUSES} from "../../data/HTTP_STATUSES";
 import {Paginated, UsersPaginationType} from "../../types/pagination.type";
 import {getUsersPagination} from "../../helpers/pagination.helper";
 import {UsersCreate, UsersViewType} from "../../types/users-types";
-
+import "reflect-metadata"
+import {injectable} from "inversify";
+@injectable()
 export class UsersControllerInstance {
 
     constructor(protected usersRepository: UsersRepository,

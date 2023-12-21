@@ -1,7 +1,9 @@
 import {BlogsCreateUpdate, BlogsMainType} from "../types/blogs-types";
 import {ObjectId} from "mongodb";
 import {BlogsModel, PostsModel} from "../domain/models/models";
-
+import "reflect-metadata"
+import {injectable} from "inversify";
+@injectable()
 export class BlogsRepository {
     async findBlogById(id: string): Promise<BlogsMainType | null> {
 

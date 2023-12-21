@@ -3,7 +3,9 @@ import {UsersRepository} from "../repositories/users-rep";
 import bcrypt from 'bcrypt';
 import {ObjectId} from "mongodb";
 import {HashAdapter} from "../adapters/hash-adapter";
-
+import {injectable} from "inversify";
+import "reflect-metadata"
+@injectable()
 export class UsersServices {
 
     constructor(protected usersRepository:UsersRepository) {

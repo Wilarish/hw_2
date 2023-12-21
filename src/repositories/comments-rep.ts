@@ -1,7 +1,9 @@
 import {CommentsCreateUpdate, CommentsMainType} from "../types/comments-types";
 import {ObjectId} from "mongodb";
 import {CommentsModel} from "../domain/models/models";
-
+import "reflect-metadata"
+import {injectable} from "inversify";
+@injectable()
 export class CommentsRepository {
     async createComment(comment: CommentsMainType): Promise<string> {
         await CommentsModel.create(comment)

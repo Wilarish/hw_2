@@ -9,7 +9,9 @@ import {DeviceMainType} from "../types/devices-types";
 import {UsersRepository} from "../repositories/users-rep";
 import {EmailServices} from "./email-services";
 import {DeviceServices} from "./device-services";
-
+import {injectable} from "inversify";
+import "reflect-metadata"
+@injectable()
 export class AuthServices {
 
     constructor(protected usersRepository: UsersRepository,

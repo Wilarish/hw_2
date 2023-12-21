@@ -12,7 +12,9 @@ import {UsersRepository} from "./repositories/users-rep";
 import {LikesRepository} from "./repositories/likes-rep";
 import {CommentsRepository} from "./repositories/comments-rep";
 import {DevicesRepository} from "./repositories/devices-rep";
-import {postsRepository} from "./composition-root";
+import {container} from "./composition-root";
+import {PostsRepository} from "./repositories/posts-rep";
+
 
 
 
@@ -45,11 +47,12 @@ export function InitApp() {
         res.send('Hello World!')
     })
     app.delete('/testing/all-data',  async (req:Request, res:Response)=>{
-        const blogsRepository =new BlogsRepository()
-        const usersRepository =new UsersRepository()
-        const likesRepository = new LikesRepository()
-        const commentsRepository = new CommentsRepository()
-        const devicesRepository = new DevicesRepository()
+        const blogsRepository =container.resolve(BlogsRepository)
+        const usersRepository =container.resolve(UsersRepository)
+        const likesRepository =container.resolve(LikesRepository)
+        const commentsRepository = container.resolve(CommentsRepository)
+        const devicesRepository =container.resolve(DevicesRepository)
+        const postsRepository =container.resolve(PostsRepository)
 
 
         await postsRepository.deleteAllPosts()

@@ -7,12 +7,16 @@ import {errorsCheckingForStatus400, errorsCheckingForStatus401} from "../middlew
 import {CheckJwtToken} from "../middleware/auth/refresh_token";
 import {authBearer} from "../middleware/auth/auth_bearer";
 import {rateLimit} from "../middleware/rate_limit/rate-limit";
-import {authController} from "../composition-root";
+import {container} from "../composition-root";
+import {AuthControllerInstance} from "./classes-routers/auth-class";
+
+//import {authController} from "../composition-root";
 
 
 
 
 export const AuthRouter = Router({})
+const authController = container.resolve(AuthControllerInstance)
 
 
 

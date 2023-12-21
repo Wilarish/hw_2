@@ -1,7 +1,9 @@
 import {DeviceMainType} from "../types/devices-types";
 import {ObjectId} from "mongodb";
 import {DevicesModel} from "../domain/models/models";
-
+import {injectable} from "inversify";
+import "reflect-metadata"
+@injectable()
 export class DevicesRepository {
     async addNewDevice(device: DeviceMainType): Promise<boolean> {
         const result=  await DevicesModel.create(device)

@@ -6,7 +6,9 @@ import {CommentsModel} from "../../domain/models/models";
 import {LikeInfoView} from "../../types/likes-types";
 import {PostsRepository} from "../posts-rep";
 import {RateHelpComments, RateHelpCommentsArr} from "../../helpers/rates-helper";
-
+import "reflect-metadata"
+import {injectable} from "inversify";
+@injectable()
 export class QueryCommentsRepository {
     constructor(protected postsRepository: PostsRepository ) {
     }

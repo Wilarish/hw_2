@@ -5,10 +5,12 @@ import {uriBlogIdPostsChecking} from "../middleware/input_valid/input_posts";
 import {authBasic} from "../middleware/auth/auth_basic";
 import {reqIdValidation} from "../middleware/req_id/id_valid";
 import {authBearerWithout401} from "../middleware/auth/auth_bearer";
-import {blogsController} from "../composition-root";
+import {container} from "../composition-root";
+import {BlogsControllerInstance} from "./classes-routers/blogs-class";
 
 
 
+const blogsController = container.resolve(BlogsControllerInstance)
 
 export const BlogsRouter = Router()
 

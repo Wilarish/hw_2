@@ -4,10 +4,12 @@ import {errorsCheckingForStatus400} from "../middleware/errors_checking";
 import {authBearer, authBearerWithout401} from "../middleware/auth/auth_bearer";
 import {authBasic} from "../middleware/auth/auth_basic";
 import {reqIdValidation} from "../middleware/req_id/id_valid";
-import {postsController} from "../composition-root";
+import {container} from "../composition-root";
+import {PostsControllerInstance} from "./classes-routers/posts-class";
 
 
 
+const postsController = container.resolve(PostsControllerInstance)
 export const PostsRouter = Router()
 
 PostsRouter.get('/', authBearerWithout401, postsController.getPosts.bind(postsController))

@@ -2,7 +2,9 @@ import {UsersMainType, UsersViewType} from "../../types/users-types";
 import {ObjectId} from "mongodb";
 import {Paginated, UsersPaginationType} from "../../types/pagination.type";
 import {UsersModel} from "../../domain/models/models";
-
+import "reflect-metadata"
+import {injectable} from "inversify";
+@injectable()
 export class QueryUsersRepository {
     async queryFindPaginatedUsers(pagination: UsersPaginationType): Promise<Paginated<UsersViewType>> {
 

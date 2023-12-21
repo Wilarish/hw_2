@@ -4,11 +4,12 @@ import {DeviceMainType} from "../../types/devices-types";
 import {NextFunction, Request, Response} from "express";
 import {HTTP_STATUSES} from "../../data/HTTP_STATUSES";
 import {DevicesRepository} from "../../repositories/devices-rep";
+import {container} from "../../composition-root";
 
 export const CheckJwtToken = {
     refreshToken: cookie('refreshToken').isJWT().custom(async (token) => {
 
-        const deviceRepository = new DevicesRepository()
+        const deviceRepository = container.resolve(DevicesRepository)
 
         const userId: string | null = await jwtAdapter.findUserByToken(token)
         if (!userId) throw new Error('not valid token...user')

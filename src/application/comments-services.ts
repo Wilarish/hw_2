@@ -5,7 +5,9 @@ import {ObjectId} from "mongodb";
 import {CommentsRepository} from "../repositories/comments-rep";
 import {UsersRepository} from "../repositories/users-rep";
 import {PostsRepository} from "../repositories/posts-rep";
-
+import "reflect-metadata"
+import {injectable} from "inversify";
+@injectable()
 export class CommentsServices {
 
 

@@ -1,5 +1,8 @@
 import { DevicesRepository} from "../repositories/devices-rep";
 import {DeviceMainType} from "../types/devices-types";
+import {injectable} from "inversify";
+import "reflect-metadata"
+@injectable()
 export class DeviceServices {
 
     constructor(protected deviceRepository: DevicesRepository) {

@@ -7,13 +7,14 @@ import {createBlogUtils} from "./utils/createBlog.utils";
 import {Paginated} from "../../types/pagination.type";
 import {RunDb} from "../../data/DB";
 import {QueryPostsRepository} from "../../repositories/query/query-posts-rep";
-import {queryPostsRepository} from "../../composition-root";
+import {container} from "../../composition-root";
+
 
 
 describe('/posts', () => {
 
     const app = InitApp()
-    //const queryPostsRepository =  new QueryPostsRepository()
+    const queryPostsRepository =  container.resolve(QueryPostsRepository)
 
     let createdPost: PostsMainType;
     let createdPost_2: PostsMainType;

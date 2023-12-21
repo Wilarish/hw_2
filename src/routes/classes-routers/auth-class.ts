@@ -3,7 +3,10 @@ import {UsersServices} from "../../application/users-services";
 import {Request, Response} from "express";
 import {HTTP_STATUSES} from "../../data/HTTP_STATUSES";
 import {UsersMainType} from "../../types/users-types";
+import {injectable} from "inversify";
+import "reflect-metadata"
 
+@injectable()
 export class AuthControllerInstance {
 
     constructor(protected authServices: AuthServices,

@@ -1,7 +1,9 @@
 import {UsersMainType} from "../types/users-types";
 import {ObjectId} from "mongodb";
 import {UsersModel} from "../domain/models/models";
-
+import "reflect-metadata"
+import {injectable} from "inversify";
+@injectable()
 export class  UsersRepository {
     async findUserByLoginOrEmail(loginOrEmail: string): Promise<UsersMainType | null> {
         return UsersModel.findOne({$or: [{login: loginOrEmail}, {email: loginOrEmail}]})

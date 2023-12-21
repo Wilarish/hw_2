@@ -5,7 +5,9 @@ import {PostsModel} from "../../domain/models/models";
 import {RateHelpPosts, RateHelpPostsArr} from "../../helpers/rates-helper";
 import {ExtendedLikesPostsView, LikesMainType} from "../../types/likes-types";
 import {LikesRepository} from "../likes-rep";
-
+import "reflect-metadata"
+import {injectable} from "inversify";
+@injectable()
 export class QueryPostsRepository {
     constructor(protected likesRepository: LikesRepository) {
     }

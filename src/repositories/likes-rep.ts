@@ -1,7 +1,9 @@
 import {LikesModel} from "../domain/models/models";
 import {ObjectId} from "mongodb";
 import {LikesMainType} from "../types/likes-types";
-
+import "reflect-metadata"
+import {injectable} from "inversify";
+@injectable()
 export class LikesRepository{
 
     async tryFindAndUpdateRate(commentId: string, userId: string, likeStatus: string):Promise<boolean> {

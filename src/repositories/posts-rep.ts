@@ -3,7 +3,9 @@ import {BlogsMainType} from "../types/blogs-types";
 import {ObjectId} from "mongodb";
 import {PostsModel} from "../domain/models/models";
 import {BlogsRepository} from "./blogs-rep";
-
+import "reflect-metadata"
+import {injectable} from "inversify";
+@injectable()
 export class PostsRepository {
     constructor(private blogsRepository:BlogsRepository  ) {
     }

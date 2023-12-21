@@ -7,7 +7,9 @@ import {PostsMainType, PostsViewType} from "../types/posts-types";
 import {PostsRepository} from "../repositories/posts-rep";
 import {UsersRepository} from "../repositories/users-rep";
 import {UsersMainType} from "../types/users-types";
-
+import "reflect-metadata"
+import {injectable} from "inversify";
+@injectable()
 export class LikesServices {
 
 

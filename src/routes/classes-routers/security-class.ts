@@ -4,7 +4,9 @@ import {DeviceServices} from "../../application/device-services";
 import {Request, Response} from "express";
 import {DeviceMainType, DeviceViewType} from "../../types/devices-types";
 import {HTTP_STATUSES} from "../../data/HTTP_STATUSES";
-
+import "reflect-metadata"
+import {injectable} from "inversify";
+@injectable()
 export class SecurityControllerInstance {
 
     constructor(protected deviceRepository: DevicesRepository,
